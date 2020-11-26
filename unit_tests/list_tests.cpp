@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "list.hpp"
 #include <list>
+#include <vector>
 
 #define INT_VALUE 1232349
 #define SIZE_T_VALUE 9000000000
@@ -55,4 +56,26 @@ TEST(list, types) {
 	ft::list<int>::difference_type			m12;
 	ft::list<int>::size_type				m13 = SIZE_T_VALUE;
 	std::cout << m13 << std::endl;
+}
+
+std::vector<int>	g_vec(10);
+
+TEST(list, construct_basic) {
+	std::list<int>	s1(std::allocator<int>);
+	std::list<int>	s2(10);
+	std::list<int>	s3(10, int());
+	std::list<int>	s4(10, int(), std::allocator<int>());
+
+	std::list<int>	s5(g_vec.begin(), g_vec.end());
+	std::list<int>	s6(g_vec.begin(), g_vec.end(), std::allocator<int>());
+	std::list<int>	s7(s2);
+
+	ft::list<int>	m1(std::allocator<int>);
+	ft::list<int>	m2(10);
+	ft::list<int>	m3(10, int());
+	ft::list<int>	m4(10, int(), std::allocator<int>());
+
+	ft::list<int>	m5(g_vec.begin(), g_vec.end());
+	ft::list<int>	m6(g_vec.begin(), g_vec.end(), std::allocator<int>());
+	ft::list<int>	m7(m2);
 }
