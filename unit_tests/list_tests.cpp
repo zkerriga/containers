@@ -58,24 +58,52 @@ TEST(list, types) {
 	std::cout << m13 << std::endl;
 }
 
-std::vector<int>	g_vec(10);
+std::vector<int> const	g_vec(10, INT_VALUE);
 
 TEST(list, construct_basic) {
 	std::list<int>	s1(std::allocator<int>);
 	std::list<int>	s2(10);
-	std::list<int>	s3(10, int());
-	std::list<int>	s4(10, int(), std::allocator<int>());
-
+	std::list<int>	s3(10, INT_VALUE);
+	std::list<int>	s4(10, INT_VALUE, std::allocator<int>());
 	std::list<int>	s5(g_vec.begin(), g_vec.end());
 	std::list<int>	s6(g_vec.begin(), g_vec.end(), std::allocator<int>());
 	std::list<int>	s7(s2);
 
 	ft::list<int>	m1(std::allocator<int>);
 	ft::list<int>	m2(10);
-	ft::list<int>	m3(10, int());
-	ft::list<int>	m4(10, int(), std::allocator<int>());
-
+	ft::list<int>	m3(10, INT_VALUE);
+	ft::list<int>	m4(10, INT_VALUE, std::allocator<int>());
 	ft::list<int>	m5(g_vec.begin(), g_vec.end());
 	ft::list<int>	m6(g_vec.begin(), g_vec.end(), std::allocator<int>());
 	ft::list<int>	m7(m2);
+}
+
+TEST(list, destructor_basic) {
+	std::list<int> *	s1 = new std::list<int>(10, INT_VALUE);
+	delete s1;
+
+	ft::list<int> *		m1 = new ft::list<int>(10, INT_VALUE);
+	delete m1;
+}
+
+TEST(list, assigment_basic) {
+	std::list<int>		s1(10, INT_VALUE);
+	std::list<int>		s2;
+	s2 = s1;
+
+	ft::list<int>		m1(10, INT_VALUE);
+	ft::list<int>		m2;
+	m2 = m1;
+}
+
+TEST(list, push_front_basic) {
+	std::list<int>	s1;
+
+	s1.push_front(INT_VALUE);
+	s1.push_front(INT_VALUE + 1);
+
+	ft::list<int>	m1;
+
+	m1.push_front(INT_VALUE);
+	m1.push_front(INT_VALUE + 1);
 }

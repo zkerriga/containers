@@ -1,5 +1,7 @@
 project(Google_tests)
 
+set(CMAKE_CXX_FLAGS "-Wno-unused")
+
 add_subdirectory(lib)
 include_directories(
         ${gtest_SOURCE_DIR}/include

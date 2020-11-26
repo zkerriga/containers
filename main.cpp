@@ -11,7 +11,12 @@
 /* ************************************************************************** */
 
 #include <iostream>
+#include <list>
 
 int main() {
+	std::list<std::string >	s1;
+
+	std::list<std::string >::const_iterator ite = s1.end();
+	std::cout << *ite << std::endl;
 	return 0;
 }
