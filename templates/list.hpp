@@ -26,59 +26,80 @@ public:
 	using difference_type	= std::ptrdiff_t;
 	using size_type			= std::size_t;
 
-	explicit list(const allocator_type & alloc = allocator_type());
-	explicit list(size_type n, const value_type & val = value_type(),
-				const allocator_type & alloc = allocator_type());
+	explicit list( const allocator_type & alloc = allocator_type() );
+	explicit list( size_type n, const value_type & val = value_type(),
+				const allocator_type & alloc = allocator_type() );
 	template < class InputIterator >
-	list(InputIterator first, InputIterator last,
-			const allocator_type & alloc = allocator_type());
-	list(const list & x);
+	list( InputIterator first, InputIterator last,
+			const allocator_type & alloc = allocator_type() );
+	list( const list & x );
 	~list();
-	list& operator= (const list& x);
+	list& operator= ( const list& x );
 
 	class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {};
 	class const_iterator : public std::iterator<std::bidirectional_iterator_tag, T const> {};
 	class reverse_iterator : public iterator {};
 	class const_reverse_iterator : public const_iterator {};
 
-	iterator begin();
-	const_iterator begin() const;
-	iterator end();
-	const_iterator end() const;
-	reverse_iterator rbegin();
-	const_reverse_iterator rbegin() const;
-	reverse_iterator rend();
-	const_reverse_iterator rend() const;
+	/* Iterators */
+	iterator				begin();
+	const_iterator			begin() const;
+	iterator				end();
+	const_iterator			end() const;
+	reverse_iterator		rbegin();
+	const_reverse_iterator	rbegin() const;
+	reverse_iterator		rend();
+	const_reverse_iterator	rend() const;
 
-	bool empty() const;
-	size_type size() const;
-	size_type max_size() const;
+	/* Capacity */
+	bool		empty() const;
+	size_type	size() const;
+	size_type	max_size() const;
 
-	reference front();
-	const_reference front() const;
-	reference back();
-	const_reference back() const;
+	/* Element access */
+	reference		front();
+	const_reference	front() const;
+	reference		back();
+	const_reference	back() const;
 
+	/* Modifiers */
 	template <class InputIterator>
-	void assign (InputIterator first, InputIterator last);
-	void assign (size_type n, const value_type& val);
-	void push_front (const value_type& val);
+	void assign( InputIterator first, InputIterator last );
+	void assign( size_type n, const value_type & val );
+	void push_front( const value_type & val );
 	void pop_front();
-	void push_back (const value_type & val);
+	void push_back( const value_type & val );
 	void pop_back();
-	iterator insert (iterator position, const value_type& val);
-	void insert (iterator position, size_type n, const value_type& val);
+	iterator insert( iterator position, const value_type & val );
+	void insert( iterator position, size_type n, const value_type & val );
 	template <class InputIterator>
-	void insert (iterator position, InputIterator first, InputIterator last);
-	iterator erase (iterator position);
-	iterator erase (iterator first, iterator last);
-	void swap (list & x);
-	void resize (size_type n, value_type val = value_type());
+	void insert( iterator position, InputIterator first, InputIterator last );
+	iterator erase( iterator position );
+	iterator erase( iterator first, iterator last);
+	void swap( list & x );
+	void resize( size_type n, value_type val = value_type() );
 	void clear();
 
-	void splice (iterator position, list& x);
-	void splice (iterator position, list& x, iterator i);
-	void splice (iterator position, list& x, iterator first, iterator last);
+	/* Operations */
+	void splice( iterator position, list & x );
+	void splice( iterator position, list & x, iterator i );
+	void splice( iterator position, list & x, iterator first, iterator last );
+	void remove( const value_type & val );
+	template <class Predicate>
+	void remove_if( Predicate pred );
+	void unique();
+	template <class BinaryPredicate>
+	void unique( BinaryPredicate binary_pred );
+	void merge( list & x );
+	template <class Compare>
+	void merge( list & x, Compare comp );
+	void sort();
+	template <class Compare>
+	void sort( Compare comp );
+	void reverse();
+
+	/* Observers */
+	allocator_type get_allocator() const;
 
 private:
 	struct t_list
@@ -87,8 +108,31 @@ private:
 		t_list		*next;
 		t_list		*prev;
 	};
-	t_list *		_list;
-	size_type		_size;
+	t_list *		m_list;
+	size_type		m_size;
 }; //class list
+
+/* todo */
+template <class T, class Alloc>
+bool operator == ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+bool operator != ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+bool operator <  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+bool operator <= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+bool operator >  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+bool operator >= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+
+template <class T, class Alloc>
+void swap( list<T,Alloc> & x, list<T,Alloc> & y );
+/* todo */
 
 } //namespace ft
