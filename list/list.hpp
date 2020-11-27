@@ -12,8 +12,13 @@
 
 #pragma once
 
+#include <memory>
+
 namespace ft {
 
+/*
+ * Double-linked list.
+ */
 template < class T, class Alloc = std::allocator<T> >
 class list {
 public:
@@ -26,6 +31,7 @@ public:
 	using difference_type	= std::ptrdiff_t;
 	using size_type			= std::size_t;
 
+	/* Initialize */
 	explicit list( const allocator_type & alloc = allocator_type() );
 	explicit list( size_type n, const value_type & val = value_type(),
 				const allocator_type & alloc = allocator_type() );
@@ -36,10 +42,13 @@ public:
 	~list();
 	list& operator= ( const list& x );
 
+	/* todo */
+	/* Iterator classes */
 	class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {};
 	class const_iterator : public std::iterator<std::bidirectional_iterator_tag, T const> {};
 	class reverse_iterator : public iterator {};
 	class const_reverse_iterator : public const_iterator {};
+	/* todo */
 
 	/* Iterators */
 	iterator				begin();
@@ -104,13 +113,21 @@ public:
 private:
 	struct t_list
 	{
-		value_type	data;
-		t_list		*next;
-		t_list		*prev;
+		value_type *	data;
+		t_list *		next;
+		t_list *		prev;
 	};
-	t_list *		m_list;
+	t_list *		m_end;
 	size_type		m_size;
 }; //class list
+
+#include "list_initialize.hpp"
+#include "list_methods_iterators.hpp"
+#include "list_methods_capacity.hpp"
+#include "list_methods_element_access.hpp"
+#include "list_methods_modifiers.hpp"
+#include "list_methods_operations.hpp"
+#include "list_methods_observers.hpp"
 
 /* todo */
 template <class T, class Alloc>

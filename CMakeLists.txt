@@ -4,11 +4,23 @@ project(containers)
 set(CMAKE_CXX_STANDARD 98)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused -Wconversion")
 
-set(T_DIR templates)
-include_directories(${T_DIR})
+set(LIST_DIR list)
+
+set(TEMPLATE_DIRS
+        ${LIST_DIR}
+        )
+
+include_directories(${TEMPLATE_DIRS})
 
 set(SRCS
-        ${T_DIR}/list.hpp
+        ${LIST_DIR}/list.hpp
+        ${LIST_DIR}/list_initialize.hpp
+        ${LIST_DIR}/list_methods_capacity.hpp
+        ${LIST_DIR}/list_methods_element_access.hpp
+        ${LIST_DIR}/list_methods_iterators.hpp
+        ${LIST_DIR}/list_methods_modifiers.hpp
+        ${LIST_DIR}/list_methods_observers.hpp
+        ${LIST_DIR}/list_methods_operations.hpp
         )
 
 add_executable(containers
