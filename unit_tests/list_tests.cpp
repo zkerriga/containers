@@ -404,4 +404,33 @@ TEST_F(ListTestClass, max_size) {
 	const int	structureSize = nPointersInStructure * sizeof(void *);
 
 	EXPECT_EQ(sEmptyList.max_size(), static_cast<size_t>(-1) / structureSize);
+	EXPECT_EQ(sTenList.max_size(), static_cast<size_t>(-1) / structureSize);
+
+	std::list<float>	s1(3);
+	EXPECT_EQ(s1.max_size(), static_cast<size_t>(-1) / structureSize);
+}
+
+TEST_F(ListTestClass, front) {
+	ASSERT_EQ(sTenList.front(), 0);
+
+	sTenList.front() = INT_VALUE;
+	ASSERT_EQ(sTenList.front(), INT_VALUE);
+
+//	ASSERT_EQ(sEmptyList.front(), int());
+//
+//	sEmptyList.front() = INT_VALUE;
+//	ASSERT_EQ(sEmptyList.front(), INT_VALUE);
+}
+
+
+TEST_F(ListTestClass, back) {
+	ASSERT_EQ(sTenList.back(), 9);
+
+	sTenList.back() = INT_VALUE;
+	ASSERT_EQ(sTenList.back(), INT_VALUE);
+
+//	ASSERT_EQ(sEmptyList.back(), int());
+//
+//	sEmptyList.back() = INT_VALUE;
+//	ASSERT_EQ(sEmptyList.back(), INT_VALUE);
 }
