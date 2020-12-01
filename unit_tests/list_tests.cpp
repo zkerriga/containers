@@ -1,14 +1,15 @@
 #include "gtest/gtest.h"
 #include "list.hpp"
 #include <list>
-#include <vector>
 
 #define INT_VALUE 1232349
 #define SIZE_T_VALUE 9000000000
-#define FLOAT_VALUE 128.512f
-#define STRING_VALUE "Super string!"
+#define SIZE_LITTLE 5
+#define SIZE_LONG 34
 
 using sList = std::list<int>;
+using mList = std::list<int>;
+using sAlloc = std::allocator<int>;
 
 class ListTestClass: public ::testing::Test {
 public:
@@ -51,119 +52,79 @@ public:
 	sList				sRandomList;
 	sList::iterator		sIt;
 	sList::iterator		sIte;
+	sAlloc				sAl;
 };
 
-TEST_F(ListTestClass, basic) {
+void checkListContainsSingleValue(const sList & list, size_t size, const int value) {
+	sList::const_iterator	it = list.begin();
+	sList::const_iterator	ite = list.end();
 
+	if (size == 0) {
+		ASSERT_TRUE(it == ite);
+		return;
+	}
+	while (it != ite) {
+		ASSERT_EQ(*it, value);
+		++it;
+		--size;
+	}
+	ASSERT_TRUE(size == 0);
 }
 
+void assertListEQ(const sList & stdList, const mList & myList) {
+	ASSERT_EQ(stdList.size(), myList.size());
 
+	sList::const_iterator	sIt = stdList.begin();
+	sList::const_iterator	sIte = stdList.end();
+	mList::const_iterator	mIt = myList.begin();
+	mList::const_iterator	mIte = myList.end();
 
-
-
-
-
-/*
-TEST(list, basic_creation_list) {
-	std::list<int>			l1;
-	ft::list<int>			my1;
-
-	std::list<std::string>	l2;
-	ft::list<std::string>	my2;
-
-	std::list<float>		l3;
-	ft::list<float>			my3;
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
-TEST(list, types) {
-
-	std::list<int>::value_type		s1 = INT_VALUE;
-	std::cout << s1 << std::endl;
-	ft::list<int>::value_type		m1 = INT_VALUE;
-	std::cout << m1 << std::endl;
-
-	std::list<float>::value_type	s2 = FLOAT_VALUE;
-	std::cout << s2 << std::endl;
-	ft::list<float>::value_type		m2 = FLOAT_VALUE;
-	std::cout << m2 << std::endl;
-
-	std::list<int>::allocator_type			s3;
-	std::list<int>::reference				s4();
-	std::list<int>::const_reference			s5();
-	std::list<int>::pointer					s6;
-	std::list<int>::const_pointer			s7;
-	std::list<int>::iterator				s8;
-	std::list<int>::const_iterator			s9;
-	std::list<int>::reverse_iterator		s10;
-	std::list<int>::const_reverse_iterator	s11;
-	std::list<int>::difference_type			s12;
-	std::list<int>::size_type				s13 = SIZE_T_VALUE;
-	std::cout << s13 << std::endl;
-
-	ft::list<int>::allocator_type			m3;
-	ft::list<int>::reference				m4();
-	ft::list<int>::const_reference			m5();
-	ft::list<int>::pointer					m6;
-	ft::list<int>::const_pointer			m7;
-	ft::list<int>::iterator					m8;
-	ft::list<int>::const_iterator			m9;
-	ft::list<int>::reverse_iterator			m10;
-	ft::list<int>::const_reverse_iterator	m11;
-	ft::list<int>::difference_type			m12;
-	ft::list<int>::size_type				m13 = SIZE_T_VALUE;
-	std::cout << m13 << std::endl;
+TEST(list, basic_types) {
+	sList::value_type				s1 = INT_VALUE;
+	sList::allocator_type			s2;
+	sList::reference				s3();
+	sList::const_reference			s4();
+	sList::pointer					s5;
+	sList::const_pointer			s6;
+	sList::iterator					s7;
+	sList::const_iterator			s8;
+	sList::reverse_iterator			s9;
+	sList::const_reverse_iterator	s10;
+	sList::difference_type			s11;
+	sList::size_type				s12 = SIZE_T_VALUE;
 }
 
-std::vector<int> const	g_vec(10, INT_VALUE);
+TEST_F(ListTestClass, construct) {
+	sList	s1;
+	ASSERT_TRUE(s1.empty());
 
-TEST(list, construct_basic) {
-	std::list<int>	s1(std::allocator<int>);
-	std::list<int>	s2(10);
-	std::list<int>	s3(10, INT_VALUE);
-	std::list<int>	s4(10, INT_VALUE, std::allocator<int>());
-	std::list<int>	s5(g_vec.begin(), g_vec.end());
-	std::list<int>	s6(g_vec.begin(), g_vec.end(), std::allocator<int>());
-	std::list<int>	s7(s2);
+	sList	s2(sAl);
+	ASSERT_TRUE(s2.empty());
 
-	ft::list<int>	m1(std::allocator<int>);
-	ft::list<int>	m2(10);
-	ft::list<int>	m3(10, INT_VALUE);
-	ft::list<int>	m4(10, INT_VALUE, std::allocator<int>());
-	ft::list<int>	m5(g_vec.begin(), g_vec.end());
-	ft::list<int>	m6(g_vec.begin(), g_vec.end(), std::allocator<int>());
-	ft::list<int>	m7(m2);
-	ASSERT_EQ(1,3);
+	sList	s3(SIZE_LITTLE);
+	checkListContainsSingleValue(s3, SIZE_LITTLE, int());
+
+	sList	s4(SIZE_LITTLE, INT_VALUE);
+	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
+
+	sList	s5(SIZE_LITTLE, INT_VALUE, sAl);
+	checkListContainsSingleValue(s5, SIZE_LITTLE, INT_VALUE);
+
+	sList	s6(sTenList.begin(), sTenList.end());
+	assertListEQ(sTenList, s6);
+
+	sList	s7(sTenList.begin(), sTenList.end(), sAl);
+	assertListEQ(sTenList, s7);
+
+	sList	s8(sRandomList.begin(), sRandomList.end());
+	assertListEQ(sRandomList, s8);
 }
-
-//using list_containter = std::list<int>;
-
-TEST(list, destructor_basic) {
-	std::list<int> *	s1 = new std::list<int>(10, INT_VALUE);
-	delete s1;
-
-	ft::list<int> *		m1 = new ft::list<int>(10, INT_VALUE);
-	delete m1;
-}
-
-TEST(list, assigment_basic) {
-	std::list<int>		s1(10, INT_VALUE);
-	std::list<int>		s2;
-	s2 = s1;
-
-	ft::list<int>		m1(10, INT_VALUE);
-	ft::list<int>		m2;
-	m2 = m1;
-}
-
-TEST(list, push_front_basic) {
-	std::list<int>	s1;
-
-	s1.push_front(INT_VALUE);
-	s1.push_front(INT_VALUE + 1);
-
-	ft::list<int>	m1;
-
-	m1.push_front(INT_VALUE);
-	m1.push_front(INT_VALUE + 1);
-}
-*/
