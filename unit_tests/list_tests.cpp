@@ -2,6 +2,7 @@
 //#include "list.hpp"
 #include <list>
 #include <iterator>
+#include <limits>
 
 #define INT_VALUE 1232349
 #define SIZE_T_VALUE 9000000000
@@ -385,4 +386,22 @@ TEST_F(ListTestClass, iterators_end) {
 	sr2 = sTenList.rbegin();
 	--s1;
 	ASSERT_EQ(*s1, *sr2);
+}
+
+TEST_F(ListTestClass, empty) {
+	EXPECT_TRUE(sEmptyList.empty());
+	EXPECT_FALSE(sTenList.empty());
+}
+
+TEST_F(ListTestClass, size) {
+	EXPECT_EQ(sEmptyList.size(), 0);
+	EXPECT_EQ(sTenList.size(), 10);
+	EXPECT_EQ(sLongList.size(), 100);
+}
+
+TEST_F(ListTestClass, max_size) {
+	const int	nPointersInStructure = 3;
+	const int	structureSize = nPointersInStructure * sizeof(void *);
+
+	EXPECT_EQ(sEmptyList.max_size(), static_cast<size_t>(-1) / structureSize);
 }
