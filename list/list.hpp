@@ -22,16 +22,16 @@ namespace ft {
 template < class T, class Alloc = std::allocator<T> >
 class list {
 public:
-	using value_type		= T;
-	using allocator_type	= Alloc;
-	using reference			= typename Alloc::reference;
-	using const_reference	= typename Alloc::const_reference;
-	using pointer			= typename Alloc::pointer;
-	using const_pointer		= typename Alloc::const_pointer;
-	using difference_type	= std::ptrdiff_t;
-	using size_type			= std::size_t;
+	typedef T								value_type;
+	typedef Alloc							allocator_type;
+	typedef typename Alloc::reference		reference;
+	typedef typename Alloc::const_reference	const_reference;
+	typedef typename Alloc::pointer			pointer;
+	typedef typename Alloc::const_pointer	const_pointer;
+	typedef std::ptrdiff_t					difference_type;
+	typedef std::size_t						size_type;
 
-	/* Initialize */
+	/* Initialize *//*
 	explicit list( const allocator_type & alloc = allocator_type() );
 	explicit list( size_type n, const value_type & val = value_type(),
 				const allocator_type & alloc = allocator_type() );
@@ -41,7 +41,7 @@ public:
 	list( const list & x );
 	~list();
 	list& operator= ( const list& x );
-
+*/
 	/* todo */
 	/* Iterator classes */
 	class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {};
@@ -50,7 +50,7 @@ public:
 	class const_reverse_iterator : public const_iterator {};
 	/* todo */
 
-	/* Iterators */
+	/* Iterators *//*
 	iterator				begin();
 	const_iterator			begin() const;
 	iterator				end();
@@ -60,18 +60,18 @@ public:
 	reverse_iterator		rend();
 	const_reverse_iterator	rend() const;
 
-	/* Capacity */
+	*//* Capacity *//*
 	bool		empty() const;
 	size_type	size() const;
 	size_type	max_size() const;
 
-	/* Element access */
+	*//* Element access *//*
 	reference		front();
 	const_reference	front() const;
 	reference		back();
 	const_reference	back() const;
 
-	/* Modifiers */
+	*//* Modifiers *//*
 	template <class InputIterator>
 	void assign( InputIterator first, InputIterator last );
 	void assign( size_type n, const value_type & val );
@@ -89,7 +89,7 @@ public:
 	void resize( size_type n, value_type val = value_type() );
 	void clear();
 
-	/* Operations */
+	*//* Operations *//*
 	void splice( iterator position, list & x );
 	void splice( iterator position, list & x, iterator i );
 	void splice( iterator position, list & x, iterator first, iterator last );
@@ -107,8 +107,8 @@ public:
 	void sort( Compare comp );
 	void reverse();
 
-	/* Observers */
-	allocator_type get_allocator() const;
+	*//* Observers *//*
+	allocator_type get_allocator() const;*/
 
 private:
 	struct t_list

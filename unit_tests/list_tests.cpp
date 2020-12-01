@@ -8,6 +8,62 @@
 #define FLOAT_VALUE 128.512f
 #define STRING_VALUE "Super string!"
 
+using sList = std::list<int>;
+
+class ListTestClass: public ::testing::Test {
+public:
+	ListTestClass() {
+		// код инициализации
+		for (int i = 0; i < 10; ++i) {
+			sTenList.push_front(i);
+		}
+		for (int i = 100; i > 0; --i) {
+			sLongList.push_front(i);
+		}
+		srand(time(nullptr));
+		int size = rand() % 100 + 1;
+		for (int i = 0; i < size; ++i) {
+			sRandomList.push_front(rand());
+		}
+	}
+
+	virtual void SetUp() {
+		// код, который будет выполнен перед началом теста
+	}
+
+	virtual void TearDown() {
+		// код, который будет выполнен сразу по завершении теста
+		// при необходимости здесь можно вызывать исключения
+	}
+
+	~ListTestClass()  {
+		// очистка всех ресурсов, вызов исключений не допускается
+		sEmptyList.clear();
+		sTenList.clear();
+		sLongList.clear();
+		sRandomList.clear();
+	}
+
+	// сюда можно поместить необходимые вам пользовательские объекты данных
+	sList				sEmptyList;
+	sList				sTenList;
+	sList				sLongList;
+	sList				sRandomList;
+	sList::iterator		sIt;
+	sList::iterator		sIte;
+};
+
+TEST_F(ListTestClass, basic) {
+
+}
+
+
+
+
+
+
+
+/*
 TEST(list, basic_creation_list) {
 	std::list<int>			l1;
 	ft::list<int>			my1;
@@ -76,7 +132,10 @@ TEST(list, construct_basic) {
 	ft::list<int>	m5(g_vec.begin(), g_vec.end());
 	ft::list<int>	m6(g_vec.begin(), g_vec.end(), std::allocator<int>());
 	ft::list<int>	m7(m2);
+	ASSERT_EQ(1,3);
 }
+
+//using list_containter = std::list<int>;
 
 TEST(list, destructor_basic) {
 	std::list<int> *	s1 = new std::list<int>(10, INT_VALUE);
@@ -107,3 +166,4 @@ TEST(list, push_front_basic) {
 	m1.push_front(INT_VALUE);
 	m1.push_front(INT_VALUE + 1);
 }
+*/
