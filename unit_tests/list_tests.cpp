@@ -88,6 +88,31 @@ void assertListEQ(const sList & stdList, const mList & myList) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
+void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
+							   mList::const_iterator mIt, mList::const_iterator mIte) {
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
+void assertListEQFromListAndIterators(sList stdList,
+				mList::const_iterator mIt, mList::const_iterator mIte) {
+	sList::const_iterator	sIt = stdList.begin();
+	sList::const_iterator	sIte = stdList.end();
+
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
 TEST(list, basic_types) {
 	sList::value_type				s1 = INT_VALUE;
 	sList::allocator_type			s2;
@@ -422,7 +447,6 @@ TEST_F(ListTestClass, front) {
 //	ASSERT_EQ(sEmptyList.front(), INT_VALUE);
 }
 
-
 TEST_F(ListTestClass, back) {
 	ASSERT_EQ(sTenList.back(), 9);
 
@@ -433,4 +457,117 @@ TEST_F(ListTestClass, back) {
 //
 //	sEmptyList.back() = INT_VALUE;
 //	ASSERT_EQ(sEmptyList.back(), INT_VALUE);
+}
+
+TEST_F(ListTestClass, assign) {
+	sEmptyList.assign(SIZE_LITTLE, INT_VALUE);
+	sList		s1(SIZE_LITTLE, INT_VALUE);
+	assertListEQ(s1, sEmptyList);
+
+	sEmptyList.assign(0, INT_VALUE);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sEmptyList.assign(++sTenList.begin(), sTenList.end());
+	ASSERT_EQ(sEmptyList.size(), sTenList.size() - 1);
+
+	sEmptyList.assign(sTenList.end(), sTenList.end());
+	ASSERT_TRUE(sEmptyList.empty());
+}
+
+TEST_F(ListTestClass, push_front) {
+	sList			s1(sEmptyList);
+
+	s1.push_front(INT_VALUE);
+	ASSERT_EQ(s1.size(), 1);
+	ASSERT_EQ(s1.front(), INT_VALUE);
+
+	s1.push_front(INT_VALUE - 1);
+	ASSERT_EQ(s1.size(), 2);
+	ASSERT_EQ(s1.front(), INT_VALUE - 1);
+	ASSERT_EQ(s1.back(), INT_VALUE);
+
+	sList			s2(sEmptyList);
+	for (int i = 9; i > -1; --i) {
+		s2.push_front(i);
+	}
+	assertListEQ(sTenList, s2);
+
+	sList					s3(sTenList);
+	sList::const_iterator	it = s3.begin();
+	sList::const_iterator	ite = s3.end();
+	s3.push_front(INT_VALUE);
+	assertListEQFromListAndIterators(sTenList, it, ite);
+	it = s3.begin();
+	assertListEQFromListAndIterators(sTenList, ++it, ite);
+}
+
+TEST_F(ListTestClass, pop_front) {
+	sList		s1(sTenList);
+
+	s1.pop_front();
+	ASSERT_EQ(s1.size(), sTenList.size() - 1);
+	assertListEQFromIterators(++sTenList.begin(), sTenList.end(), s1.begin(), s1.end());
+
+	for (int i = 1; i < 10; ++i) {
+		ASSERT_EQ(s1.front(), i);
+		s1.pop_front();
+	}
+	assertListEQ(sEmptyList, s1);
+
+//	s1.pop_front();
+//	ASSERT_EQ(s1.size(), 0);
+
+	sList					s2(sTenList);
+	sList::const_iterator	it1 = s2.begin();
+	ASSERT_EQ(*it1, 0);
+	s2.pop_front();
+	sList::const_iterator	it2 = s2.begin();
+	ASSERT_TRUE(it1 != it2);
+}
+
+TEST_F(ListTestClass, push_back) {
+	sList s1(sEmptyList);
+
+	s1.push_back(INT_VALUE);
+	ASSERT_EQ(s1.size(), 1);
+	ASSERT_EQ(s1.back(), INT_VALUE);
+
+	s1.push_back(INT_VALUE - 1);
+	ASSERT_EQ(s1.size(), 2);
+	ASSERT_EQ(s1.back(), INT_VALUE - 1);
+	ASSERT_EQ(s1.front(), INT_VALUE);
+
+	sList s2(sEmptyList);
+	for (int i = 0; i < 10; ++i) {
+		s2.push_back(i);
+	}
+	assertListEQ(sTenList, s2);
+
+	sList::const_iterator	it = s2.begin();
+	sList::const_iterator	ite = s2.end();
+	s2.push_back(INT_VALUE - 3);
+	ASSERT_EQ(s2.back(), INT_VALUE - 3);
+	assertListEQFromListAndIterators(sTenList, it, --ite);
+}
+
+TEST_F(ListTestClass, pop_back) {
+	sList		s1(sTenList);
+
+	s1.pop_back();
+	ASSERT_EQ(s1.size(), sTenList.size() - 1);
+	assertListEQFromIterators(sTenList.begin(), --sTenList.end(), s1.begin(), s1.end());
+
+	for (int i = 8; i > -1; --i) {
+		ASSERT_EQ(s1.back(), i);
+		s1.pop_back();
+	}
+	assertListEQ(sEmptyList, s1);
+
+//	s1.pop_back();
+//	ASSERT_EQ(s1.size(), 0);
+
+	sList					s2(sTenList);
+	sList::const_iterator	ite = s2.end();
+	s2.pop_back();
+	assertListEQFromIterators(sTenList.begin(), --sTenList.end(), s2.begin(), ite);
 }
