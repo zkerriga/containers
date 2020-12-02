@@ -710,3 +710,155 @@ TEST_F(ListTestClass, clear) {
 	ASSERT_EQ(sEmptyList.front(), INT_VALUE);
 }
 
+TEST_F(ListTestClass, splice) {
+	sList		s1(sEmptyList);
+	sList		s2(sTenList);
+
+	s1.splice(s1.begin(), s2);
+	assertListEQ(sTenList, s1);
+	assertListEQ(sEmptyList, s2);
+
+	sList		s3(sTenList);
+	sList		s4(sRandomList);
+
+	s4.splice(s4.begin(), s3, ++s3.begin());
+	sList::const_iterator	it = s4.begin();
+	ASSERT_EQ(*it++, 1);
+	assertListEQFromListAndIterators(sRandomList, it, s4.end());
+	ASSERT_EQ(s3.size(), sTenList.size() - 1);
+
+	sList		s5(sTenList);
+	sList		s6(sRandomList);
+
+	s6.splice(++s6.begin(), s5, s5.begin(), --s5.end());
+	it = s6.begin();
+	ASSERT_EQ(*it++, sRandomList.front());
+	for (int i = 0; i < 9; ++i) {
+		ASSERT_EQ(*it++, i);
+	}
+	assertListEQFromIterators(++sRandomList.begin(), sRandomList.end(), it, s6.end());
+	ASSERT_EQ(s5.size(), 1);
+	ASSERT_EQ(s5.front(), sTenList.back());
+}
+
+TEST_F(ListTestClass, remove) {
+	sEmptyList.remove(INT_VALUE);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(SIZE_LONG, INT_VALUE);
+
+	s1.remove(INT_VALUE);
+	ASSERT_TRUE(s1.empty());
+
+	sList		s2(sTenList);
+	sList		s3(sTenList);
+	sList		s4(sTenList);
+
+	s2.remove(0);
+	s3.remove(5);
+	s4.remove(9);
+	ASSERT_EQ(s2.size(), 9);
+	ASSERT_EQ(s3.size(), 9);
+	ASSERT_EQ(s4.size(), 9);
+
+	sList::const_iterator	it = s2.begin();
+	for (int i = 1; i < 10; ++i) {
+		ASSERT_EQ(*it++, i);
+	}
+	it = s3.begin();
+	for (int i = 0; i < 10; ++i) {
+		if (i == 5)
+			continue;
+		ASSERT_EQ(*it++, i);
+	}
+	it = s4.begin();
+	for (int i = 0; i < 9; ++i) {
+		ASSERT_EQ(*it++, i);
+	}
+}
+
+static bool allTrue(int val) {
+	return true;
+}
+
+static bool allFalse(int val) {
+	return false;
+}
+
+static bool check(int val) {
+	return (val % 2 == 0);
+}
+
+TEST_F(ListTestClass, remove_if) {
+	sEmptyList.remove_if(allTrue);
+	sEmptyList.remove_if(allFalse);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(sTenList);
+	s1.remove_if(allFalse);
+	ASSERT_EQ(s1.size(), sTenList.size());
+	s1.remove_if(check);
+	ASSERT_EQ(s1.size(), 5);
+	sList::const_iterator		it = s1.begin();
+	for (int i = 1; i < 10; i += 2) {
+		ASSERT_EQ(*it++, i);
+	}
+	s1.remove_if(allTrue);
+	ASSERT_TRUE(s1.empty());
+}
+
+static bool binaryAllTrue(int prev, int cur) {
+	return true;
+}
+
+static bool binaryAllFalse(int prev, int cur) {
+	return false;
+}
+
+static bool binaryCheck(int cur, int prev) {
+	return (prev > cur);
+}
+
+TEST_F(ListTestClass, unique) {
+	sEmptyList.unique();
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(sTenList);
+	s1.unique();
+	assertListEQ(sTenList, s1);
+
+	sList		s2(SIZE_LONG, INT_VALUE);
+	s2.unique();
+	ASSERT_EQ(s2.size(), 1);
+	ASSERT_EQ(s2.front(), INT_VALUE);
+
+	sList		s3(sTenList);
+	s3.insert(++s3.begin(), 1);
+	s3.insert(++s3.begin(), 1);
+
+	s3.unique();
+	assertListEQ(sTenList, s3);
+
+	sList		s4(sTenList);
+	s4.push_back(9);
+	s4.unique();
+	assertListEQ(sTenList, s4);
+
+	sEmptyList.unique(binaryAllFalse);
+	sEmptyList.unique(binaryAllTrue);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s5(sTenList);
+	s5.unique(binaryAllFalse);
+	ASSERT_FALSE(s5.empty());
+	s5.unique(binaryCheck);
+	ASSERT_EQ(s5.size(), 1);
+	ASSERT_EQ(s5.front(), 0);
+
+	sList		s6(sTenList);
+	s6.push_front(INT_VALUE);
+	s6.unique(binaryCheck);
+	ASSERT_EQ(s6.size(), 2);
+	ASSERT_EQ(s6.front(), INT_VALUE);
+	ASSERT_EQ(*(++s6.begin()), 0);
+}
