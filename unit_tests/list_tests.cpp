@@ -667,12 +667,46 @@ TEST_F(ListTestClass, swap) {
 
 	sList					s3(sRandomList);
 	sList					s4(sTenList);
-	sList::const_iterator	it = s3.begin();
 
 	s3.swap(s4);
 	assertListEQ(sTenList, s3);
 	assertListEQ(sRandomList, s4);
-	printList(sRandomList);
-	printList(s3);
-//	assertListEQFromListAndIterators(sRandomList, it, s3.end());
 }
+
+TEST_F(ListTestClass , resize) {
+	sEmptyList.resize(0);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(sTenList);
+	s1.resize(SIZE_LITTLE);
+	s1.resize(SIZE_LITTLE, INT_VALUE);
+	s1.resize(SIZE_LONG, INT_VALUE - 1);
+
+	sList::const_iterator	it = s1.begin();
+	sList::const_iterator	ite = s1.end();
+	for (int i = 0; i < SIZE_LITTLE; ++i) {
+		ASSERT_EQ(*it++, i);
+	}
+	for (int i = 0; i < SIZE_LONG - SIZE_LITTLE; ++i) {
+		ASSERT_EQ(*it++, INT_VALUE - 1);
+	}
+	ASSERT_TRUE(it == ite);
+}
+
+TEST_F(ListTestClass, clear) {
+	sEmptyList.clear();
+	ASSERT_EQ(sEmptyList.size(), 0);
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sTenList.clear();
+	ASSERT_EQ(sTenList.size(), 0);
+	ASSERT_TRUE(sTenList.empty());
+
+	sRandomList.clear();
+	ASSERT_EQ(sRandomList.size(), 0);
+	ASSERT_TRUE(sRandomList.empty());
+
+	sEmptyList.push_back(INT_VALUE);
+	ASSERT_EQ(sEmptyList.front(), INT_VALUE);
+}
+
