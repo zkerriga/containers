@@ -969,3 +969,18 @@ TEST_F(ListTestClass, reverse) {
 	s2.reverse();
 	assertListEQ(sRandomList, s2);
 }
+
+TEST_F(ListTestClass, get_allocator) {
+	sList	s1(sAl);
+	int *	p;
+
+	p = s1.get_allocator().allocate(10);
+
+	for (int i = 0; i < 10; ++i)
+		p[i] = i;
+
+	sList	s2(p, p + 10);
+	assertListEQ(sTenList, s2);
+
+	s1.get_allocator().deallocate(p,10);
+}
