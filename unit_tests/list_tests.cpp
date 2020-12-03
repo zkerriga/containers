@@ -113,6 +113,21 @@ void assertListEQFromListAndIterators(sList stdList,
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
+void assertListEQFromListAndRIterators(sList stdList,
+									  mList::const_reverse_iterator mIt,
+									  mList::const_reverse_iterator mIte) {
+	sList::const_iterator	sIt = stdList.begin();
+	sList::const_iterator	sIte = stdList.end();
+
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
 TEST(list, basic_types) {
 	sList::value_type				s1 = INT_VALUE;
 	sList::allocator_type			s2;
@@ -861,4 +876,96 @@ TEST_F(ListTestClass, unique) {
 	ASSERT_EQ(s6.size(), 2);
 	ASSERT_EQ(s6.front(), INT_VALUE);
 	ASSERT_EQ(*(++s6.begin()), 0);
+}
+
+bool myCompare (int first, int second) {
+	return ( (first / 10) < (second / 10) );
+}
+
+bool except (int first, int second) {
+	throw std::exception();
+}
+
+TEST_F(ListTestClass, merge) {
+	sList		s1;
+	s1.push_back(22);
+	s1.push_back(29);
+	s1.push_back(31);
+
+	sList		s2;
+	s2.push_back(14);
+	s2.push_back(37);
+	s2.push_back(71);
+
+	s1.merge(s2);
+	ASSERT_TRUE(s2.empty());
+
+	s2.push_back(21);
+	s1.merge(s2, myCompare);
+
+	int		result[] = {14, 22, 29, 21, 31, 37, 71};
+	sList	sResult(result, result + 7);
+
+	assertListEQ(sResult, s1);
+	ASSERT_TRUE(s2.empty());
+
+	try {
+		s1.merge(sTenList, except);
+	}
+	catch (std::exception &) {}
+	assertListEQ(sResult, s1);
+}
+
+bool compareAllFalse(int first, int second) {
+	return false;
+}
+
+bool compareAllTrue(int first, int second) {
+	return true;
+}
+
+bool compareNormal(int first, int second) {
+	return (first < second);
+}
+
+bool compareStupid(int first, int second) {
+	return (first == 2);
+}
+
+TEST_F(ListTestClass, sort) {
+	sEmptyList.sort();
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(sTenList);
+	s1.sort();
+	assertListEQ(sTenList, s1);
+
+	s1.sort(compareAllFalse);
+	assertListEQ(sTenList, s1);
+
+	s1.sort(compareAllTrue);
+	assertListEQFromListAndRIterators(sTenList, s1.rbegin(), s1.rend());
+
+	s1.sort(compareNormal);
+	assertListEQ(sTenList, s1);
+
+	s1.sort(compareStupid);
+	int		result[] = {2, 0, 1, 3, 4, 5, 6, 7, 8, 9};
+	sList	sResult(result, result + 10);
+	assertListEQ(sResult, s1);
+}
+
+TEST_F(ListTestClass, reverse) {
+	sEmptyList.reverse();
+	ASSERT_TRUE(sEmptyList.empty());
+
+	sList		s1(sTenList);
+	s1.reverse();
+	assertListEQFromListAndRIterators(sTenList, s1.rbegin(), s1.rend());
+
+	sList		s2(sRandomList);
+
+	s2.reverse();
+	s2.reverse();
+	assertListEQ(sRandomList, s2);
 }
