@@ -984,3 +984,32 @@ TEST_F(ListTestClass, get_allocator) {
 
 	s1.get_allocator().deallocate(p,10);
 }
+
+TEST_F(ListTestClass, non_member_operators) {
+	sList	s1(sEmptyList);
+
+	ASSERT_TRUE(s1 == sEmptyList);
+	ASSERT_TRUE(s1 < sTenList);
+	ASSERT_FALSE(s1 > sTenList);
+	ASSERT_TRUE(s1 != sTenList);
+
+	sList	s2(sTenList);
+	ASSERT_TRUE(s2 <= sTenList);
+	ASSERT_TRUE(s2 >= sTenList);
+}
+
+TEST_F(ListTestClass, non_member_swap) {
+	sList		s1(sEmptyList);
+	sList		s2(sTenList);
+
+	std::swap(s1, s2);
+	assertListEQ(sEmptyList, s2);
+	assertListEQ(sTenList, s1);
+
+	sList		s3(sRandomList);
+	sList		s4(sTenList);
+
+	std::swap(s3, s4);
+	assertListEQ(sTenList, s3);
+	assertListEQ(sRandomList, s4);
+}
