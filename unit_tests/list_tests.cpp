@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-//#include "list.hpp"
+#include "list.hpp"
 #include <list>
 #include <iterator>
 #include <limits>
@@ -10,7 +10,8 @@
 #define SIZE_LONG 34
 
 using sList = std::list<int>;
-using mList = std::list<int>;
+using nList = std::list<int>;
+using mList = ft::list<int>;
 using sAlloc = std::allocator<int>;
 
 class ListTestClass: public ::testing::Test {
@@ -71,13 +72,29 @@ void checkListContainsSingleValue(const sList & list, size_t size, const int val
 	ASSERT_TRUE(size == 0);
 }
 
-void assertListEQ(const sList & stdList, const mList & myList) {
+void checkListContainsSingleValue(const mList & list, size_t size, const int value) {
+	mList::const_iterator	it = list.begin();
+	mList::const_iterator	ite = list.end();
+
+	if (size == 0) {
+		ASSERT_TRUE(it == ite);
+		return;
+	}
+	while (it != ite) {
+		ASSERT_EQ(*it, value);
+		++it;
+		--size;
+	}
+	ASSERT_TRUE(size == 0);
+}
+
+void assertListEQ(const sList & stdList, const nList & myList) {
 	ASSERT_EQ(stdList.size(), myList.size());
 
 	sList::const_iterator	sIt = stdList.begin();
 	sList::const_iterator	sIte = stdList.end();
-	mList::const_iterator	mIt = myList.begin();
-	mList::const_iterator	mIte = myList.end();
+	nList::const_iterator	mIt = myList.begin();
+	nList::const_iterator	mIte = myList.end();
 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
@@ -89,7 +106,7 @@ void assertListEQ(const sList & stdList, const mList & myList) {
 }
 
 void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
-							   mList::const_iterator mIt, mList::const_iterator mIte) {
+							   nList::const_iterator mIt, nList::const_iterator mIte) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
 		EXPECT_EQ(*sIt, *mIt);
@@ -100,7 +117,7 @@ void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator 
 }
 
 void assertListEQFromListAndIterators(sList stdList,
-				mList::const_iterator mIt, mList::const_iterator mIte) {
+									  nList::const_iterator mIt, nList::const_iterator mIte) {
 	sList::const_iterator	sIt = stdList.begin();
 	sList::const_iterator	sIte = stdList.end();
 
@@ -114,8 +131,8 @@ void assertListEQFromListAndIterators(sList stdList,
 }
 
 void assertListEQFromListAndRIterators(sList stdList,
-									  mList::const_reverse_iterator mIt,
-									  mList::const_reverse_iterator mIte) {
+									   nList::const_reverse_iterator mIt,
+									   nList::const_reverse_iterator mIte) {
 	sList::const_iterator	sIt = stdList.begin();
 	sList::const_iterator	sIte = stdList.end();
 
@@ -141,17 +158,36 @@ TEST(list, basic_types) {
 	sList::const_reverse_iterator	s10;
 	sList::difference_type			s11;
 	sList::size_type				s12 = SIZE_T_VALUE;
+
+	mList::value_type				m1 = INT_VALUE;
+	mList::allocator_type			m2;
+//	mList::reference				m3;
+//	mList::const_reference			m4;
+	mList::pointer					m5;
+	mList::const_pointer			m6;
+	mList::iterator					m7;
+	mList::const_iterator			m8;
+	mList::reverse_iterator			m9;
+	mList::const_reverse_iterator	m10;
+	mList::difference_type			m11;
+	mList::size_type				m12 = SIZE_T_VALUE;
 }
 
 TEST_F(ListTestClass, construct) {
 	sList	s1;
 	ASSERT_TRUE(s1.empty());
+	mList	m1;
+	ASSERT_TRUE(m1.empty());
 
 	sList	s2(sAl);
 	ASSERT_TRUE(s2.empty());
+	mList	m2(sAl);
+	ASSERT_TRUE(m2.empty());
 
 	sList	s3(SIZE_LITTLE);
 	checkListContainsSingleValue(s3, SIZE_LITTLE, int());
+	mList	m3(SIZE_LITTLE);
+	checkListContainsSingleValue(m3, SIZE_LITTLE, int());
 
 	sList	s4(SIZE_LITTLE, INT_VALUE);
 	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
