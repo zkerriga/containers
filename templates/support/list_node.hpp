@@ -15,7 +15,7 @@
 //#define DEBUG
 
 #include <stdexcept>
-#include <list>
+
 template < typename value_type, typename allocator_type >
 class ListNode {
 public:
@@ -29,6 +29,13 @@ public:
 	typedef void (*stepFunction)(ListNode * &);
 	typedef int stepToNextType;
 	typedef char stepToPrevType;
+
+	static stepFunction	getStepFunction(stepToNextType) {
+		return toNext;
+	}
+	static stepFunction	getStepFunction(stepToPrevType) {
+		return toPrev;
+	}
 
 	static ListNode *	getNewNode(allocator_type & alloc) throw(std::bad_alloc) {
 		ListNode *	node = static_cast<ListNode*>(operator new(1));
@@ -51,15 +58,23 @@ public:
 		prevNode->next = insertingNode;
 		nextNode->prev = insertingNode;
 	}
-	static void			addNIdenticalValue(const size_type n, ListNode * endNode, const value_type & value, allocator_type & alloc) throw(std::bad_alloc) {
-		if (n == 0) {
-			return;
-		}
+	static void			createAndInsertBetween(const value_type & value, allocator_type & alloc, ListNode * prevNode, ListNode * nextNode) {
 		insertBetween(
 			setDataReturnNode(
 				getNewNode(alloc),
 				value
 			),
+			prevNode,
+			nextNode
+		);
+	}
+	static void			addNIdenticalValue(const size_type n, ListNode * endNode, const value_type & value, allocator_type & alloc) {
+		if (n == 0) {
+			return;
+		}
+		createAndInsertBetween(
+			value,
+			alloc,
 			endNode,
 			endNode->next
 		);
@@ -71,12 +86,7 @@ public:
 	inline static void	toNext(ListNode * & node) {
 		node = node->next;
 	};
-	static stepFunction	getStepFunction(stepToNextType) {
-		return toNext;
-	}
-	static stepFunction	getStepFunction(stepToPrevType) {
-		return toPrev;
-	}
+
 
 private:
 	template < class InputIterator >
@@ -86,11 +96,9 @@ private:
 		if (it == ite) {
 			return n;
 		}
-		insertBetween(
-			setDataReturnNode(
-				getNewNode(alloc),
-				*it++
-			),
+		createAndInsertBetween(
+			*it++,
+			alloc,
 			endNode->prev,
 			endNode
 		);

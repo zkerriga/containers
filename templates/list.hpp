@@ -59,7 +59,7 @@ public:
 		m_end = _lst::getNewNode(m_allocator);
 		m_size = _lst::addBeforeNodeFromIterators(first, last, m_end, m_allocator);
 	}
-//	list( const list & x );
+	list( const list & x );
 //	~list();
 //	list& operator= ( const list& x );
 
@@ -114,7 +114,14 @@ public:
 //	void assign( size_type n, const value_type & val );
 //	void push_front( const value_type & val );
 //	void pop_front();
-//	void push_back( const value_type & val );
+	void push_back( const value_type & val ) {
+		_lst::createAndInsertBetween(
+			val,
+			m_allocator,
+			m_end->prev,
+			m_end
+		);
+	}
 //	void pop_back();
 //	iterator insert( iterator position, const value_type & val );
 //	void insert( iterator position, size_type n, const value_type & val );
