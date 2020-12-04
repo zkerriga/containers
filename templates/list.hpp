@@ -57,10 +57,27 @@ public:
 		: m_end(nullptr), m_size(0), m_allocator(alloc)
 	{
 		m_end = _lst::getNewNode(m_allocator);
-		m_size = _lst::addBeforeNodeFromIterators(first, last, m_end, m_allocator);
+		m_size = _lst::addBeforeNodeFromIterators(
+			first,
+			last,
+			m_end,
+			m_allocator
+		);
 	}
-	list( const list & x );
-//	~list();
+	list( const list & x )
+		: m_end(nullptr), m_size(0), m_allocator(x.m_allocator)
+	{
+		m_end = _lst::getNewNode(m_allocator);
+		m_size = _lst::addBeforeNodeFromIterators(
+			x.begin(),
+			x.end(),
+			m_end,
+			m_allocator
+		);
+	}
+	~list() {
+
+	}
 //	list& operator= ( const list& x );
 
 	/* Iterator classes */
@@ -112,7 +129,14 @@ public:
 //	template <class InputIterator>
 //	void assign( InputIterator first, InputIterator last );
 //	void assign( size_type n, const value_type & val );
-//	void push_front( const value_type & val );
+	void push_front( const value_type & val ) {
+		_lst::createAndInsertBetween(
+			val,
+			m_allocator,
+			m_end,
+			m_end->next
+		);
+	}
 //	void pop_front();
 	void push_back( const value_type & val ) {
 		_lst::createAndInsertBetween(

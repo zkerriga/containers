@@ -86,7 +86,31 @@ public:
 	inline static void	toNext(ListNode * & node) {
 		node = node->next;
 	};
+	static ListNode *	destroyNodeAndGetNext(ListNode * node, allocator_type & alloc) {
+		ListNode *	nextNode = node->next;
 
+		alloc.deallocate(node->data, 1);
+		operator delete (node);
+		return nextNode;
+	}
+
+private:
+	static void			_clearFullListFromNode(ListNode * itNode, const ListNode * endNode,
+												allocator_type & alloc) {
+		if (itNode == endNode) {
+			return;
+		}
+		_clearFullListFromNode(
+			destroyNodeAndGetNext(itNode, alloc),
+			endNode,
+			alloc
+		);
+	}
+public:
+	static void			clearFullList(ListNode * endNode, allocator_type & alloc) {
+		_clearFullListFromNode(endNode->next, endNode);
+		//TODO: endNode??? cleared?
+	}
 
 private:
 	template < class InputIterator >
@@ -107,8 +131,8 @@ private:
 public:
 	/* Returns the number of added values */
 	template < class InputIterator >
-	static size_type	addBeforeNodeFromIterators(InputIterator & it,
-									const InputIterator & ite, ListNode * endNode,
+	static size_type	addBeforeNodeFromIterators(InputIterator it,
+									const InputIterator ite, ListNode * endNode,
 									allocator_type & alloc) {
 		return _addBeforeNodeFromItWithAccumulator(0, it, ite, endNode, alloc);
 	}

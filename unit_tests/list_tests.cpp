@@ -31,14 +31,19 @@ public:
 		// код инициализации
 		for (int i = 0; i < 10; ++i) {
 			sTenList.push_back(i);
+			mTenList.push_back(i);
 		}
 		for (int i = 100; i > 0; --i) {
 			sLongList.push_back(i);
+			mLongList.push_back(i);
 		}
 		srand(time(nullptr));
 		int size = rand() % 100 + 1;
+		int randomInt = 0;
 		for (int i = 0; i < size; ++i) {
-			sRandomList.push_front(rand());
+			randomInt = rand();
+			sRandomList.push_front(randomInt);
+			mRandomList.push_front(randomInt);
 		}
 	}
 
@@ -59,11 +64,20 @@ public:
 		sRandomList.clear();
 	}
 
+public:
 	// сюда можно поместить необходимые вам пользовательские объекты данных
 	sList				sEmptyList;
+	mList				mEmptyList;
+
 	sList				sTenList;
+	mList				mTenList;
+
 	sList				sLongList;
+	mList				mLongList;
+
 	sList				sRandomList;
+	mList				mRandomList;
+
 	sAlloc				sAl;
 };
 
@@ -244,15 +258,19 @@ TEST_F(ListTestClass, construct) {
 	assertListEQ(s8, m8);
 
 	sList	s9(sTenList);
-	assertListEQ(sTenList, s9);
+	mList	m9(mTenList);
+	assertListEQ(s9, m9);
 
 	sList	s10(sEmptyList);
-	assertListEQ(sEmptyList, s10);
+	mList	m10(mEmptyList);
+	assertListEQ(s10, m10);
 
 	sList	s11(sRandomList);
-	assertListEQ(sRandomList, s11);
+	mList	m11(mRandomList);
+	assertListEQ(s11, m11);
 
 //	sList	s12(-1, INT_VALUE);
+//	mList	m12(-1, INT_VALUE);
 }
 
 TEST_F(ListTestClass, assignation) {
