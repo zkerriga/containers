@@ -15,7 +15,7 @@
 //#define DEBUG
 
 #include <stdexcept>
-
+#include <list>
 template < typename value_type, typename allocator_type >
 class ListNode {
 public:
@@ -78,6 +78,33 @@ public:
 		return toPrev;
 	}
 
+private:
+	template < class InputIterator >
+	static size_type	_addBeforeNodeFromItWithAccumulator(const size_type n,
+									InputIterator & it, const InputIterator & ite,
+									ListNode * endNode, allocator_type & alloc) {
+		if (it == ite) {
+			return 0;
+		}
+		insertBetween(
+			setDataReturnNode(
+				getNewNode(alloc),
+				*it++
+			),
+			endNode->prev,
+			endNode
+		);
+		return _addBeforeNodeFromItWithAccumulator(n + 1, it, ite, endNode, alloc);
+	}
+public:
+	/* Returns the number of added values */
+	template < class InputIterator >
+	static size_type	addBeforeNodeFromIterators(InputIterator & it,
+									const InputIterator & ite, ListNode * endNode,
+									allocator_type & alloc) {
+		return _addBeforeNodeFromItWithAccumulator(0, it, ite, endNode, alloc);
+	}
+
 #ifdef DEBUG
 	inline static void	printNodeData(const ListNode *node) {
 		std::cout << *(node->data) << ", ";
@@ -93,8 +120,8 @@ public:
 #endif //DEBUG
 
 private:
-	void* operator new (std::size_t size) throw (std::bad_alloc) {
-		return ::operator new(size * sizeof(ListNode));
+	void* operator new (std::size_t) throw (std::bad_alloc) {
+		return ::operator new(sizeof(ListNode));
 	}
 };
 

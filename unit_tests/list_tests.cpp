@@ -117,6 +117,23 @@ void assertListEQ(const sList & stdList, const nList & myList) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
+void assertListEQ(const sList & stdList, const mList & myList) {
+	ASSERT_EQ(stdList.size(), myList.size());
+
+	sList::const_iterator	sIt = stdList.begin();
+	sList::const_iterator	sIte = stdList.end();
+	mList::const_iterator	mIt = myList.begin();
+	mList::const_iterator	mIte = myList.end();
+
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
 void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
 							   nList::const_iterator mIt, nList::const_iterator mIte) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
@@ -235,7 +252,15 @@ TEST_F(ListTestClass, construct) {
 	checkListContainsSingleValue(m5, SIZE_LITTLE, INT_VALUE);
 
 	sList	s6(sTenList.begin(), sTenList.end());
+//	mList	m6(sTenList.begin(), sTenList.end());
 	assertListEQ(sTenList, s6);
+//	assertListEQ(sTenList, m6);
+//	sList::const_iterator	kek = ++sTenList.begin();
+//	_lst * node = _lst::setDataReturnNode(
+//			_lst::getNewNode(sAl),
+//			*kek
+//			);
+//	std::cout << *node;
 
 	sList	s7(sTenList.begin(), sTenList.end(), sAl);
 	assertListEQ(sTenList, s7);
@@ -310,6 +335,7 @@ TEST_F(ListTestClass, iterators_empty) {
 	ASSERT_TRUE(*s3 == *s4);
 	ASSERT_TRUE(s3 == s4);
 	/* todo: const_iterator = iterator? */
+	/* todo: iterator minus iterator */
 }
 
 TEST_F(ListTestClass, const_iterator_bi) {

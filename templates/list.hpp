@@ -49,9 +49,14 @@ public:
 		m_end = _lst::getNewNode(m_allocator);
 		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
 	}
-//	template < class InputIterator >
-//	list( InputIterator first, InputIterator last,
-//			const allocator_type & alloc = allocator_type() );
+	template < class InputIterator >
+	list( InputIterator first, InputIterator last,
+			const allocator_type & alloc = allocator_type() )
+		: m_end(nullptr), m_size(0), m_allocator(alloc)
+	{
+		m_end = _lst::getNewNode(m_allocator);
+		_lst::addBeforeNodeFromIterators(first, last, m_end, m_allocator);
+	}
 //	list( const list & x );
 //	~list();
 //	list& operator= ( const list& x );
@@ -90,7 +95,9 @@ public:
 	bool		empty() const {
 		return (m_size == 0);
 	}
-//	size_type	size() const;
+	size_type	size() const {
+		return m_size;
+	}
 //	size_type	max_size() const;
 //
 //	 Element access

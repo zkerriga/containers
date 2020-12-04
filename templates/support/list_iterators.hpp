@@ -49,12 +49,10 @@ public:
 	}
 	_listIterator &			operator++() {
 		_lst::getStepFunction(PlusPlusType())(m_lst);
-//		_lst::toNext(m_lst);
 		return *this;
 	}
 	_listIterator &			operator--() {
 		_lst::getStepFunction(MinusMinusType())(m_lst);
-//		_lst::toPrev(m_lst);
 		return *this;
 	}
 	const _listIterator		operator--(int) {
