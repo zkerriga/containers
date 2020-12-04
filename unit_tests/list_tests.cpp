@@ -10,7 +10,7 @@
 #define SIZE_LITTLE 5
 #define SIZE_LONG 34
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define D(x) { x }
@@ -70,6 +70,23 @@ public:
 void checkListContainsSingleValue(const sList & list, size_t size, const int value) {
 	sList::const_iterator	it = list.begin();
 	sList::const_iterator	ite = list.end();
+
+	if (size == 0) {
+		ASSERT_TRUE(it == ite);
+		return;
+	}
+	while (it != ite) {
+		ASSERT_EQ(*it, value);
+		++it;
+		--size;
+	}
+	ASSERT_TRUE(size == 0);
+}
+void checkListContainsSingleValue(const mList & list, size_t size, const int value) {
+	mList::const_iterator	it = list.begin();
+	mList::const_iterator	ite = list.end();
+
+	mList::iterator		it2;
 
 	if (size == 0) {
 		ASSERT_TRUE(it == ite);
@@ -195,13 +212,17 @@ TEST(list, _lst) {
 
 TEST_F(ListTestClass, construct) {
 	sList	s1;
-	ASSERT_TRUE(s1.empty());
+	mList	m1;
+	ASSERT_TRUE(s1.empty() == m1.empty());
 
 	sList	s2(sAl);
-	ASSERT_TRUE(s2.empty());
+	mList	m2(sAl);
+	ASSERT_TRUE(s1.empty() == m1.empty());
 
 	sList	s3(SIZE_LITTLE);
+	mList	m3(SIZE_LITTLE);
 	checkListContainsSingleValue(s3, SIZE_LITTLE, int());
+	checkListContainsSingleValue(m3, SIZE_LITTLE, int());
 
 	sList	s4(SIZE_LITTLE, INT_VALUE);
 	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
@@ -284,6 +305,7 @@ TEST_F(ListTestClass, iterators_empty) {
 
 	ASSERT_TRUE(*s3 == *s4);
 	ASSERT_TRUE(s3 == s4);
+	/* todo: const_iterator = iterator? */
 }
 
 TEST_F(ListTestClass, const_iterator_bi) {
@@ -329,6 +351,7 @@ TEST_F(ListTestClass, iterator_bi) {
 	--sIt;
 	ASSERT_TRUE(sIt == s4);
 	ASSERT_TRUE(sIt == s3);
+	ASSERT_TRUE(sIt.operator->() == s3.operator->());
 
 	s3 = sIt++;
 	s4 = sIt--;

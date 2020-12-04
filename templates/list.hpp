@@ -57,11 +57,15 @@ public:
 //	list& operator= ( const list& x );
 
 	/* Iterator classes */
-	typedef _listIterator< value_type, allocator_type >			iterator;
-	typedef _listIterator< const value_type, allocator_type >	const_iterator;
+	typedef _listIterator< value_type, value_type, allocator_type,
+						   typename _lst::stepToNextType,
+						   typename _lst::stepToPrevType >			iterator;
+	typedef _listIterator< value_type, const value_type, allocator_type,
+						   typename _lst::stepToNextType,
+						   typename _lst::stepToPrevType >			const_iterator;
 	/* todo */
-	class reverse_iterator : public iterator {};
-	class const_reverse_iterator : public const_iterator {};
+	class reverse_iterator {};
+	class const_reverse_iterator {};
 	/* todo */
 
 	/* Iterators */

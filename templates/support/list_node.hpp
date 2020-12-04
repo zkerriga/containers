@@ -26,6 +26,10 @@ public:
 	ListNode *		prev;
 
 public:
+	typedef void (*stepFunction)(ListNode * &);
+	typedef int stepToNextType;
+	typedef char stepToPrevType;
+
 	static ListNode *	getNewNode(allocator_type & alloc) throw(std::bad_alloc) {
 		ListNode *	node = static_cast<ListNode*>(operator new(1));
 
@@ -67,6 +71,12 @@ public:
 	inline static void	toNext(ListNode * & node) {
 		node = node->next;
 	};
+	static stepFunction	getStepFunction(stepToNextType) {
+		return toNext;
+	}
+	static stepFunction	getStepFunction(stepToPrevType) {
+		return toPrev;
+	}
 
 #ifdef DEBUG
 	inline static void	printNodeData(const ListNode *node) {

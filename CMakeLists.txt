@@ -14,6 +14,7 @@ include_directories(${TEMPLATES} ${SUPPORT})
 set(SRCS
         ${TEMPLATES}list.hpp
         ${TEMPLATES}${SUPPORT}list_node.hpp
+        ${TEMPLATES}${SUPPORT}list_iterators.hpp
         )
 
 add_executable(containers
