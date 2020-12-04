@@ -82,23 +82,6 @@ void checkListContainsSingleValue(const sList & list, size_t size, const int val
 	}
 	ASSERT_TRUE(size == 0);
 }
-void checkListContainsSingleValue(const mList & list, size_t size, const int value) {
-	mList::const_iterator	it = list.begin();
-	mList::const_iterator	ite = list.end();
-
-	mList::iterator		it2;
-
-	if (size == 0) {
-		ASSERT_TRUE(it == ite);
-		return;
-	}
-	while (it != ite) {
-		ASSERT_EQ(*it, value);
-		++it;
-		--size;
-	}
-	ASSERT_TRUE(size == 0);
-}
 
 void assertListEQ(const sList & stdList, const nList & myList) {
 	ASSERT_EQ(stdList.size(), myList.size());
@@ -238,29 +221,27 @@ TEST_F(ListTestClass, construct) {
 
 	sList	s3(SIZE_LITTLE);
 	mList	m3(SIZE_LITTLE);
-	checkListContainsSingleValue(s3, SIZE_LITTLE, int());
-	checkListContainsSingleValue(m3, SIZE_LITTLE, int());
+	assertListEQ(s3, m3);
 
 	sList	s4(SIZE_LITTLE, INT_VALUE);
 	mList	m4(SIZE_LITTLE, INT_VALUE);
-	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
-	checkListContainsSingleValue(m4, SIZE_LITTLE, INT_VALUE);
+	assertListEQ(s4, m4);
 
 	sList	s5(SIZE_LITTLE, INT_VALUE, sAl);
 	mList	m5(SIZE_LITTLE, INT_VALUE, sAl);
-	checkListContainsSingleValue(s5, SIZE_LITTLE, INT_VALUE);
-	checkListContainsSingleValue(m5, SIZE_LITTLE, INT_VALUE);
+	assertListEQ(s5, m5);
 
 	sList	s6(sTenList.begin(), sTenList.end());
 	mList	m6(sTenList.begin(), sTenList.end());
-	assertListEQ(sTenList, s6);
-	assertListEQ(sTenList, m6);
+	assertListEQ(s6, m6);
 
 	sList	s7(sTenList.begin(), sTenList.end(), sAl);
-	assertListEQ(sTenList, s7);
+	mList	m7(sTenList.begin(), sTenList.end(), sAl);
+	assertListEQ(s7, m7);
 
 	sList	s8(sRandomList.begin(), sRandomList.end());
-	assertListEQ(sRandomList, s8);
+	mList	m8(sRandomList.begin(), sRandomList.end());
+	assertListEQ(s8, m8);
 
 	sList	s9(sTenList);
 	assertListEQ(sTenList, s9);
