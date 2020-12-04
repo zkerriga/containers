@@ -14,6 +14,7 @@
 
 #include <memory>
 #include "support/list_node.hpp"
+#include "support/list_iterators.hpp"
 
 namespace ft {
 
@@ -31,17 +32,23 @@ public:
 	typedef typename Alloc::const_pointer	const_pointer;
 	typedef std::ptrdiff_t					difference_type;
 	typedef std::size_t						size_type;
+private:
+	typedef ListNode<value_type,allocator_type>		_lst;
 
+public:
 	/* Initialize */
-//	explicit list( const allocator_type & alloc = allocator_type() )
-//		: m_end(), m_size(0), m_allocator(alloc)
-//	{
-//	}
-//	explicit list( size_type n, const value_type & val = value_type(),
-//				const allocator_type & alloc = allocator_type() )
-//		: m_end(), m_size(n), m_allocator(alloc)
-//	{
-//	}
+	explicit list( const allocator_type & alloc = allocator_type() )
+		: m_end(nullptr), m_size(0), m_allocator(alloc)
+	{
+		m_end = _lst::getNewNode(m_allocator);
+	}
+	explicit list( size_type n, const value_type & val = value_type(),
+				const allocator_type & alloc = allocator_type() )
+		: m_end(nullptr), m_size(n), m_allocator(alloc)
+	{
+		m_end = _lst::getNewNode(m_allocator);
+		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
+	}
 //	template < class InputIterator >
 //	list( InputIterator first, InputIterator last,
 //			const allocator_type & alloc = allocator_type() );
@@ -51,7 +58,7 @@ public:
 
 	/* todo */
 	/* Iterator classes */
-	class iterator : public std::iterator<std::bidirectional_iterator_tag, T> {};
+	typedef _listIterator< value_type, allocator_type >		iterator;
 	class const_iterator : public std::iterator<std::bidirectional_iterator_tag, T const> {};
 	class reverse_iterator : public iterator {};
 	class const_reverse_iterator : public const_iterator {};
@@ -120,8 +127,6 @@ public:
 //	allocator_type get_allocator() const;
 
 private:
-	typedef ListNode<value_type,allocator_type>		_lst;
-
 	_lst *			m_end;
 	size_type		m_size;
 	allocator_type	m_allocator;

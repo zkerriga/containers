@@ -12,13 +12,15 @@
 
 #pragma once
 
-#define DEBUG
+//#define DEBUG
 
 #include <stdexcept>
 
 template < typename value_type, typename allocator_type >
 class ListNode {
 public:
+	typedef std::size_t		size_type;
+
 	value_type *	data;
 	ListNode *		next;
 	ListNode *		prev;
@@ -45,6 +47,27 @@ public:
 		prevNode->next = insertingNode;
 		nextNode->prev = insertingNode;
 	}
+	static void			addNIdenticalValue(const size_type n, ListNode * endNode, const value_type & value, allocator_type & alloc) throw(std::bad_alloc) {
+		if (n == 0) {
+			return;
+		}
+		insertBetween(
+			setDataReturnNode(
+				getNewNode(alloc),
+				value
+			),
+			endNode,
+			endNode->next
+		);
+		addNIdenticalValue(n - 1, endNode, value, alloc);
+	}
+	inline static void	toPrev(ListNode & node) {
+		node = node.prev;
+	};
+	inline static void	toNext(ListNode & node) {
+		node = node.next;
+	};
+
 #ifdef DEBUG
 	inline static void	printNodeData(const ListNode *node) {
 		std::cout << *(node->data) << ", ";
