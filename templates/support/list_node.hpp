@@ -61,11 +61,11 @@ public:
 		);
 		addNIdenticalValue(n - 1, endNode, value, alloc);
 	}
-	inline static void	toPrev(ListNode & node) {
-		node = node.prev;
+	inline static void	toPrev(ListNode * & node) {
+		node = node->prev;
 	};
-	inline static void	toNext(ListNode & node) {
-		node = node.next;
+	inline static void	toNext(ListNode * & node) {
+		node = node->next;
 	};
 
 #ifdef DEBUG

@@ -56,19 +56,27 @@ public:
 //	~list();
 //	list& operator= ( const list& x );
 
-	/* todo */
 	/* Iterator classes */
-	typedef _listIterator< value_type, allocator_type >		iterator;
-	class const_iterator : public std::iterator<std::bidirectional_iterator_tag, T const> {};
+	typedef _listIterator< value_type, allocator_type >			iterator;
+	typedef _listIterator< const value_type, allocator_type >	const_iterator;
+	/* todo */
 	class reverse_iterator : public iterator {};
 	class const_reverse_iterator : public const_iterator {};
 	/* todo */
 
 	/* Iterators */
-//	iterator				begin();
-//	const_iterator			begin() const;
-//	iterator				end();
-//	const_iterator			end() const;
+	iterator				begin() {
+		return iterator(m_end->next);
+	}
+	const_iterator			begin() const {
+		return const_iterator(m_end->next);
+	}
+	iterator				end() {
+		return iterator(m_end);
+	}
+	const_iterator			end() const {
+		return const_iterator(m_end);
+	}
 //	reverse_iterator		rbegin();
 //	const_reverse_iterator	rbegin() const;
 //	reverse_iterator		rend();
