@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "list.hpp"
+#include "support/list_node.hpp"
 #include <list>
 #include <iterator>
 #include <limits>
@@ -9,10 +10,20 @@
 #define SIZE_LITTLE 5
 #define SIZE_LONG 34
 
-using sList = std::list<int>;
-using nList = std::list<int>;
-using mList = ft::list<int>;
-using sAlloc = std::allocator<int>;
+#define DEBUG
+
+#ifdef DEBUG
+#define D(x) { x }
+#else
+#define D(x) {}
+#endif //ifdef DEBUG
+
+using sList		= std::list<int>;
+using nList		= std::list<int>;
+using mList		= ft::list<int>;
+using sAlloc	= std::allocator<int>;
+
+using _lst		= ListNode<int, std::allocator<int> >;
 
 class ListTestClass: public ::testing::Test {
 public:
@@ -59,22 +70,6 @@ public:
 void checkListContainsSingleValue(const sList & list, size_t size, const int value) {
 	sList::const_iterator	it = list.begin();
 	sList::const_iterator	ite = list.end();
-
-	if (size == 0) {
-		ASSERT_TRUE(it == ite);
-		return;
-	}
-	while (it != ite) {
-		ASSERT_EQ(*it, value);
-		++it;
-		--size;
-	}
-	ASSERT_TRUE(size == 0);
-}
-
-void checkListContainsSingleValue(const mList & list, size_t size, const int value) {
-	mList::const_iterator	it = list.begin();
-	mList::const_iterator	ite = list.end();
 
 	if (size == 0) {
 		ASSERT_TRUE(it == ite);
@@ -173,21 +168,40 @@ TEST(list, basic_types) {
 	mList::size_type				m12 = SIZE_T_VALUE;
 }
 
+TEST(list, _lst) {
+	ASSERT_EQ(sizeof(_lst), 8 * 3);
+	sAlloc		sAl;
+
+	_lst *	endNode = _lst::getNewNode(sAl);
+	_lst *	newNode = _lst::setDataReturnNode(
+			_lst::getNewNode(sAl),
+			INT_VALUE
+	);
+	_lst::insertBetween(newNode, endNode->prev, endNode);
+
+	newNode = _lst::setDataReturnNode(
+			_lst::getNewNode(sAl),
+			INT_VALUE - 1
+	);
+	_lst::insertBetween(newNode, endNode->prev, endNode);
+
+	ASSERT_EQ(*(endNode->next->data), INT_VALUE);
+	ASSERT_EQ(*(endNode->next->next->data), INT_VALUE - 1);
+	ASSERT_EQ(*(endNode->prev->data), INT_VALUE - 1);
+	ASSERT_EQ(*(endNode->prev->prev->data), INT_VALUE);
+
+	D( _lst::printList(endNode->next, endNode); )
+}
+
 TEST_F(ListTestClass, construct) {
 	sList	s1;
 	ASSERT_TRUE(s1.empty());
-	mList	m1;
-	ASSERT_TRUE(m1.empty());
 
 	sList	s2(sAl);
 	ASSERT_TRUE(s2.empty());
-	mList	m2(sAl);
-	ASSERT_TRUE(m2.empty());
 
 	sList	s3(SIZE_LITTLE);
 	checkListContainsSingleValue(s3, SIZE_LITTLE, int());
-	mList	m3(SIZE_LITTLE);
-	checkListContainsSingleValue(m3, SIZE_LITTLE, int());
 
 	sList	s4(SIZE_LITTLE, INT_VALUE);
 	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
@@ -1049,3 +1063,5 @@ TEST_F(ListTestClass, non_member_swap) {
 	assertListEQ(sTenList, s3);
 	assertListEQ(sRandomList, s4);
 }
+
+#undef DEBUG
