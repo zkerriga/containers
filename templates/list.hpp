@@ -13,6 +13,7 @@
 #pragma once
 
 #include <memory>
+#include <type_traits>
 #include "support/list_node.hpp"
 #include "support/list_iterators.hpp"
 
@@ -50,12 +51,13 @@ public:
 		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
 	}
 	template < class InputIterator >
-	list( InputIterator first, InputIterator last,
-			const allocator_type & alloc = allocator_type() )
+	list( InputIterator first,
+		  typename std::enable_if< std::__is_input_iterator<InputIterator>::value,InputIterator >::type last,
+		  const allocator_type & alloc = allocator_type())
 		: m_end(nullptr), m_size(0), m_allocator(alloc)
 	{
 		m_end = _lst::getNewNode(m_allocator);
-		_lst::addBeforeNodeFromIterators(first, last, m_end, m_allocator);
+		m_size = _lst::addBeforeNodeFromIterators(first, last, m_end, m_allocator);
 	}
 //	list( const list & x );
 //	~list();

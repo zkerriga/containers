@@ -252,15 +252,9 @@ TEST_F(ListTestClass, construct) {
 	checkListContainsSingleValue(m5, SIZE_LITTLE, INT_VALUE);
 
 	sList	s6(sTenList.begin(), sTenList.end());
-//	mList	m6(sTenList.begin(), sTenList.end());
+	mList	m6(sTenList.begin(), sTenList.end());
 	assertListEQ(sTenList, s6);
-//	assertListEQ(sTenList, m6);
-//	sList::const_iterator	kek = ++sTenList.begin();
-//	_lst * node = _lst::setDataReturnNode(
-//			_lst::getNewNode(sAl),
-//			*kek
-//			);
-//	std::cout << *node;
+	assertListEQ(sTenList, m6);
 
 	sList	s7(sTenList.begin(), sTenList.end(), sAl);
 	assertListEQ(sTenList, s7);

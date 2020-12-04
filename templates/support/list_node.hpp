@@ -84,7 +84,7 @@ private:
 									InputIterator & it, const InputIterator & ite,
 									ListNode * endNode, allocator_type & alloc) {
 		if (it == ite) {
-			return 0;
+			return n;
 		}
 		insertBetween(
 			setDataReturnNode(
