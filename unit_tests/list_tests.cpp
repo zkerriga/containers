@@ -225,10 +225,14 @@ TEST_F(ListTestClass, construct) {
 	checkListContainsSingleValue(m3, SIZE_LITTLE, int());
 
 	sList	s4(SIZE_LITTLE, INT_VALUE);
+	mList	m4(SIZE_LITTLE, INT_VALUE);
 	checkListContainsSingleValue(s4, SIZE_LITTLE, INT_VALUE);
+	checkListContainsSingleValue(m4, SIZE_LITTLE, INT_VALUE);
 
 	sList	s5(SIZE_LITTLE, INT_VALUE, sAl);
+	mList	m5(SIZE_LITTLE, INT_VALUE, sAl);
 	checkListContainsSingleValue(s5, SIZE_LITTLE, INT_VALUE);
+	checkListContainsSingleValue(m5, SIZE_LITTLE, INT_VALUE);
 
 	sList	s6(sTenList.begin(), sTenList.end());
 	assertListEQ(sTenList, s6);
