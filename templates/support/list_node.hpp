@@ -45,11 +45,12 @@ public:
 		node->next = node;
 		return node;
 	}
-	inline static void	setData(ListNode * targetNode, const value_type & value) {
-		*(targetNode->data) = value;
+	inline static void	setData(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
+//		*(targetNode->data) = value;
+		alloc.construct(targetNode->data, value);
 	}
-	static ListNode *	setDataReturnNode(ListNode * targetNode, const value_type & value) {
-		setData(targetNode, value);
+	static ListNode *	setDataReturnNode(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
+		setData(targetNode, value, alloc);
 		return targetNode;
 	}
 	inline static void	insertBetween(ListNode * insertingNode, ListNode * prevNode, ListNode * nextNode) {
@@ -62,7 +63,8 @@ public:
 		insertBetween(
 			setDataReturnNode(
 				getNewNode(alloc),
-				value
+				value,
+				alloc
 			),
 			prevNode,
 			nextNode
@@ -86,30 +88,33 @@ public:
 	inline static void	toNext(ListNode * & node) {
 		node = node->next;
 	};
+	inline static void	destroyNode(ListNode * node, allocator_type & alloc) {
+		alloc.destroy(node->data);
+		alloc.deallocate(node->data, 1);
+		operator delete (node);
+	}
 	static ListNode *	destroyNodeAndGetNext(ListNode * node, allocator_type & alloc) {
 		ListNode *	nextNode = node->next;
 
-		alloc.deallocate(node->data, 1);
-		operator delete (node);
+		destroyNode(node, alloc);
 		return nextNode;
 	}
 
 private:
-	static void			_clearFullListFromNode(ListNode * itNode, const ListNode * endNode,
+	static void			_clearListFromNode(ListNode * itNode, const ListNode * endNode,
 												allocator_type & alloc) {
 		if (itNode == endNode) {
 			return;
 		}
-		_clearFullListFromNode(
+		_clearListFromNode(
 			destroyNodeAndGetNext(itNode, alloc),
 			endNode,
 			alloc
 		);
 	}
 public:
-	static void			clearFullList(ListNode * endNode, allocator_type & alloc) {
-		_clearFullListFromNode(endNode->next, endNode);
-		//TODO: endNode??? cleared?
+	static void			clearListWithoutEnd(ListNode * endNode, allocator_type & alloc) {
+		_clearListFromNode(endNode->next, endNode, alloc);
 	}
 
 private:

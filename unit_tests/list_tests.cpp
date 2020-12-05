@@ -206,13 +206,15 @@ TEST(list, _lst) {
 	_lst *	endNode = _lst::getNewNode(sAl);
 	_lst *	newNode = _lst::setDataReturnNode(
 			_lst::getNewNode(sAl),
-			INT_VALUE
+			INT_VALUE,
+			sAl
 	);
 	_lst::insertBetween(newNode, endNode->prev, endNode);
 
 	newNode = _lst::setDataReturnNode(
 			_lst::getNewNode(sAl),
-			INT_VALUE - 1
+			INT_VALUE - 1,
+			sAl
 	);
 	_lst::insertBetween(newNode, endNode->prev, endNode);
 

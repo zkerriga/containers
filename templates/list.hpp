@@ -76,7 +76,8 @@ public:
 		);
 	}
 	~list() {
-
+		_lst::clearListWithoutEnd(m_end, m_allocator);
+		_lst::destroyNode(m_end, m_allocator);
 	}
 //	list& operator= ( const list& x );
 
