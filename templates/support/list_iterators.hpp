@@ -13,6 +13,8 @@
 #pragma once
 
 #include <iterator>
+#include <type_traits>
+
 #include "list_node.hpp"
 
 template < typename value_type, typename allocator_type >
@@ -64,6 +66,11 @@ public:
 	}
 
 	_listIterator(_lst * p) : _base(p) {}
+
+	template < typename InputIterator >
+	void construct(const InputIterator & other) {
+		std::cout << "COMPLETE! ptr = " << &other <<  std::endl;
+	}
 
 	bool					operator!=(const _listIterator & other) const {
 		return (_base::m_lst != other.m_lst);

@@ -329,8 +329,23 @@ TEST_F(ListTestClass, iterators_construct) {
 	mList::iterator			m3 = mEmptyList.begin();
 	mList::iterator			m4(m3);
 
+//	mList::iterator			m5(mc1);
+	mList::const_iterator	m6(m4);
+
 	mc2 = m4;
 //	m4 = mc2;
+
+
+	mList::const_iterator	const_Iterator = mEmptyList.begin();
+	mList::iterator			iterator = mEmptyList.begin();
+
+
+
+	const_Iterator.construct(iterator);			// TRUE
+	const_Iterator.construct(const_Iterator);	// TRUE
+
+	iterator.construct(iterator);				// TRUE
+	iterator.construct(const_Iterator);			// FALSE
 }
 
 TEST_F(ListTestClass, const_iterators_empty) {
