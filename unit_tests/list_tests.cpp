@@ -308,22 +308,52 @@ TEST(list, iterator_types) {
 	sList::iterator::difference_type			s2;
 	sList::iterator::pointer					s3;
 	sList::iterator::iterator_category			s4;
+
+	mList::iterator::value_type					m1;
+	mList::iterator::difference_type			m2;
+	mList::iterator::pointer					m3;
+	mList::iterator::iterator_category			m4;
+}
+
+TEST_F(ListTestClass, iterators_construct) {
+	sList::const_iterator	sc1 = sEmptyList.begin();
+	sList::const_iterator	sc2(sc1);
+	sList::iterator			s3 = sEmptyList.begin();
+	sList::iterator			s4(s3);
+
+	sc2 = s4;
+//	s4 = sc2;
+
+	mList::const_iterator	mc1 = mEmptyList.begin();
+	mList::const_iterator	mc2(mc1);
+	mList::iterator			m3 = mEmptyList.begin();
+	mList::iterator			m4(m3);
+
+	mc2 = m4;
+//	m4 = mc2;
 }
 
 TEST_F(ListTestClass, const_iterators_empty) {
 	sList::const_iterator	sIt = sEmptyList.begin();
 	sList::const_iterator	sIte = sEmptyList.end();
+/*
+	mList::const_iterator	mIt = mEmptyList.end();
+	mList::const_iterator	mIte = mEmptyList.end();
 
-	ASSERT_TRUE(*sIt == *sIte);
-	ASSERT_TRUE(sIt == sIte);
-	ASSERT_FALSE(sIt != sIte);
+	ASSERT_EQ(*sIt == *sIte, *mIt == *mIte);
+	ASSERT_EQ(sIt == sIte, mIt == mIte);
+	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
 	sList::const_iterator	s3(sIt);
+	mList::const_iterator	m3(mIt);
 	sList::const_iterator	s4;
+	mList::const_iterator	m4;
 	s4 = sIte;
+	m4 = mIte;
 
-	ASSERT_TRUE(*s3 == *s4);
-	ASSERT_TRUE(s3 == s4);
+	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
+*/
 }
 
 TEST_F(ListTestClass, iterators_empty) {
