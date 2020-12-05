@@ -52,28 +52,43 @@ private:
 	typedef _baseIterator< value_type,allocator_type >		_base;
 	typedef _listIterator< value_type, value_type,
 						   allocator_type, PlusPlusType,
-						   MinusMinusType >					_nonConstantIterator;
+						   MinusMinusType >					_nonConstIterator;
 
 public:
 	_listIterator() : _base() {}
-	_listIterator(const _nonConstantIterator & other) {
+	_listIterator(const _listIterator & other) {
 		*this = other;
 	}
 	~_listIterator() {}
-	_listIterator &	operator=(const _nonConstantIterator & other) {
+	_listIterator &	operator=(const _listIterator & other) {
+		_base::operator=(other);
+		return *this;
+	}
+	explicit _listIterator(_lst * p) : _base(p) {}
+
+	template < typename InputIterator,
+			   bool Enable = std::is_same<InputIterator, _listIterator>::value
+							 || std::is_same<InputIterator, _nonConstIterator>::value,
+			   typename = typename std::enable_if< Enable >::type >
+	_listIterator(const InputIterator & other) {
+		*this = other;
+	}
+	template < typename InputIterator,
+			bool Enable = std::is_same<InputIterator, _listIterator>::value
+						  || std::is_same<InputIterator, _nonConstIterator>::value,
+			typename = typename std::enable_if< Enable >::type >
+	_listIterator &	operator=(const InputIterator & other) {
 		_base::operator=(other);
 		return *this;
 	}
 
-	_listIterator(_lst * p) : _base(p) {}
-
-	template < typename InputIterator,
-			bool Enable = std::is_same<InputIterator, _listIterator>::value
-						  || std::is_same<InputIterator, _nonConstantIterator>::value,
-			typename = typename std::enable_if< Enable >::type >
-	void construct(const InputIterator & other) {
-		std::cout << "COMPLETE! ptr = " << &other <<  std::endl;
-	}
+//	template < typename InputIterator,
+//			bool Enable = std::is_same<InputIterator, _listIterator>::value
+//						  || std::is_same<InputIterator, _nonConstIterator>::value,
+//			typename = typename std::enable_if< Enable >::type >
+//	void construct(const InputIterator & other) {
+//		std::cout << "COMPLETE! ptr = " << &other <<  std::endl;
+//	}
 
 	bool					operator!=(const _listIterator & other) const {
 		return (_base::m_lst != other.m_lst);
