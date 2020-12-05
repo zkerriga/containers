@@ -340,12 +340,24 @@ TEST_F(ListTestClass, iterators_construct) {
 	mList::iterator			iterator = mEmptyList.begin();
 
 
+	const_Iterator.construct();					// FALSE
+	iterator.construct();						// FALSE
+
+	const_Iterator.construct(nullptr);			// FALSE
+	iterator.construct(nullptr);				// FALSE
 
 	const_Iterator.construct(iterator);			// TRUE
 	const_Iterator.construct(const_Iterator);	// TRUE
-
 	iterator.construct(iterator);				// TRUE
+
 	iterator.construct(const_Iterator);			// FALSE
+
+	int intValue = 1;
+	iterator.construct(intValue);				// FALSE
+	const_Iterator.construct(intValue);			// FALSE
+
+	iterator.construct(sEmptyList.begin());		// FALSE
+	const_Iterator.construct(sEmptyList.begin());// FALSE
 }
 
 TEST_F(ListTestClass, const_iterators_empty) {

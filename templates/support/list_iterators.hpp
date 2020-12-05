@@ -67,7 +67,10 @@ public:
 
 	_listIterator(_lst * p) : _base(p) {}
 
-	template < typename InputIterator >
+	template < typename InputIterator,
+			bool Enable = std::is_same<InputIterator, _listIterator>::value
+						  || std::is_same<InputIterator, _nonConstantIterator>::value,
+			typename = typename std::enable_if< Enable >::type >
 	void construct(const InputIterator & other) {
 		std::cout << "COMPLETE! ptr = " << &other <<  std::endl;
 	}
