@@ -56,7 +56,7 @@ private:
 
 public:
 	_listIterator() : _base() {}
-	_listIterator(const _listIterator & other) {
+	explicit _listIterator(const _listIterator & other) {
 		*this = other;
 	}
 	~_listIterator() {}
@@ -67,16 +67,14 @@ public:
 	explicit _listIterator(_lst * p) : _base(p) {}
 
 	template < typename InputIterator,
-			   bool Enable = std::is_same<InputIterator, _listIterator>::value
-							 || std::is_same<InputIterator, _nonConstIterator>::value,
-			   typename = typename std::enable_if< Enable >::type >
+			   typename = typename std::enable_if< std::is_same<InputIterator, _listIterator>::value
+												   || std::is_same<InputIterator, _nonConstIterator >::value >::type >
 	_listIterator(const InputIterator & other) {
 		*this = other;
 	}
 	template < typename InputIterator,
-			bool Enable = std::is_same<InputIterator, _listIterator>::value
-						  || std::is_same<InputIterator, _nonConstIterator>::value,
-			typename = typename std::enable_if< Enable >::type >
+			typename = typename std::enable_if< std::is_same<InputIterator, _listIterator>::value
+												|| std::is_same<InputIterator, _nonConstIterator>::value >::type >
 	_listIterator &	operator=(const InputIterator & other) {
 		_base::operator=(other);
 		return *this;
