@@ -41,13 +41,15 @@ public:
 		ListNode *	node = static_cast<ListNode*>(operator new(1));
 
 		node->data = alloc.allocate(1);
-		node->prev = node;
-		node->next = node;
+		setPrevNext(node, node, node);
 		return node;
 	}
 	inline static void	setData(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
-//		*(targetNode->data) = value;
 		alloc.construct(targetNode->data, value);
+	}
+	inline static void	setPrevNext(ListNode * targetNode, ListNode * prevNode, ListNode * nextNode) {
+		targetNode->prev = prevNode;
+		targetNode->next = nextNode;
 	}
 	static ListNode *	setDataReturnNode(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
 		setData(targetNode, value, alloc);
@@ -101,7 +103,7 @@ public:
 	}
 
 private:
-	static void			_clearListFromNode(ListNode * itNode, const ListNode * endNode,
+	inline static void	_clearListFromNode(ListNode * itNode, const ListNode * endNode,
 												allocator_type & alloc) {
 		if (itNode == endNode) {
 			return;
@@ -115,6 +117,7 @@ private:
 public:
 	static void			clearListWithoutEnd(ListNode * endNode, allocator_type & alloc) {
 		_clearListFromNode(endNode->next, endNode, alloc);
+		setPrevNext(endNode, endNode, endNode);
 	}
 
 private:

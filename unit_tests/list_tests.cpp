@@ -275,21 +275,32 @@ TEST_F(ListTestClass, construct) {
 //	mList	m12(-1, INT_VALUE);
 }
 
+TEST_F(ListTestClass, destructor) {
+	// For debug mode ;)
+	mList	m1(mTenList);
+}
+
 TEST_F(ListTestClass, assignation) {
 	sList	s1;
 	sList	s2;
+	mList	m1;
+	mList	m2;
 
 	s2 = s1;
-	assertListEQ(s2, s1);
+	m2 = m1;
+	assertListEQ(s2, m2);
 
 	s1 = sTenList;
-	assertListEQ(sTenList, s1);
+	m1 = mTenList;
+	assertListEQ(sTenList, m1);
 
 	s1 = sEmptyList;
-	assertListEQ(sEmptyList, s1);
+	m1 = mEmptyList;
+	assertListEQ(sEmptyList, m1);
 
 	s1 = sRandomList;
-	assertListEQ(sRandomList, s1);
+	m1 = mRandomList;
+	assertListEQ(sRandomList, m1);
 }
 
 TEST(list, iterator_types) {

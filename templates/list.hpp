@@ -79,7 +79,18 @@ public:
 		_lst::clearListWithoutEnd(m_end, m_allocator);
 		_lst::destroyNode(m_end, m_allocator);
 	}
-//	list& operator= ( const list& x );
+	list & operator= ( const list& x ) {
+		if (this != &x) {
+			_lst::clearListWithoutEnd(m_end, m_allocator);
+			m_size = _lst::addBeforeNodeFromIterators(
+				x.begin(),
+				x.end(),
+				m_end,
+				m_allocator
+			);
+		}
+		return *this;
+	}
 
 	/* Iterator classes */
 	typedef _listIterator< value_type, value_type, allocator_type,
