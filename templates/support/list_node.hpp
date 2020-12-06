@@ -26,14 +26,14 @@ public:
 	ListNode *		prev;
 
 public:
-	typedef void (*stepFunction)(ListNode * &);
+	typedef void (*shiftFunction)(ListNode * &);
 	typedef int stepToNextType;
 	typedef char stepToPrevType;
 
-	static stepFunction	getStepFunction(stepToNextType) {
+	inline static shiftFunction	getShiftFunction(stepToNextType) {
 		return toNext;
 	}
-	static stepFunction	getStepFunction(stepToPrevType) {
+	inline static shiftFunction	getShiftFunction(stepToPrevType) {
 		return toPrev;
 	}
 
