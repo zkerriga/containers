@@ -111,18 +111,44 @@ class _ListIterator : public BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR {
 private:
 	typedef BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR	_base;
 	typedef typename _base::StoredType				_lst;
+	typedef _ListIterator< value_type, value_type,
+						   allocator_type,
+						   IncrementType,
+						   DecrementType>			_MutableListIterator;
+	typedef _ListIterator< value_type, const value_type,
+						   allocator_type,
+						   IncrementType,
+						   DecrementType>			_ConstListIterator;
 
 public:
 	_ListIterator() : _base( GET_SHIFT_FUNCS ) {}
-	_ListIterator(const _ListIterator &other) : _base( GET_SHIFT_FUNCS ) {
+	_ListIterator(const _ListIterator & other)
+		: _base( GET_SHIFT_FUNCS )
+	{
 		_base::operator=(other);
 	}
 	~_ListIterator() {}
-	_ListIterator & operator=(const _ListIterator &other) {
+	_ListIterator & operator=(const _ListIterator & other) {
 		_base::operator=(other);
 		return *this;
 	}
 	explicit _ListIterator(_lst * p) : _base( p, GET_SHIFT_FUNCS ) {}
+
+	_ListIterator(typename std::enable_if<
+		std::is_same< _ListIterator, _ConstListIterator >::value,
+		const _MutableListIterator & >::type
+		other)
+	{
+		_base::operator=(other);
+	}
+	_ListIterator & operator=(typename std::enable_if<
+		std::is_same< _ListIterator, _ConstListIterator >::value,
+		const _MutableListIterator & >::type
+		other)
+	{
+		_base::operator=(other);
+		return *this;
+	}
 
 	return_value_type &		operator*() const {
 		return *(_base::m_p->data);
