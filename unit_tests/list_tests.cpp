@@ -329,11 +329,11 @@ TEST_F(ListTestClass, iterators_construct) {
 	mList::iterator			m3 = mEmptyList.begin();
 	mList::iterator			m4(m3);
 
-//	mList::iterator			m5(mc1);
+//	mList::iterator			m5(mc1);	// FALSE
 	mList::const_iterator	m6(m4);
 
 	mc2 = m4;
-//	m4 = mc2;
+//	m4 = mc2;							// FALSE
 
 
 	mList::const_iterator	const_Iterator = mEmptyList.begin();
@@ -353,12 +353,21 @@ TEST_F(ListTestClass, iterators_construct) {
 	iterator = sEmptyList.begin();		// FALSE
 	const_Iterator = sEmptyList.begin();// FALSE
 */
+
+	sList::iterator			s = sEmptyList.begin();
+	sList::const_iterator	sConst = sEmptyList.begin();
+	mList::iterator			m = mEmptyList.begin();
+	mList::const_iterator	mConst = mEmptyList.begin();
+	ASSERT_EQ(s == sConst, m == mConst);
+	ASSERT_EQ(sConst == s, mConst == m);
+	ASSERT_EQ(sConst != s, mConst != m);
+	ASSERT_EQ(s != sConst, m != mConst);
 }
 
 TEST_F(ListTestClass, const_iterators_empty) {
 	sList::const_iterator	sIt = sEmptyList.begin();
 	sList::const_iterator	sIte = sEmptyList.end();
-/*
+
 	mList::const_iterator	mIt = mEmptyList.end();
 	mList::const_iterator	mIte = mEmptyList.end();
 
@@ -375,7 +384,6 @@ TEST_F(ListTestClass, const_iterators_empty) {
 
 	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
 	ASSERT_EQ(s3 == s4, m3 == m4);
-*/
 }
 
 TEST_F(ListTestClass, iterators_empty) {
@@ -392,8 +400,6 @@ TEST_F(ListTestClass, iterators_empty) {
 
 	ASSERT_TRUE(*s3 == *s4);
 	ASSERT_TRUE(s3 == s4);
-	/* todo: const_iterator = iterator? */
-	/* todo: iterator minus iterator */
 }
 
 TEST_F(ListTestClass, const_iterator_bi) {

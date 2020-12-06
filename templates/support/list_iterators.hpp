@@ -89,15 +89,25 @@ private:
 						_lst::getShiftFunction(DecrementType())
 
 template < typename value_type,
+		typename allocator_type,
+		typename IncrementType,
+		typename DecrementType >
+class _ListConstIterator;
+
+
+template < typename value_type,
 		   typename allocator_type,
 		   typename IncrementType,
 		   typename DecrementType >
 class _ListIterator : public STD_ITERATOR_FOR_LIST(value_type),
 					  public BASE_CLASS_FOR_LIST {
 private:
-	typedef BASE_CLASS_FOR_LIST			_base;
-	typedef typename _base::StoredType	_lst;
-
+	typedef BASE_CLASS_FOR_LIST					_base;
+	typedef typename _base::StoredType			_lst;
+	typedef _ListConstIterator< value_type,
+								allocator_type,
+								IncrementType,
+								DecrementType >	_ConstIterator;
 public:
 	_ListIterator() : _base( GET_SHIFT_FUNCS ) {}
 	_ListIterator(const _ListIterator & other) : _base( GET_SHIFT_FUNCS ) {
@@ -122,6 +132,12 @@ public:
 	}
 	bool					operator==(const _ListIterator & other) const {
 		return (_base::operator==(other));
+	}
+	bool					operator==(const _ConstIterator & other) const {
+		return (_base::operator==(other));
+	}
+	bool					operator!=(const _ConstIterator & other) const {
+		return (_base::operator!=(other));
 	}
 	_ListIterator &			operator++() {
 		_base::operator++();
@@ -158,13 +174,13 @@ private:
 	typedef _ListIterator< value_type,
 						   allocator_type,
 						   IncrementType,
-						   DecrementType >	_MutableListIterator;
+						   DecrementType >	_ListMutableIterator;
 public:
 	_ListConstIterator() : _base( GET_SHIFT_FUNCS ) {}
 	_ListConstIterator(const _ListConstIterator & other) : _base( GET_SHIFT_FUNCS ) {
 		_base::operator=(other);
 	}
-	_ListConstIterator(const _MutableListIterator & other) : _base( GET_SHIFT_FUNCS ) {
+	_ListConstIterator(const _ListMutableIterator & other) : _base( GET_SHIFT_FUNCS ) {
 		_base::operator=(other);
 	}
 	~_ListConstIterator() {}
@@ -172,7 +188,7 @@ public:
 		_base::operator=(other);
 		return *this;
 	}
-	_ListConstIterator & operator=(const _MutableListIterator & other) {
+	_ListConstIterator & operator=(const _ListMutableIterator & other) {
 		_base::operator=(other);
 		return *this;
 	}
@@ -217,90 +233,3 @@ public:
 #undef STD_ITERATOR_FOR_LIST
 #undef GET_SHIFT_FUNCS
 #undef BASE_CLASS_FOR_LIST
-
-
-
-/*
-template < typename value_type, typename allocator_type >
-class _baseIterator {
-private:
-	typedef ListNode<value_type,allocator_type>		_lst;
-
-public:
-	_baseIterator() : m_lst(nullptr) {}
-	_baseIterator(const _baseIterator & other) {
-		*this = other;
-	}
-	virtual ~_baseIterator() {}
-	_baseIterator & operator = (const _baseIterator & other) {
-		if (this != &other) {
-			m_lst = other.m_lst;
-		}
-		return *this;
-	}
-	explicit _baseIterator(_lst * p) : m_lst(p) {}
-
-protected:
-	_lst *		m_lst;
-
-}; //class _baseIterator
-
-
-template < typename value_type, typename return_value_type,
-		   typename allocator_type,
-		   typename IncrementType, typename DecrementType >
-class _listIterator : public std::iterator< std::bidirectional_iterator_tag, return_value_type >,
-					  public _baseIterator< value_type, allocator_type > {
-private:
-	typedef ListNode< value_type,allocator_type >			_lst;
-	typedef _baseIterator< value_type,allocator_type >		_base;
-	typedef _listIterator< value_type, value_type,
-						   allocator_type, IncrementType,
-						   DecrementType >					_nonConstIterator;
-
-public:
-	_listIterator() : _base() {}
-	_listIterator(const _nonConstIterator & other) : _base() {
-		*this = other;
-	}
-	~_listIterator() {}
-	_listIterator &	operator=(const _nonConstIterator & other) {
-		_base::operator=(other);
-		return *this;
-	}
-	explicit _listIterator(_lst * p) : _base(p) {}
-
-	bool					operator!=(const _listIterator & other) const {
-		return (_base::m_lst != other.m_lst);
-	}
-	bool					operator==(const _listIterator & other) const {
-		return (_base::m_lst == other.m_lst);
-	}
-	return_value_type &		operator*() const {
-		return *(_base::m_lst->data);
-	}
-	return_value_type *		operator->() const {
-		return _base::m_lst->data;
-	}
-	_listIterator &			operator++() {
-		_lst::getStepFunction(IncrementType())(_base::m_lst);
-		return *this;
-	}
-	_listIterator &			operator--() {
-		_lst::getStepFunction(DecrementType())(_base::m_lst);
-		return *this;
-	}
-	const _listIterator		operator--(int) {
-		_lst *	tmp = _base::m_lst;
-
-		this->operator--();
-		return _listIterator(tmp);
-	}
-	const _listIterator		operator++(int) {
-		_lst *	tmp = _base::m_lst;
-
-		this->operator++();
-		return _listIterator(tmp);
-	}
-}; //class _listIterator
-*/
