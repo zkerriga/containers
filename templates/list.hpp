@@ -93,12 +93,14 @@ public:
 	}
 
 	/* Iterator classes */
-	typedef _listIterator< value_type, value_type, allocator_type,
+	typedef _ListIterator< value_type,
+						   allocator_type,
 						   typename _lst::stepToNextType,
 						   typename _lst::stepToPrevType >			iterator;
-	typedef _listIterator< value_type, const value_type, allocator_type,
-						   typename _lst::stepToNextType,
-						   typename _lst::stepToPrevType >			const_iterator;
+	typedef _ListConstIterator< value_type, const value_type,
+								allocator_type,
+								typename _lst::stepToNextType,
+								typename _lst::stepToPrevType >		const_iterator;
 	/* todo */
 	class reverse_iterator {};
 	class const_reverse_iterator {};
