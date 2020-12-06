@@ -17,16 +17,8 @@
 
 #include "list_node.hpp"
 
-template < typename iterator_category,
-		   typename value_type,
-		   typename return_value_type,
-		   typename stored_type >
-class _BaseIterator
-	: public std::iterator< iterator_category,
-							value_type,
-							std::size_t,
-							return_value_type *,
-							return_value_type & > {
+template < typename value_type, typename stored_type >
+class _BaseIterator {
 private:
 	typedef void (*shiftPointerFunction)(stored_type * &);
 
@@ -51,31 +43,19 @@ public:
 				  shiftPointerFunction inc, shiftPointerFunction dec)
 		: m_p(pointer), mc_incrementFunction(inc), mc_decrementFunction(dec) {}
 
-	bool					operator!=(const _BaseIterator & other) const {
+	virtual bool					operator!=(const _BaseIterator & other) const {
 		return (m_p != other.m_p);
 	}
-	bool					operator==(const _BaseIterator & other) const {
+	virtual bool					operator==(const _BaseIterator & other) const {
 		return (m_p == other.m_p);
 	}
-	_BaseIterator &			operator++() {
+	virtual _BaseIterator &			operator++() {
 		mc_incrementFunction(m_p);
 		return *this;
 	}
-	_BaseIterator &			operator--() {
+	virtual _BaseIterator &			operator--() {
 		mc_decrementFunction(m_p);
 		return *this;
-	}
-	const _BaseIterator		operator--(int) {
-		stored_type *	tmp = m_p;
-
-		_BaseIterator::operator--();
-		return _BaseIterator(tmp);
-	}
-	const _BaseIterator		operator++(int) {
-		stored_type *	tmp = m_p;
-
-		_BaseIterator::operator++();
-		return _BaseIterator(tmp);
 	}
 
 protected:
@@ -93,10 +73,16 @@ private:
 
 }; //class _BaseIterator
 
-#define BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR(return_value_type) \
-			_BaseIterator< std::bidirectional_iterator_tag, \
+
+#define STD_ITERATOR_FOR_LIST(return_value_type) \
+			std::iterator< std::bidirectional_iterator_tag, \
 						   value_type, \
-						   return_value_type, \
+						   std::size_t, \
+						   return_value_type *, \
+						   return_value_type & >
+
+#define BASE_CLASS_FOR_LIST \
+			_BaseIterator< value_type, \
 						   ListNode< value_type, allocator_type > >
 
 #define GET_SHIFT_FUNCS _lst::getShiftFunction(IncrementType()), \
@@ -106,10 +92,11 @@ template < typename value_type,
 		   typename allocator_type,
 		   typename IncrementType,
 		   typename DecrementType >
-class _ListIterator : public BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR(value_type) {
+class _ListIterator : public STD_ITERATOR_FOR_LIST(value_type),
+					  public BASE_CLASS_FOR_LIST {
 private:
-	typedef BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR(value_type)	_base;
-	typedef typename _base::StoredType							_lst;
+	typedef BASE_CLASS_FOR_LIST			_base;
+	typedef typename _base::StoredType	_lst;
 
 public:
 	_ListIterator() : _base( GET_SHIFT_FUNCS ) {}
@@ -123,26 +110,55 @@ public:
 	}
 	explicit _ListIterator(_lst * p) : _base( p, GET_SHIFT_FUNCS ) {}
 
-	value_type &		operator*() const {
+	value_type &			operator*() const {
 		return *(_base::m_p->data);
 	}
-	value_type *		operator->() const {
+	value_type *			operator->() const {
 		return _base::m_p->data;
+	}
+
+	bool					operator!=(const _ListIterator & other) const {
+		return (_base::operator!=(other));
+	}
+	bool					operator==(const _ListIterator & other) const {
+		return (_base::operator==(other));
+	}
+	_ListIterator &			operator++() {
+		_base::operator++();
+		return *this;
+	}
+	_ListIterator &			operator--() {
+		_base::operator--();
+		return *this;
+	}
+	const _ListIterator		operator--(int) {
+		_lst *	tmp = _base::m_p;
+
+		_base::operator--();
+		return _ListIterator(tmp);
+	}
+	const _ListIterator		operator++(int) {
+		_lst *	tmp = _base::m_p;
+
+		_base::operator++();
+		return _ListIterator(tmp);
 	}
 }; //class _ListIterator
 
+
 template < typename value_type,
-		   typename return_value_type,
 		   typename allocator_type,
 		   typename IncrementType,
 		   typename DecrementType >
-class _ListConstIterator
-		: public BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR(return_value_type) {
+class _ListConstIterator : public STD_ITERATOR_FOR_LIST(const value_type),
+						   public BASE_CLASS_FOR_LIST {
 private:
-	typedef BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR(return_value_type)	_base;
-	typedef typename _base::StoredType									_lst;
-	typedef _ListIterator< value_type, allocator_type,
-						   IncrementType, DecrementType >				_MutableListIterator;
+	typedef BASE_CLASS_FOR_LIST				_base;
+	typedef typename _base::StoredType		_lst;
+	typedef _ListIterator< value_type,
+						   allocator_type,
+						   IncrementType,
+						   DecrementType >	_MutableListIterator;
 public:
 	_ListConstIterator() : _base( GET_SHIFT_FUNCS ) {}
 	_ListConstIterator(const _ListConstIterator & other) : _base( GET_SHIFT_FUNCS ) {
@@ -162,17 +178,45 @@ public:
 	}
 	explicit _ListConstIterator(_lst * p) : _base( p, GET_SHIFT_FUNCS ) {}
 
-	value_type &		operator*() const {
+	const value_type &			operator*() const {
 		return *(_base::m_p->data);
 	}
-	value_type *		operator->() const {
+	const value_type *			operator->() const {
 		return _base::m_p->data;
+	}
+
+	bool						operator!=(const _ListConstIterator & other) const {
+		return (_base::operator!=(other));
+	}
+	bool						operator==(const _ListConstIterator & other) const {
+		return (_base::operator==(other));
+	}
+	_ListConstIterator &		operator++() {
+		_base::operator++();
+		return *this;
+	}
+	_ListConstIterator &		operator--() {
+		_base::operator--();
+		return *this;
+	}
+	const _ListConstIterator	operator--(int) {
+		_lst *	tmp = _base::m_p;
+
+		_base::operator--();
+		return _ListConstIterator(tmp);
+	}
+	const _ListConstIterator	operator++(int) {
+		_lst *	tmp = _base::m_p;
+
+		_base::operator++();
+		return _ListConstIterator(tmp);
 	}
 }; //class _ListConstIterator
 
-#undef BASE_CLASS_TEMPLATE_FOR_LIST_ITERATOR
-#undef GET_SHIFT_FUNCS
 
+#undef STD_ITERATOR_FOR_LIST
+#undef GET_SHIFT_FUNCS
+#undef BASE_CLASS_FOR_LIST
 
 
 

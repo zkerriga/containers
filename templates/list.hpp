@@ -97,7 +97,7 @@ public:
 						   allocator_type,
 						   typename _lst::stepToNextType,
 						   typename _lst::stepToPrevType >			iterator;
-	typedef _ListConstIterator< value_type, const value_type,
+	typedef _ListConstIterator< value_type,
 								allocator_type,
 								typename _lst::stepToNextType,
 								typename _lst::stepToPrevType >		const_iterator;
