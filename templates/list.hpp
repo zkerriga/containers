@@ -19,6 +19,9 @@
 
 namespace ft {
 
+#define _ENABLE_INPUT_ITERATOR_TYPE(type_name) \
+			typename std::enable_if< std::__is_input_iterator<type_name>::value,type_name >::type
+
 /*
  * Double-linked list.
  */
@@ -52,7 +55,7 @@ public:
 	}
 	template < class InputIterator >
 	list( InputIterator first,
-		  typename std::enable_if< std::__is_input_iterator<InputIterator>::value,InputIterator >::type last,
+		  _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last,
 		  const allocator_type & alloc = allocator_type())
 		: m_end(nullptr), m_size(0), m_allocator(alloc)
 	{
@@ -162,9 +165,22 @@ public:
 	}
 
 	/* Modifiers */
-//	template <class InputIterator>
-//	void assign( InputIterator first, InputIterator last );
-//	void assign( size_type n, const value_type & val );
+	template < class InputIterator >
+	void assign( InputIterator first,
+				 _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last ) {
+		_lst::clearListWithoutEnd(m_end, m_allocator);
+		m_size = _lst::addBeforeNodeFromIterators(
+			first,
+			last,
+			m_end,
+			m_allocator
+		);
+	}
+	void assign( size_type n, const value_type & val ) {
+		_lst::clearListWithoutEnd(m_end, m_allocator);
+		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
+		m_size = n;
+	}
 	void push_front( const value_type & val ) {
 		_lst::createAndInsertBetween(
 			val,
@@ -222,6 +238,8 @@ private:
 	allocator_type	m_allocator;
 
 }; //class list
+
+#undef _ENABLE_INPUT_ITERATOR_TYPE
 
 /* todo */
 template <class T, class Alloc>
