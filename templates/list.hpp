@@ -101,10 +101,14 @@ public:
 								allocator_type,
 								typename _lst::stepToNextType,
 								typename _lst::stepToPrevType >		const_iterator;
-	/* todo */
-	class reverse_iterator {};
-	class const_reverse_iterator {};
-	/* todo */
+	typedef _ListIterator< value_type,
+						   allocator_type,
+						   typename _lst::stepToPrevType,
+						   typename _lst::stepToNextType >			reverse_iterator;
+	typedef _ListConstIterator< value_type,
+								allocator_type,
+								typename _lst::stepToPrevType,
+								typename _lst::stepToNextType >		const_reverse_iterator;
 
 	/* Iterators */
 	iterator				begin() {
@@ -119,10 +123,18 @@ public:
 	const_iterator			end() const {
 		return const_iterator(m_end);
 	}
-//	reverse_iterator		rbegin();
-//	const_reverse_iterator	rbegin() const;
-//	reverse_iterator		rend();
-//	const_reverse_iterator	rend() const;
+	reverse_iterator		rbegin() {
+		return reverse_iterator(m_end->prev);
+	}
+	const_reverse_iterator	rbegin() const {
+		return const_reverse_iterator(m_end->prev);
+	}
+	reverse_iterator		rend() {
+		return reverse_iterator(m_end);
+	}
+	const_reverse_iterator	rend() const {
+		return const_reverse_iterator(m_end);
+	}
 
 	/* Capacity */
 	bool		empty() const {
@@ -150,6 +162,7 @@ public:
 			m_end,
 			m_end->next
 		);
+		++m_size;
 	}
 //	void pop_front();
 	void push_back( const value_type & val ) {
@@ -159,6 +172,7 @@ public:
 			m_end->prev,
 			m_end
 		);
+		++m_size;
 	}
 //	void pop_back();
 //	iterator insert( iterator position, const value_type & val );

@@ -390,43 +390,56 @@ TEST_F(ListTestClass, iterators_empty) {
 	sList::iterator	sIt = sEmptyList.begin();
 	sList::iterator	sIte = sEmptyList.end();
 
-	ASSERT_TRUE(*sIt == *sIte);
-	ASSERT_TRUE(sIt == sIte);
-	ASSERT_FALSE(sIt != sIte);
+	mList::iterator	mIt		= mEmptyList.begin();
+	mList::iterator	mIte	= mEmptyList.end();
+
+	ASSERT_EQ(*sIt == *sIte, *mIt == *mIte);
+	ASSERT_EQ(sIt == sIte, mIt == mIte);
+	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
 	sList::iterator	s3(sIt);
 	sList::iterator	s4;
 	s4 = sIte;
 
-	ASSERT_TRUE(*s3 == *s4);
-	ASSERT_TRUE(s3 == s4);
+	mList::iterator	m3(mIt);
+	mList::iterator	m4;
+	m4 = mIte;
+
+	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(ListTestClass, const_iterator_bi) {
 	sList::const_iterator			sIt = sTenList.begin();
 	sList::const_iterator			sIte = sTenList.end();
+	mList::const_iterator			mIt = mTenList.begin();
+	mList::const_iterator			mIte = mTenList.end();
 
-	ASSERT_TRUE(sIt != sIte);
+	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
 	sList::const_iterator			s3(sIt);
 	sList::const_iterator			s4;
 	s4 = sIt;
+	mList::const_iterator			m3(mIt);
+	mList::const_iterator			m4;
+	m4 = mIt;
 
-	++sIt;
-	--sIt;
-	ASSERT_TRUE(sIt == s4);
-	ASSERT_TRUE(sIt == s3);
+	++sIt; ++mIt;
+	--sIt; --mIt;
+	ASSERT_EQ(sIt == s4, mIt == m4);
+	ASSERT_EQ(sIt == s3, mIt == m3);
 
-	s3 = sIt++;
-	s4 = sIt--;
-	ASSERT_EQ(*s3, 0);
-	ASSERT_EQ(*s4, 1);
+	s3 = sIt++; m3 = mIt++;
+	s4 = sIt--; m4 = mIt--;
+	ASSERT_EQ(*s3, *m3);
+	ASSERT_EQ(*s4, *m4);
 
 	int counter = 0;
-	while (sIt != sIte) {
-		ASSERT_EQ(*sIt, counter);
+	while (mIt != mIte) {
+//		ASSERT_EQ(*sIt, counter);
+		ASSERT_EQ(*sIt, *mIt);
 		++counter;
-		++sIt;
+		++sIt; ++mIt;
 	}
 	ASSERT_EQ(counter, 10);
 }
@@ -434,99 +447,123 @@ TEST_F(ListTestClass, const_iterator_bi) {
 TEST_F(ListTestClass, iterator_bi) {
 	sList::iterator			sIt = sTenList.begin();
 	sList::iterator			sIte = sTenList.end();
-
-	ASSERT_TRUE(sIt != sIte);
+	mList::iterator			mIt = mTenList.begin();
+	mList::iterator			mIte = mTenList.end();
+	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
 	sList::iterator			s3(sIt);
 	sList::iterator			s4;
 	s4 = sIt;
+	mList::iterator			m3(mIt);
+	mList::iterator			m4;
+	m4 = mIt;
 
-	++sIt;
-	--sIt;
-	ASSERT_TRUE(sIt == s4);
-	ASSERT_TRUE(sIt == s3);
-	ASSERT_TRUE(sIt.operator->() == s3.operator->());
+	++sIt; ++mIt;
+	--sIt; --mIt;
+	ASSERT_EQ(sIt == s4, mIt == m4);
+	ASSERT_EQ(sIt == s3, mIt == m3);
+	ASSERT_EQ(sIt.operator->() == s3.operator->(),
+			  mIt.operator->() == m3.operator->());
 
-	s3 = sIt++;
-	s4 = sIt--;
-	ASSERT_EQ(*s3, 0);
-	ASSERT_EQ(*s4, 1);
+	s3 = sIt++; m3 = mIt++;
+	s4 = sIt--; m4 = mIt--;
+	ASSERT_EQ(*s3, *m3);
+	ASSERT_EQ(*s4, *m4);
 
 	int counter = 0;
-	while (sIt != sIte) {
-		ASSERT_EQ(*sIt, counter);
+	while (mIt != mIte) {
+		ASSERT_EQ(*sIt, *mIt);
 		++counter;
-		++sIt;
+		++sIt; ++mIt;
 	}
 	ASSERT_EQ(counter, 10);
 
 	sIt = sTenList.begin();
 	sIte = sTenList.end();
+	mIt = mTenList.begin();
+	mIte = mTenList.end();
 	while (sIt != sIte) {
-		*sIt = INT_VALUE;
-		++sIt;
+		*sIt = INT_VALUE; *mIt = INT_VALUE;
+		++sIt; ++mIt;
 	}
 	sList	s5(10, INT_VALUE);
 	assertListEQ(s5, sTenList);
+	assertListEQ(s5, mTenList);
 }
 
 TEST_F(ListTestClass, const_iterator_reverse_empty) {
 	sList::const_reverse_iterator	sRit = sEmptyList.rbegin();
 	sList::const_reverse_iterator	sRite = sEmptyList.rend();
+	mList::const_reverse_iterator	mRit = mEmptyList.rbegin();
+	mList::const_reverse_iterator	mRite = mEmptyList.rend();
 
-	ASSERT_TRUE(*sRit == *sRite);
-	ASSERT_TRUE(sRit == sRite);
-	ASSERT_FALSE(sRit != sRite);
+	ASSERT_EQ(*sRit == *sRite, *mRit == *mRite);
+	ASSERT_EQ(sRit == sRite, mRit == mRite);
+	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
 	sList::const_reverse_iterator	s3(sRit);
 	sList::const_reverse_iterator	s4;
 	s4 = sRite;
+	mList::const_reverse_iterator	m3(mRit);
+	mList::const_reverse_iterator	m4;
+	m4 = mRite;
 
-	ASSERT_TRUE(*s3 == *s4);
-	ASSERT_TRUE(s3 == s4);
+	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(ListTestClass, iterator_reverse_empty) {
 	sList::reverse_iterator	sRit = sEmptyList.rbegin();
 	sList::reverse_iterator	sRite = sEmptyList.rend();
+	mList::reverse_iterator	mRit = mEmptyList.rbegin();
+	mList::reverse_iterator	mRite = mEmptyList.rend();
 
-	ASSERT_TRUE(*sRit == *sRite);
-	ASSERT_TRUE(sRit == sRite);
-	ASSERT_FALSE(sRit != sRite);
+	ASSERT_EQ(*sRit == *sRite, *mRit == *mRite);
+	ASSERT_EQ(sRit == sRite, mRit == mRite);
+	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
 	sList::reverse_iterator	s3(sRit);
 	sList::reverse_iterator	s4;
 	s4 = sRite;
+	mList::reverse_iterator	m3(mRit);
+	mList::reverse_iterator	m4;
+	m4 = mRite;
 
-	ASSERT_TRUE(*s3 == *s4);
-	ASSERT_TRUE(s3 == s4);
+	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(ListTestClass, const_iterator_reverse_bi) {
-	sList::const_reverse_iterator			sRit = sTenList.rbegin();
-	sList::const_reverse_iterator			sRite = sTenList.rend();
+	sList::const_reverse_iterator	sRit = sTenList.rbegin();
+	sList::const_reverse_iterator	sRite = sTenList.rend();
+	mList::const_reverse_iterator	mRit = mTenList.rbegin();
+	mList::const_reverse_iterator	mRite = mTenList.rend();
 
-	ASSERT_TRUE(sRit != sRite);
+	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
-	sList::const_reverse_iterator			s3(sRit);
-	sList::const_reverse_iterator			s4;
+	sList::const_reverse_iterator	s3(sRit);
+	sList::const_reverse_iterator	s4;
 	s4 = sRit;
+	mList::const_reverse_iterator	m3(mRit);
+	mList::const_reverse_iterator	m4;
+	m4 = mRit;
 
-	++sRit;
-	--sRit;
-	ASSERT_TRUE(sRit == s4);
-	ASSERT_TRUE(sRit == s3);
+	++sRit; ++mRit;
+	--sRit; --mRit;
+	ASSERT_EQ(sRit == s4, mRit == m4);
+	ASSERT_EQ(sRit == s3, mRit == m3);
 
-	s3 = sRit++;
-	s4 = sRit--;
-	ASSERT_EQ(*s3, 9);
-	ASSERT_EQ(*s4, 8);
+	s3 = sRit++; m3 = mRit++;
+	s4 = sRit--; m4 = mRit--;
+	ASSERT_EQ(*s3, *m3);
+	ASSERT_EQ(*s4, *m4);
 
 	int counter = 9;
-	while (sRit != sRite) {
-		ASSERT_EQ(*sRit, counter);
+	while (mRit != mRite) {
+//		ASSERT_EQ(*sRit, counter);
+		ASSERT_EQ(*sRit, *mRit);
 		--counter;
-		++sRit;
+		++sRit; ++mRit;
 	}
 	ASSERT_EQ(counter, -1);
 }
@@ -534,65 +571,84 @@ TEST_F(ListTestClass, const_iterator_reverse_bi) {
 TEST_F(ListTestClass, iterator_reverse_bi) {
 	sList::reverse_iterator			sRit = sTenList.rbegin();
 	sList::reverse_iterator			sRite = sTenList.rend();
+	mList::reverse_iterator			mRit = mTenList.rbegin();
+	mList::reverse_iterator			mRite = mTenList.rend();
 
-	ASSERT_TRUE(sRit != sRite);
+	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
 	sList::reverse_iterator			s3(sRit);
 	sList::reverse_iterator			s4;
 	s4 = sRit;
+	mList::reverse_iterator			m3(mRit);
+	mList::reverse_iterator			m4;
+	m4 = mRit;
 
-	++sRit;
-	--sRit;
-	ASSERT_TRUE(sRit == s4);
-	ASSERT_TRUE(sRit == s3);
+	++sRit; ++mRit;
+	--sRit; --mRit;
+	ASSERT_EQ(sRit == s4, mRit == m4);
+	ASSERT_EQ(sRit == s3, mRit == m3);
 
-	s3 = sRit++;
-	s4 = sRit--;
-	ASSERT_EQ(*s3, 9);
-	ASSERT_EQ(*s4, 8);
+	s3 = sRit++; m3 = mRit++;
+	s4 = sRit--; m4 = mRit--;
+	ASSERT_EQ(*s3, *m3);
+	ASSERT_EQ(*s4, *m4);
 
 	int counter = 9;
-	while (sRit != sRite) {
-		ASSERT_EQ(*sRit, counter);
+	while (mRit != mRite) {
+		ASSERT_EQ(*sRit, *mRit);
 		--counter;
-		++sRit;
+		++sRit; ++mRit;
 	}
 	ASSERT_EQ(counter, -1);
 
 	sRit = sTenList.rbegin();
 	sRite = sTenList.rend();
-	while (sRit != sRite) {
-		*sRit = INT_VALUE;
-		++sRit;
+	mRit = mTenList.rbegin();
+	mRite = mTenList.rend();
+	while (mRit != mRite) {
+		*sRit = INT_VALUE; *mRit = INT_VALUE;
+		++sRit; ++mRit;
 	}
 	sList	s5(10, INT_VALUE);
-	assertListEQ(s5, sTenList);
+	assertListEQ(s5, mTenList);
 }
 
 TEST_F(ListTestClass, const_iterators_end) {
 	sList::const_iterator			s1 = sTenList.begin();
 	sList::const_reverse_iterator	sr2 = sTenList.rend();
+	mList::const_iterator			m1 = mTenList.begin();
+	mList::const_reverse_iterator	mr2 = mTenList.rend();
 
-	--sr2;
+	--sr2; --mr2;
 	ASSERT_EQ(*s1, *sr2);
+	ASSERT_EQ(*m1, *mr2);
 
 	s1 = sTenList.end();
 	sr2 = sTenList.rbegin();
-	--s1;
+	m1 = mTenList.end();
+	mr2 = mTenList.rbegin();
+	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
+	ASSERT_EQ(*m1, *mr2);
 }
 
 TEST_F(ListTestClass, iterators_end) {
 	sList::iterator			s1 = sTenList.begin();
 	sList::reverse_iterator	sr2 = sTenList.rend();
+	mList::iterator			m1 = mTenList.begin();
+	mList::reverse_iterator	mr2 = mTenList.rend();
 
-	--sr2;
+	--sr2; --mr2;
 	ASSERT_EQ(*s1, *sr2);
+	ASSERT_EQ(*m1, *mr2);
 
 	s1 = sTenList.end();
 	sr2 = sTenList.rbegin();
-	--s1;
+	m1 = mTenList.end();
+	mr2 = mTenList.rbegin();
+	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
+	ASSERT_EQ(*m1, *mr2);
 }
 
 TEST_F(ListTestClass, empty) {
