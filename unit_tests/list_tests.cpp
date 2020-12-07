@@ -19,11 +19,8 @@
 #endif //ifdef DEBUG
 
 using sList		= std::list<int>;
-using nList		= std::list<int>;
 using mList		= ft::list<int>;
 using sAlloc	= std::allocator<int>;
-
-using _lst		= ListNode<int, std::allocator<int> >;
 
 class ListTestClass: public ::testing::Test {
 public:
@@ -81,39 +78,6 @@ public:
 	sAlloc				sAl;
 };
 
-void checkListContainsSingleValue(const sList & list, size_t size, const int value) {
-	sList::const_iterator	it = list.begin();
-	sList::const_iterator	ite = list.end();
-
-	if (size == 0) {
-		ASSERT_TRUE(it == ite);
-		return;
-	}
-	while (it != ite) {
-		ASSERT_EQ(*it, value);
-		++it;
-		--size;
-	}
-	ASSERT_TRUE(size == 0);
-}
-
-void assertListEQ(const sList & stdList, const nList & myList) {
-	ASSERT_EQ(stdList.size(), myList.size());
-
-	sList::const_iterator	sIt = stdList.begin();
-	sList::const_iterator	sIte = stdList.end();
-	nList::const_iterator	mIt = myList.begin();
-	nList::const_iterator	mIte = myList.end();
-
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
-		++sIt;
-		++mIt;
-	}
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
-
 void assertListEQ(const sList & stdList, const mList & myList) {
 	ASSERT_EQ(stdList.size(), myList.size());
 
@@ -122,17 +86,6 @@ void assertListEQ(const sList & stdList, const mList & myList) {
 	mList::const_iterator	mIt = myList.begin();
 	mList::const_iterator	mIte = myList.end();
 
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
-		++sIt;
-		++mIt;
-	}
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
-
-void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
-							   nList::const_iterator mIt, nList::const_iterator mIte) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
 		EXPECT_EQ(*sIt, *mIt);
@@ -154,36 +107,7 @@ void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator 
 }
 
 void assertListEQFromListAndIterators(sList stdList,
-									  nList::const_iterator mIt, nList::const_iterator mIte) {
-	sList::const_iterator	sIt = stdList.begin();
-	sList::const_iterator	sIte = stdList.end();
-
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
-		++sIt;
-		++mIt;
-	}
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
-
-void assertListEQFromListAndIterators(sList stdList,
 									  mList::const_iterator mIt, mList::const_iterator mIte) {
-	sList::const_iterator	sIt = stdList.begin();
-	sList::const_iterator	sIte = stdList.end();
-
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
-		++sIt;
-		++mIt;
-	}
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
-
-void assertListEQFromListAndRIterators(sList stdList,
-									   nList::const_reverse_iterator mIt,
-									   nList::const_reverse_iterator mIte) {
 	sList::const_iterator	sIt = stdList.begin();
 	sList::const_iterator	sIte = stdList.end();
 
@@ -225,6 +149,8 @@ TEST(list, basic_types) {
 }
 
 TEST(list, _lst) {
+	using _lst	= ListNode<int, std::allocator<int> >;
+
 	ASSERT_EQ(sizeof(_lst), 8 * 3);
 	sAlloc		sAl;
 
@@ -512,7 +438,6 @@ TEST_F(ListTestClass, iterator_bi) {
 		++sIt; ++mIt;
 	}
 	sList	s5(10, INT_VALUE);
-	assertListEQ(s5, sTenList);
 	assertListEQ(s5, mTenList);
 }
 
@@ -771,14 +696,6 @@ TEST_F(ListTestClass, push_front) {
 	}
 	assertListEQ(s2, m2);
 
-	sList					s3(sTenList);
-	sList::const_iterator	sIt = s3.begin();
-	sList::const_iterator	sIte = s3.end();
-	s3.push_front(INT_VALUE);
-	assertListEQFromListAndIterators(sTenList, sIt, sIte);
-	sIt = s3.begin();
-	assertListEQFromListAndIterators(sTenList, ++sIt, sIte);
-
 	mList					m3(mTenList);
 	mList::const_iterator	mIt = m3.begin();
 	mList::const_iterator	mIte = m3.end();
@@ -795,7 +712,6 @@ TEST_F(ListTestClass, pop_front) {
 	s1.pop_front();
 	m1.pop_front();
 	ASSERT_EQ(s1.size(), m1.size());
-	assertListEQFromIterators(++sTenList.begin(), sTenList.end(), s1.begin(), s1.end());
 	assertListEQ(s1, m1);
 
 	for (int i = 1; i < 10; ++i) {
@@ -853,7 +769,6 @@ TEST_F(ListTestClass, push_back) {
 	s2.push_back(INT_VALUE - 3);
 	m2.push_back(INT_VALUE - 3);
 	ASSERT_EQ(s2.back(), m2.back());
-	assertListEQFromListAndIterators(sTenList, sIt, --sIte);
 	assertListEQFromListAndIterators(sTenList, mIt, --mIte);
 }
 
@@ -896,6 +811,7 @@ void printList(sList list) {
 	std::cout << ";" << std::endl;
 }
 
+/*
 TEST_F(ListTestClass, insert) {
 	sList		s1(sEmptyList);
 
@@ -1311,5 +1227,5 @@ TEST_F(ListTestClass, non_member_swap) {
 	assertListEQ(sTenList, s3);
 	assertListEQ(sRandomList, s4);
 }
-
+*/
 #undef DEBUG
