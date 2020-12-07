@@ -142,6 +142,17 @@ void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
+void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
+							   mList::const_iterator mIt, mList::const_iterator mIte) {
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
 void assertListEQFromListAndIterators(sList stdList,
 									  nList::const_iterator mIt, nList::const_iterator mIte) {
 	sList::const_iterator	sIt = stdList.begin();
@@ -779,73 +790,99 @@ TEST_F(ListTestClass, push_front) {
 
 TEST_F(ListTestClass, pop_front) {
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 
 	s1.pop_front();
-	ASSERT_EQ(s1.size(), sTenList.size() - 1);
+	m1.pop_front();
+	ASSERT_EQ(s1.size(), m1.size());
 	assertListEQFromIterators(++sTenList.begin(), sTenList.end(), s1.begin(), s1.end());
+	assertListEQ(s1, m1);
 
 	for (int i = 1; i < 10; ++i) {
-		ASSERT_EQ(s1.front(), i);
-		s1.pop_front();
+		ASSERT_EQ(s1.front(), m1.front());
+		s1.pop_front(); m1.pop_front();
 	}
-	assertListEQ(sEmptyList, s1);
+	assertListEQ(s1, m1);
 
 //	s1.pop_front();
 //	ASSERT_EQ(s1.size(), 0);
 
 	sList					s2(sTenList);
-	sList::const_iterator	it1 = s2.begin();
-	ASSERT_EQ(*it1, 0);
+	sList::const_iterator	sIt1 = s2.begin();
+	ASSERT_EQ(*sIt1, 0);
 	s2.pop_front();
-	sList::const_iterator	it2 = s2.begin();
-	ASSERT_TRUE(it1 != it2);
+	sList::const_iterator	sIt2 = s2.begin();
+	ASSERT_TRUE(sIt1 != sIt2);
+
+	mList					m2(mTenList);
+	mList::const_iterator	mIt1 = m2.begin();
+	ASSERT_EQ(*mIt1, 0);
+	m2.pop_front();
+	mList::const_iterator	mIt2 = m2.begin();
+	ASSERT_TRUE(mIt1 != mIt2);
 }
 
 TEST_F(ListTestClass, push_back) {
-	sList s1(sEmptyList);
+	sList	s1(sEmptyList);
+	mList	m1(mEmptyList);
 
 	s1.push_back(INT_VALUE);
-	ASSERT_EQ(s1.size(), 1);
-	ASSERT_EQ(s1.back(), INT_VALUE);
+	m1.push_back(INT_VALUE);
+	ASSERT_EQ(s1.size(), m1.size());
+	ASSERT_EQ(s1.back(), m1.back());
 
 	s1.push_back(INT_VALUE - 1);
-	ASSERT_EQ(s1.size(), 2);
-	ASSERT_EQ(s1.back(), INT_VALUE - 1);
-	ASSERT_EQ(s1.front(), INT_VALUE);
+	m1.push_back(INT_VALUE - 1);
+	ASSERT_EQ(s1.size(), m1.size());
+	ASSERT_EQ(s1.back(), m1.back());
+	ASSERT_EQ(s1.front(), m1.front());
 
-	sList s2(sEmptyList);
+	sList	s2(sEmptyList);
+	mList	m2(mEmptyList);
 	for (int i = 0; i < 10; ++i) {
 		s2.push_back(i);
+		m2.push_back(i);
 	}
-	assertListEQ(sTenList, s2);
+	assertListEQ(s2, m2);
 
-	sList::const_iterator	it = s2.begin();
-	sList::const_iterator	ite = s2.end();
+	sList::const_iterator	sIt = s2.begin();
+	sList::const_iterator	sIte = s2.end();
+	mList::const_iterator	mIt = m2.begin();
+	mList::const_iterator	mIte = m2.end();
+
 	s2.push_back(INT_VALUE - 3);
-	ASSERT_EQ(s2.back(), INT_VALUE - 3);
-	assertListEQFromListAndIterators(sTenList, it, --ite);
+	m2.push_back(INT_VALUE - 3);
+	ASSERT_EQ(s2.back(), m2.back());
+	assertListEQFromListAndIterators(sTenList, sIt, --sIte);
+	assertListEQFromListAndIterators(sTenList, mIt, --mIte);
 }
 
 TEST_F(ListTestClass, pop_back) {
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 
 	s1.pop_back();
-	ASSERT_EQ(s1.size(), sTenList.size() - 1);
-	assertListEQFromIterators(sTenList.begin(), --sTenList.end(), s1.begin(), s1.end());
+	m1.pop_back();
+	ASSERT_EQ(s1.size(), m1.size());
+	assertListEQ(s1, m1);
 
 	for (int i = 8; i > -1; --i) {
-		ASSERT_EQ(s1.back(), i);
+		ASSERT_EQ(s1.back(), m1.back());
 		s1.pop_back();
+		m1.pop_back();
 	}
-	assertListEQ(sEmptyList, s1);
+	assertListEQ(s1, m1);
 
 //	s1.pop_back();
 //	ASSERT_EQ(s1.size(), 0);
 
 	sList					s2(sTenList);
-	sList::const_iterator	ite = s2.end();
+	sList::const_iterator	sIte = s2.end();
 	s2.pop_back();
-	assertListEQFromIterators(sTenList.begin(), --sTenList.end(), s2.begin(), ite);
+	mList					m2(mTenList);
+	mList::const_iterator	mIte = m2.end();
+	m2.pop_back();
+	assertListEQFromIterators(s2.begin(), sIte, m2.begin(), mIte);
 }
 
 void printList(sList list) {

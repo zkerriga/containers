@@ -71,6 +71,14 @@ public:
 		prevNode->next = insertingNode;
 		nextNode->prev = insertingNode;
 	}
+	static ListNode *	drawNodeFromList(ListNode * drawingNode) _NOEXCEPT {
+		ListNode * const	prevNode = drawingNode->prev;
+		ListNode * const	nextNode = drawingNode->next;
+
+		prevNode->next = nextNode;
+		nextNode->prev = prevNode;
+		return drawingNode;
+	}
 	static void			createAndInsertBetween(const value_type & value,
 											   allocator_type & alloc,
 											   ListNode * prevNode,

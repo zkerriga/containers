@@ -190,7 +190,12 @@ public:
 		);
 		++m_size;
 	}
-//	void pop_front();
+	void pop_front() {
+		_lst * const	frontNode = _lst::drawNodeFromList(m_end->next);
+
+		_lst::destroyNode(frontNode, m_allocator);
+		--m_size;
+	}
 	void push_back( const value_type & val ) {
 		_lst::createAndInsertBetween(
 			val,
@@ -200,7 +205,12 @@ public:
 		);
 		++m_size;
 	}
-//	void pop_back();
+	void pop_back() {
+		_lst * const	backNode = _lst::drawNodeFromList(m_end->prev);
+
+		_lst::destroyNode(backNode, m_allocator);
+		--m_size;
+	}
 //	iterator insert( iterator position, const value_type & val );
 //	void insert( iterator position, size_type n, const value_type & val );
 //	template <class InputIterator>
