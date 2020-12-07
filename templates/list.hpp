@@ -147,11 +147,19 @@ public:
 		return (static_cast<size_type>(-1) / sizeof(*m_end));
 	}
 
-//	 Element access
-//	reference		front();
-//	const_reference	front() const;
-//	reference		back();
-//	const_reference	back() const;
+	/* Element access */
+	reference		front() {
+		return _lst::getDataReference(m_end->next);
+	}
+	const_reference	front() const {
+		return _lst::getDataReference(m_end->next);
+	}
+	reference		back() {
+		return _lst::getDataReference(m_end->prev);
+	}
+	const_reference	back() const {
+		return _lst::getDataReference(m_end->prev);
+	}
 
 	/* Modifiers */
 //	template <class InputIterator>

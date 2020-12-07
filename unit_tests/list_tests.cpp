@@ -677,10 +677,11 @@ TEST_F(ListTestClass, max_size) {
 }
 
 TEST_F(ListTestClass, front) {
-	ASSERT_EQ(sTenList.front(), 0);
+	ASSERT_EQ(sTenList.front(), mTenList.front());
 
 	sTenList.front() = INT_VALUE;
-	ASSERT_EQ(sTenList.front(), INT_VALUE);
+	mTenList.front() = INT_VALUE;
+	ASSERT_EQ(sTenList.front(), mTenList.front());
 
 //	ASSERT_EQ(sEmptyList.front(), int());
 //
@@ -689,10 +690,11 @@ TEST_F(ListTestClass, front) {
 }
 
 TEST_F(ListTestClass, back) {
-	ASSERT_EQ(sTenList.back(), 9);
+	ASSERT_EQ(sTenList.back(), mTenList.back());
 
 	sTenList.back() = INT_VALUE;
-	ASSERT_EQ(sTenList.back(), INT_VALUE);
+	mTenList.back() = INT_VALUE;
+	ASSERT_EQ(sTenList.back(), mTenList.back());
 
 //	ASSERT_EQ(sEmptyList.back(), int());
 //

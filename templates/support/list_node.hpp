@@ -48,6 +48,10 @@ public:
 								allocator_type & alloc) _NOEXCEPT {
 		alloc.construct(targetNode->data, value);
 	}
+	inline static
+	value_type &		getDataReference(ListNode * node) _NOEXCEPT {
+		return *(node->data);
+	}
 	inline static void	setPrevNext(ListNode * targetNode, ListNode * prevNode,
 									ListNode * nextNode) _NOEXCEPT {
 		targetNode->prev = prevNode;
