@@ -30,48 +30,58 @@ public:
 	typedef int stepToNextType;
 	typedef char stepToPrevType;
 
-	inline static shiftFunction	getShiftFunction(stepToNextType) _NOEXCEPT {
+	inline static
+	shiftFunction	getShiftFunction(stepToNextType) _NOEXCEPT {
 		return toNext;
 	}
-	inline static shiftFunction	getShiftFunction(stepToPrevType) _NOEXCEPT {
+	inline static
+	shiftFunction	getShiftFunction(stepToPrevType) _NOEXCEPT {
 		return toPrev;
 	}
 
-	static ListNode *	getNewNode(allocator_type & alloc) throw(std::bad_alloc) {
-		ListNode *	node = static_cast<ListNode*>(operator new(1));
+	static
+	ListNode *		getNewNode(allocator_type & alloc) throw(std::bad_alloc) {
+		ListNode * const	node = static_cast<ListNode*>(operator new(1));
 
 		node->data = alloc.allocate(1);
 		setPrevNext(node, node, node);
 		return node;
 	}
-	inline static void	setData(ListNode * targetNode, const value_type & value,
-								allocator_type & alloc) _NOEXCEPT {
+	inline static
+	void			setData(ListNode * const targetNode,
+							const value_type & value,
+							allocator_type & alloc) _NOEXCEPT {
 		alloc.construct(targetNode->data, value);
 	}
 	inline static
-	value_type &		getDataReference(ListNode * node) _NOEXCEPT {
+	value_type &	getDataReference(ListNode * const node) _NOEXCEPT {
 		return *(node->data);
 	}
-	inline static void	setPrevNext(ListNode * targetNode, ListNode * prevNode,
-									ListNode * nextNode) _NOEXCEPT {
+	inline static
+	void			setPrevNext(ListNode * const targetNode,
+								ListNode * const prevNode,
+								ListNode * const nextNode) _NOEXCEPT {
 		targetNode->prev = prevNode;
 		targetNode->next = nextNode;
 	}
-	static ListNode *	setDataReturnNode(ListNode * targetNode,
-										  const value_type & value,
-										  allocator_type & alloc) _NOEXCEPT {
+	static
+	ListNode *		setDataReturnNode(ListNode * const targetNode,
+									  const value_type & value,
+									  allocator_type & alloc) _NOEXCEPT {
 		setData(targetNode, value, alloc);
 		return targetNode;
 	}
-	inline static void	insertBetween(ListNode * insertingNode,
-									  ListNode * prevNode,
-									  ListNode * nextNode) _NOEXCEPT {
+	inline static
+	void			insertBetween(ListNode * const insertingNode,
+								  ListNode * const prevNode,
+								  ListNode * const nextNode) _NOEXCEPT {
 		insertingNode->next = nextNode;
 		insertingNode->prev = prevNode;
 		prevNode->next = insertingNode;
 		nextNode->prev = insertingNode;
 	}
-	static ListNode *	drawNodeFromList(ListNode * drawingNode) _NOEXCEPT {
+	static
+	ListNode *		drawNodeFromList(ListNode * const drawingNode) _NOEXCEPT {
 		ListNode * const	prevNode = drawingNode->prev;
 		ListNode * const	nextNode = drawingNode->next;
 
@@ -79,10 +89,11 @@ public:
 		nextNode->prev = prevNode;
 		return drawingNode;
 	}
-	static void			createAndInsertBetween(const value_type & value,
-											   allocator_type & alloc,
-											   ListNode * prevNode,
-											   ListNode * nextNode) {
+	static
+	void			createAndInsertBetween(const value_type & value,
+										   allocator_type & alloc,
+										   ListNode * const prevNode,
+										   ListNode * const nextNode) throw(std::bad_alloc) {
 		insertBetween(
 			setDataReturnNode(
 				getNewNode(alloc),
@@ -93,9 +104,11 @@ public:
 			nextNode
 		);
 	}
-	static void			addNIdenticalValue(const size_type n, ListNode * endNode,
-										   const value_type & value,
-										   allocator_type & alloc) {
+	static
+	void			addNIdenticalValue(const size_type n,
+									   ListNode * const endNode,
+									   const value_type & value,
+									   allocator_type & alloc) throw(std::bad_alloc) {
 		if (n == 0) {
 			return;
 		}
@@ -107,30 +120,35 @@ public:
 		);
 		addNIdenticalValue(n - 1, endNode, value, alloc);
 	}
-	inline static void	toPrev(ListNode * & node) _NOEXCEPT {
+	inline static
+	void			toPrev(ListNode * & node) _NOEXCEPT {
 		node = node->prev;
 	};
-	inline static void	toNext(ListNode * & node) _NOEXCEPT {
+	inline static
+	void			toNext(ListNode * & node) _NOEXCEPT {
 		node = node->next;
 	};
-	inline static void	destroyNode(ListNode * node,
-									allocator_type & alloc) _NOEXCEPT {
+	inline static
+	void			destroyNode(ListNode * const node,
+								allocator_type & alloc) _NOEXCEPT {
 		alloc.destroy(node->data);
 		alloc.deallocate(node->data, 1);
 		operator delete (node);
 	}
-	static ListNode *	destroyNodeAndGetNext(ListNode * node,
-											  allocator_type & alloc) _NOEXCEPT {
-		ListNode *	nextNode = node->next;
+	static
+	ListNode *		destroyNodeAndGetNext(ListNode * const node,
+										  allocator_type & alloc) _NOEXCEPT {
+		ListNode * const	nextNode = node->next;
 
 		destroyNode(node, alloc);
 		return nextNode;
 	}
 
 private:
-	inline static void	_clearListFromNode(ListNode * itNode,
-										   const ListNode * endNode,
-										   allocator_type & alloc) _NOEXCEPT {
+	inline static
+	void			_clearListFromNode(ListNode * const itNode,
+									   const ListNode * const endNode,
+									   allocator_type & alloc) _NOEXCEPT {
 		if (itNode == endNode) {
 			return;
 		}
@@ -141,17 +159,21 @@ private:
 		);
 	}
 public:
-	static void			clearListWithoutEnd(ListNode * endNode,
-											allocator_type & alloc) _NOEXCEPT {
+	static
+	void			clearListWithoutEnd(ListNode * const endNode,
+										allocator_type & alloc) _NOEXCEPT {
 		_clearListFromNode(endNode->next, endNode, alloc);
 		setPrevNext(endNode, endNode, endNode);
 	}
 
 private:
 	template < class InputIterator >
-	static size_type	_addBeforeNodeFromItWithAccumulator(const size_type n,
-									InputIterator & it, const InputIterator & ite,
-									ListNode * endNode, allocator_type & alloc) {
+	static
+	size_type		_addBeforeNodeFromItWithAccumulator(const size_type n,
+									InputIterator & it,
+									const InputIterator & ite,
+									ListNode * const endNode,
+									allocator_type & alloc) throw(std::bad_alloc) {
 		if (it == ite) {
 			return n;
 		}
@@ -166,18 +188,22 @@ private:
 public:
 	/* Returns the number of added values */
 	template < class InputIterator >
-	static size_type	addBeforeNodeFromIterators(InputIterator it,
-									const InputIterator ite, ListNode * endNode,
-									allocator_type & alloc) {
+	static
+	size_type		addBeforeNodeFromIterators(InputIterator it,
+											   const InputIterator ite,
+											   ListNode * const endNode,
+											   allocator_type & alloc) throw(std::bad_alloc) {
 		return _addBeforeNodeFromItWithAccumulator(0, it, ite, endNode, alloc);
 	}
 
 #ifdef DEBUG
-	inline static void	printNodeData(const ListNode *node) _NOEXCEPT {
+	inline static
+	void			printNodeData(const ListNode * const node) _NOEXCEPT {
 		std::cout << *(node->data) << ", ";
 	}
-	static void			printList(const ListNode * itNode,
-								  const ListNode * endNode) _NOEXCEPT {
+	static
+	void			printList(const ListNode * const itNode,
+							  const ListNode * const endNode) _NOEXCEPT {
 		if (itNode == endNode) {
 			std::cout << "end" << std::endl;
 			return;
@@ -194,7 +220,7 @@ private:
 };
 
 std::ostream & operator<<(std::ostream & o,
-						  ListNode< int, std::allocator<int> > nodePtr) _NOEXCEPT {
+						  const ListNode< int, std::allocator<int> > nodePtr) _NOEXCEPT {
 	o << "Node {" << std::endl;
 	o << "	data = ";
 	(nodePtr.data)

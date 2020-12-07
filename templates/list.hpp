@@ -14,6 +14,8 @@
 
 #include <memory>
 #include <type_traits>
+#include <stdexcept>
+
 #include "support/list_node.hpp"
 #include "support/list_iterators.hpp"
 
@@ -37,7 +39,7 @@ public:
 	typedef std::ptrdiff_t					difference_type;
 	typedef std::size_t						size_type;
 private:
-	typedef ListNode<value_type,allocator_type>		_lst;
+	typedef ListNode< value_type, allocator_type >		_lst;
 
 public:
 	/* Initialize */
@@ -140,34 +142,34 @@ public:
 	}
 
 	/* Capacity */
-	bool		empty() const {
+	bool		empty() const _NOEXCEPT {
 		return (m_size == 0);
 	}
-	size_type	size() const {
+	size_type	size() const _NOEXCEPT {
 		return m_size;
 	}
-	size_type	max_size() const {
+	size_type	max_size() const _NOEXCEPT {
 		return (static_cast<size_type>(-1) / sizeof(*m_end));
 	}
 
 	/* Element access */
-	reference		front() {
+	reference		front() _NOEXCEPT {
 		return _lst::getDataReference(m_end->next);
 	}
-	const_reference	front() const {
+	const_reference	front() const _NOEXCEPT {
 		return _lst::getDataReference(m_end->next);
 	}
-	reference		back() {
+	reference		back() _NOEXCEPT {
 		return _lst::getDataReference(m_end->prev);
 	}
-	const_reference	back() const {
+	const_reference	back() const _NOEXCEPT {
 		return _lst::getDataReference(m_end->prev);
 	}
 
 	/* Modifiers */
 	template < class InputIterator >
 	void assign( InputIterator first,
-				 _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last ) {
+				 _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last ) throw(std::bad_alloc) {
 		_lst::clearListWithoutEnd(m_end, m_allocator);
 		m_size = _lst::addBeforeNodeFromIterators(
 			first,
@@ -176,12 +178,12 @@ public:
 			m_allocator
 		);
 	}
-	void assign( size_type n, const value_type & val ) {
+	void assign( size_type n, const value_type & val ) throw(std::bad_alloc) {
 		_lst::clearListWithoutEnd(m_end, m_allocator);
 		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
 		m_size = n;
 	}
-	void push_front( const value_type & val ) {
+	void push_front( const value_type & val ) throw(std::bad_alloc) {
 		_lst::createAndInsertBetween(
 			val,
 			m_allocator,
@@ -190,13 +192,13 @@ public:
 		);
 		++m_size;
 	}
-	void pop_front() {
+	void pop_front() _NOEXCEPT {
 		_lst * const	frontNode = _lst::drawNodeFromList(m_end->next);
 
 		_lst::destroyNode(frontNode, m_allocator);
 		--m_size;
 	}
-	void push_back( const value_type & val ) {
+	void push_back( const value_type & val ) throw(std::bad_alloc) {
 		_lst::createAndInsertBetween(
 			val,
 			m_allocator,
@@ -205,7 +207,7 @@ public:
 		);
 		++m_size;
 	}
-	void pop_back() {
+	void pop_back() _NOEXCEPT {
 		_lst * const	backNode = _lst::drawNodeFromList(m_end->prev);
 
 		_lst::destroyNode(backNode, m_allocator);
