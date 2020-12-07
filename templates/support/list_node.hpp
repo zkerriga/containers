@@ -30,10 +30,10 @@ public:
 	typedef int stepToNextType;
 	typedef char stepToPrevType;
 
-	inline static shiftFunction	getShiftFunction(stepToNextType) {
+	inline static shiftFunction	getShiftFunction(stepToNextType) _NOEXCEPT {
 		return toNext;
 	}
-	inline static shiftFunction	getShiftFunction(stepToPrevType) {
+	inline static shiftFunction	getShiftFunction(stepToPrevType) _NOEXCEPT {
 		return toPrev;
 	}
 
@@ -44,24 +44,33 @@ public:
 		setPrevNext(node, node, node);
 		return node;
 	}
-	inline static void	setData(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
+	inline static void	setData(ListNode * targetNode, const value_type & value,
+								allocator_type & alloc) _NOEXCEPT {
 		alloc.construct(targetNode->data, value);
 	}
-	inline static void	setPrevNext(ListNode * targetNode, ListNode * prevNode, ListNode * nextNode) {
+	inline static void	setPrevNext(ListNode * targetNode, ListNode * prevNode,
+									ListNode * nextNode) _NOEXCEPT {
 		targetNode->prev = prevNode;
 		targetNode->next = nextNode;
 	}
-	static ListNode *	setDataReturnNode(ListNode * targetNode, const value_type & value, allocator_type & alloc) {
+	static ListNode *	setDataReturnNode(ListNode * targetNode,
+										  const value_type & value,
+										  allocator_type & alloc) _NOEXCEPT {
 		setData(targetNode, value, alloc);
 		return targetNode;
 	}
-	inline static void	insertBetween(ListNode * insertingNode, ListNode * prevNode, ListNode * nextNode) {
+	inline static void	insertBetween(ListNode * insertingNode,
+									  ListNode * prevNode,
+									  ListNode * nextNode) _NOEXCEPT {
 		insertingNode->next = nextNode;
 		insertingNode->prev = prevNode;
 		prevNode->next = insertingNode;
 		nextNode->prev = insertingNode;
 	}
-	static void			createAndInsertBetween(const value_type & value, allocator_type & alloc, ListNode * prevNode, ListNode * nextNode) {
+	static void			createAndInsertBetween(const value_type & value,
+											   allocator_type & alloc,
+											   ListNode * prevNode,
+											   ListNode * nextNode) {
 		insertBetween(
 			setDataReturnNode(
 				getNewNode(alloc),
@@ -72,7 +81,9 @@ public:
 			nextNode
 		);
 	}
-	static void			addNIdenticalValue(const size_type n, ListNode * endNode, const value_type & value, allocator_type & alloc) {
+	static void			addNIdenticalValue(const size_type n, ListNode * endNode,
+										   const value_type & value,
+										   allocator_type & alloc) {
 		if (n == 0) {
 			return;
 		}
@@ -84,18 +95,20 @@ public:
 		);
 		addNIdenticalValue(n - 1, endNode, value, alloc);
 	}
-	inline static void	toPrev(ListNode * & node) {
+	inline static void	toPrev(ListNode * & node) _NOEXCEPT {
 		node = node->prev;
 	};
-	inline static void	toNext(ListNode * & node) {
+	inline static void	toNext(ListNode * & node) _NOEXCEPT {
 		node = node->next;
 	};
-	inline static void	destroyNode(ListNode * node, allocator_type & alloc) {
+	inline static void	destroyNode(ListNode * node,
+									allocator_type & alloc) _NOEXCEPT {
 		alloc.destroy(node->data);
 		alloc.deallocate(node->data, 1);
 		operator delete (node);
 	}
-	static ListNode *	destroyNodeAndGetNext(ListNode * node, allocator_type & alloc) {
+	static ListNode *	destroyNodeAndGetNext(ListNode * node,
+											  allocator_type & alloc) _NOEXCEPT {
 		ListNode *	nextNode = node->next;
 
 		destroyNode(node, alloc);
@@ -103,8 +116,9 @@ public:
 	}
 
 private:
-	inline static void	_clearListFromNode(ListNode * itNode, const ListNode * endNode,
-												allocator_type & alloc) {
+	inline static void	_clearListFromNode(ListNode * itNode,
+										   const ListNode * endNode,
+										   allocator_type & alloc) _NOEXCEPT {
 		if (itNode == endNode) {
 			return;
 		}
@@ -115,7 +129,8 @@ private:
 		);
 	}
 public:
-	static void			clearListWithoutEnd(ListNode * endNode, allocator_type & alloc) {
+	static void			clearListWithoutEnd(ListNode * endNode,
+											allocator_type & alloc) _NOEXCEPT {
 		_clearListFromNode(endNode->next, endNode, alloc);
 		setPrevNext(endNode, endNode, endNode);
 	}
@@ -146,10 +161,11 @@ public:
 	}
 
 #ifdef DEBUG
-	inline static void	printNodeData(const ListNode *node) {
+	inline static void	printNodeData(const ListNode *node) _NOEXCEPT {
 		std::cout << *(node->data) << ", ";
 	}
-	static void			printList(const ListNode * itNode, const ListNode * endNode) {
+	static void			printList(const ListNode * itNode,
+								  const ListNode * endNode) _NOEXCEPT {
 		if (itNode == endNode) {
 			std::cout << "end" << std::endl;
 			return;
@@ -160,12 +176,13 @@ public:
 #endif //DEBUG
 
 private:
-	void* operator new (std::size_t) throw (std::bad_alloc) {
+	void* operator new (std::size_t) throw(std::bad_alloc) {
 		return ::operator new(sizeof(ListNode));
 	}
 };
 
-std::ostream & operator<<(std::ostream & o, ListNode< int, std::allocator<int> > nodePtr) {
+std::ostream & operator<<(std::ostream & o,
+						  ListNode< int, std::allocator<int> > nodePtr) _NOEXCEPT {
 	o << "Node {" << std::endl;
 	o << "	data = ";
 	(nodePtr.data)
