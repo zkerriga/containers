@@ -53,7 +53,7 @@ public:
 		: m_end(nullptr), m_size(n), m_allocator(alloc)
 	{
 		m_end = _lst::getNewNode(m_allocator);
-		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
+		_lst::addBeforeNodeNIdenticalValue(n, m_end, val, m_allocator);
 	}
 	template < class InputIterator >
 	list( InputIterator first,
@@ -180,7 +180,7 @@ public:
 	}
 	void assign( size_type n, const value_type & val ) throw(std::bad_alloc) {
 		_lst::clearListWithoutEnd(m_end, m_allocator);
-		_lst::addNIdenticalValue(n, m_end, val, m_allocator);
+		_lst::addBeforeNodeNIdenticalValue(n, m_end, val, m_allocator);
 		m_size = n;
 	}
 	void push_front( const value_type & val ) throw(std::bad_alloc) {
@@ -213,10 +213,35 @@ public:
 		_lst::destroyNode(backNode, m_allocator);
 		--m_size;
 	}
-//	iterator insert( iterator position, const value_type & val );
-//	void insert( iterator position, size_type n, const value_type & val );
-//	template <class InputIterator>
-//	void insert( iterator position, InputIterator first, InputIterator last );
+	iterator insert( iterator position, const value_type & val ) {
+		_lst * const	lastNode = position._getListNode();
+		_lst::createAndInsertBetween(
+			val,
+			m_allocator,
+			lastNode->prev,
+			lastNode
+		);
+		++m_size;
+		return iterator(lastNode->prev);
+	}
+	void insert( iterator position, size_type n, const value_type & val ) {
+		_lst * const	lastNode = position._getListNode();
+
+		_lst::addBeforeNodeNIdenticalValue(n, lastNode, val, m_allocator);
+		m_size += n;
+	}
+	template < class InputIterator >
+	void insert( iterator position, InputIterator first,
+				 _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last ) {
+		_lst * const	lastNode = position._getListNode();
+
+		m_size += _lst::addBeforeNodeFromIterators(
+			first,
+			last,
+			lastNode,
+			m_allocator
+		);
+	}
 //	iterator erase( iterator position );
 //	iterator erase( iterator first, iterator last);
 //	void swap( list & x );

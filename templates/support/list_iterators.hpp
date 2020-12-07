@@ -94,6 +94,10 @@ template < typename value_type,
 		typename DecrementType >
 class _ListConstIterator;
 
+namespace ft {
+	template < class T, class Alloc >
+	class list;
+}
 
 template < typename value_type,
 		   typename allocator_type,
@@ -119,6 +123,7 @@ public:
 		return *this;
 	}
 	explicit _ListIterator(_lst * p) : _base( p, GET_SHIFT_FUNCS ) {}
+	friend class ft::list< value_type, allocator_type >;
 
 	value_type &			operator*() const {
 		return *(_base::m_p->data);
@@ -158,6 +163,11 @@ public:
 
 		_base::operator++();
 		return _ListIterator(tmp);
+	}
+
+private:
+	_lst *	_getListNode() {
+		return _base::m_p;
 	}
 }; //class _ListIterator
 

@@ -811,51 +811,61 @@ void printList(sList list) {
 	std::cout << ";" << std::endl;
 }
 
-/*
 TEST_F(ListTestClass, insert) {
 	sList		s1(sEmptyList);
+	mList		m1(mEmptyList);
 
-	s1.insert(s1.begin(), INT_VALUE);
-	ASSERT_EQ(s1.size(), 1);
-	ASSERT_EQ(s1.front(), INT_VALUE);
+	ASSERT_EQ(*s1.insert(s1.begin(), INT_VALUE), *m1.insert(m1.begin(), INT_VALUE));
+	ASSERT_EQ(s1.size(), m1.size());
+	ASSERT_EQ(s1.front(), m1.front());
+	s1.pop_front(); m1.pop_front();
+
+	ASSERT_EQ(*s1.insert(s1.end(), INT_VALUE - 1), *m1.insert(m1.end(), INT_VALUE - 1));
+	ASSERT_EQ(s1.size(), m1.size());
+	ASSERT_EQ(s1.front(), m1.front());
 	s1.pop_front();
+	m1.pop_front();
 
-	s1.insert(s1.end(), INT_VALUE - 1);
-	ASSERT_EQ(s1.size(), 1);
-	ASSERT_EQ(s1.front(), INT_VALUE - 1);
-	s1.pop_front();
-
-	s1.push_front(0);
-	s1.push_back(9);
+	s1.push_front(0); m1.push_front(0);
+	s1.push_back(9); m1.push_back(9);
 	s1.insert(++s1.begin(), ++sTenList.begin(), --sTenList.end());
-	assertListEQ(sTenList, s1);
+	m1.insert(++m1.begin(), ++sTenList.begin(), --sTenList.end());
+	assertListEQ(s1, m1);
 
 	sList		s2(sEmptyList);
-	s2.push_front(INT_VALUE - 2);
+	mList		m2(mEmptyList);
+	s2.push_front(INT_VALUE - 2); m2.push_front(INT_VALUE - 2);
 	s2.insert(s2.begin(), SIZE_LONG, INT_VALUE - 2);
-	checkListContainsSingleValue(s2, SIZE_LONG + 1, INT_VALUE - 2);
+	m2.insert(m2.begin(), SIZE_LONG, INT_VALUE - 2);
+	assertListEQ(s2, m2);
 
 	sList				s3(sTenList);
-	sList::iterator		it = s3.begin();
+	sList::iterator		sIt = s3.begin();
+	mList				m3(mTenList);
+	mList::iterator		mIt = m3.begin();
 
-	++it, ++it, ++it;
-	s3.insert(it, SIZE_LITTLE, INT_VALUE);
-	ASSERT_EQ(*it, 3);
-	it = s3.begin();
+	++sIt, ++sIt, ++sIt;
+	++mIt, ++mIt, ++mIt;
+	s3.insert(sIt, SIZE_LITTLE, INT_VALUE);
+	m3.insert(mIt, SIZE_LITTLE, INT_VALUE);
+	ASSERT_EQ(*sIt, *mIt);
+	sIt = s3.begin();
+	mIt = m3.begin();
 	bool flag = true;
 	for (int i = 0; i < 10; ++i) {
 		if (i == 3 && flag) {
 			for (int j = 0; j < SIZE_LITTLE; ++j) {
-				EXPECT_EQ(*it++, INT_VALUE);
+				EXPECT_EQ(*sIt++, *mIt++);
 			}
 			--i;
 			flag = false;
 			continue;
 		}
-		EXPECT_EQ(*it++, i);
+		EXPECT_EQ(*sIt++, *mIt++);
 	}
 }
 
+/*
 TEST_F(ListTestClass, erase) {
 //	sEmptyList.erase(sEmptyList.begin());
 //	ASSERT_TRUE(sEmptyList.empty());

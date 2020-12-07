@@ -105,20 +105,20 @@ public:
 		);
 	}
 	static
-	void			addNIdenticalValue(const size_type n,
-									   ListNode * const endNode,
-									   const value_type & value,
-									   allocator_type & alloc) throw(std::bad_alloc) {
+	void			addBeforeNodeNIdenticalValue(const size_type n,
+												 ListNode * const endNode,
+												 const value_type & value,
+												 allocator_type & alloc) throw(std::bad_alloc) {
 		if (n == 0) {
 			return;
 		}
 		createAndInsertBetween(
 			value,
 			alloc,
-			endNode,
-			endNode->next
+			endNode->prev,
+			endNode
 		);
-		addNIdenticalValue(n - 1, endNode, value, alloc);
+		addBeforeNodeNIdenticalValue(n - 1, endNode, value, alloc);
 	}
 	inline static
 	void			toPrev(ListNode * & node) _NOEXCEPT {
