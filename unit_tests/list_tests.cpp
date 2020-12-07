@@ -652,25 +652,28 @@ TEST_F(ListTestClass, iterators_end) {
 }
 
 TEST_F(ListTestClass, empty) {
-	EXPECT_TRUE(sEmptyList.empty());
-	EXPECT_FALSE(sTenList.empty());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
+	ASSERT_EQ(sTenList.empty(), mTenList.empty());
 }
 
 TEST_F(ListTestClass, size) {
-	EXPECT_EQ(sEmptyList.size(), 0);
-	EXPECT_EQ(sTenList.size(), 10);
-	EXPECT_EQ(sLongList.size(), 100);
+	EXPECT_EQ(sEmptyList.size(), mEmptyList.size());
+	EXPECT_EQ(sTenList.size(), mTenList.size());
+	EXPECT_EQ(sLongList.size(), mLongList.size());
 }
 
 TEST_F(ListTestClass, max_size) {
-	const int	nPointersInStructure = 3;
-	const int	structureSize = nPointersInStructure * sizeof(void *);
+	const int		nPointersInStructure = 3;
+	const int		structureSize = nPointersInStructure * sizeof(void *);
+	const size_t	maxSize = static_cast<size_t>(-1) / structureSize;
 
-	EXPECT_EQ(sEmptyList.max_size(), static_cast<size_t>(-1) / structureSize);
-	EXPECT_EQ(sTenList.max_size(), static_cast<size_t>(-1) / structureSize);
+	EXPECT_EQ(sEmptyList.max_size(), mEmptyList.max_size());
+	EXPECT_EQ(sTenList.max_size(), mTenList.max_size());
 
 	std::list<float>	s1(3);
-	EXPECT_EQ(s1.max_size(), static_cast<size_t>(-1) / structureSize);
+	ft::list<float>		m1(3);
+	EXPECT_EQ(s1.max_size(), maxSize);
+	EXPECT_EQ(m1.max_size(), maxSize);
 }
 
 TEST_F(ListTestClass, front) {

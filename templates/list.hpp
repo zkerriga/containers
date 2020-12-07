@@ -143,8 +143,10 @@ public:
 	size_type	size() const {
 		return m_size;
 	}
-//	size_type	max_size() const;
-//
+	size_type	max_size() const {
+		return (static_cast<size_type>(-1) / sizeof(*m_end));
+	}
+
 //	 Element access
 //	reference		front();
 //	const_reference	front() const;
