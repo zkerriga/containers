@@ -908,23 +908,34 @@ TEST_F(ListTestClass, erase) {
 	assertListEQ(s2, m2);
 }
 
-/*
 TEST_F(ListTestClass, swap) {
 	sList		s1(sEmptyList);
 	sList		s2(sTenList);
+	mList		m1(mEmptyList);
+	mList		m2(mTenList);
 
 	s1.swap(s2);
-	assertListEQ(sEmptyList, s2);
-	assertListEQ(sTenList, s1);
+	m1.swap(m2);
+	assertListEQ(s2, m2);
+	assertListEQ(s1, m1);
 
-	sList					s3(sRandomList);
-	sList					s4(sTenList);
+	sList		s3(sRandomList);
+	sList		s4(sTenList);
+	mList		m3(mRandomList);
+	mList		m4(mTenList);
+
+	sList::const_iterator	sIt = ++s4.begin();
+	mList::const_iterator	mIt = ++m4.begin();
 
 	s3.swap(s4);
-	assertListEQ(sTenList, s3);
-	assertListEQ(sRandomList, s4);
+	m3.swap(m4);
+	assertListEQ(s3, m3);
+	assertListEQ(s4, m4);
+	ASSERT_EQ(*sIt++, *mIt++);
+	ASSERT_EQ(*sIt, *mIt);
 }
 
+/*
 TEST_F(ListTestClass , resize) {
 	sEmptyList.resize(0);
 	ASSERT_TRUE(sEmptyList.empty());

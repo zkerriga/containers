@@ -18,6 +18,7 @@
 
 #include "support/list_node.hpp"
 #include "support/list_iterators.hpp"
+#include "utils.hpp"
 
 namespace ft {
 
@@ -262,7 +263,11 @@ public:
 		);
 		return last;
 	}
-//	void swap( list & x );
+	void swap( list & x ) _NOEXCEPT {
+		ft::swap(m_allocator, x.m_allocator);
+		ft::swap(m_end, x.m_end);
+		ft::swap(m_size, x.m_size);
+	}
 //	void resize( size_type n, value_type val = value_type() );
 //	void clear();
 
