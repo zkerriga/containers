@@ -215,8 +215,8 @@ public:
 		return deleteSize;
 	}
 	static
-	void			clearFullListWithoutEnd(ListNode * const endNode,
-											allocator_type & alloc) _NOEXCEPT {
+	void			safetyClearFullListWithoutEnd(ListNode * const endNode,
+												  allocator_type & alloc) _NOEXCEPT {
 		_clearListBetweenNodes(0, endNode->next, endNode, alloc);
 		setPrevNext(endNode, endNode, endNode);
 	}

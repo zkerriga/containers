@@ -82,12 +82,12 @@ public:
 		);
 	}
 	~list() {
-		_lst::clearFullListWithoutEnd(m_end, m_allocator);
+		_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
 		_lst::destroyNode(m_end, m_allocator);
 	}
 	list & operator= ( const list& x ) {
 		if (this != &x) {
-			_lst::clearFullListWithoutEnd(m_end, m_allocator);
+			_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
 			m_size = _lst::addBeforeNodeFromIterators(
 				x.begin(),
 				x.end(),
@@ -171,7 +171,7 @@ public:
 	template < class InputIterator >
 	void assign( InputIterator first,
 				 _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last ) throw(std::bad_alloc) {
-		_lst::clearFullListWithoutEnd(m_end, m_allocator);
+		_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
 		m_size = _lst::addBeforeNodeFromIterators(
 			first,
 			last,
@@ -180,7 +180,7 @@ public:
 		);
 	}
 	void assign( size_type n, const value_type & val ) throw(std::bad_alloc) {
-		_lst::clearFullListWithoutEnd(m_end, m_allocator);
+		_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
 		_lst::addBeforeNodeNIdenticalValue(n, m_end, val, m_allocator);
 		m_size = n;
 	}
@@ -285,7 +285,9 @@ public:
 		}
 		m_size = n;
 	}
-//	void clear();
+	void clear() {
+		_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
+	}
 
 	/* Operations */
 //	void splice( iterator position, list & x );

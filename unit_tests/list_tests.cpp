@@ -963,24 +963,30 @@ TEST_F(ListTestClass , resize) {
 	ASSERT_EQ(sIt == sIte, mIt == mIte);
 }
 
-/*
 TEST_F(ListTestClass, clear) {
 	sEmptyList.clear();
-	ASSERT_EQ(sEmptyList.size(), 0);
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.clear();
+	ASSERT_EQ(sEmptyList.size(), mEmptyList.size());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sTenList.clear();
-	ASSERT_EQ(sTenList.size(), 0);
-	ASSERT_TRUE(sTenList.empty());
+	mTenList.clear();
+	ASSERT_EQ(sEmptyList.size(), mEmptyList.size());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sRandomList.clear();
-	ASSERT_EQ(sRandomList.size(), 0);
-	ASSERT_TRUE(sRandomList.empty());
+	mRandomList.clear();
+	ASSERT_EQ(sEmptyList.size(), mEmptyList.size());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sEmptyList.push_back(INT_VALUE);
-	ASSERT_EQ(sEmptyList.front(), INT_VALUE);
+	mEmptyList.push_back(INT_VALUE);
+	ASSERT_EQ(sEmptyList.front(), mEmptyList.front());
+	ASSERT_EQ(sEmptyList.size(), mEmptyList.size());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 }
 
+/*
 TEST_F(ListTestClass, splice) {
 	sList		s1(sEmptyList);
 	sList		s2(sTenList);
