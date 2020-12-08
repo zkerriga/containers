@@ -240,9 +240,51 @@ public:
 			alloc
 		);
 	}
-private:
-	template < typename Predicate >
 	inline static
+	size_type		deleteNodesFromListByEquate(const value_type & value,
+												ListNode * const endNode,
+												allocator_type & alloc) _NOEXCEPT {
+		return _deleteNodesFromListByEquate(
+				0,
+				value,
+				endNode->next,
+				endNode,
+				alloc
+		);
+	}
+	static
+	void			safetyDestroyNodeInList(ListNode * const node,
+											allocator_type & alloc) _NOEXCEPT {
+		destroyNode(
+			drawNodeFromList(node),
+			alloc
+		);
+	}
+private:
+	static
+	size_type		_deleteNodesFromListByEquate(const size_type n,
+												 const value_type & value,
+												 ListNode * const itNode,
+												 ListNode * const endNode,
+												 allocator_type & alloc) _NOEXCEPT {
+		if (itNode == endNode) {
+			return n;
+		}
+		const bool			shouldRemove	= getDataReference(itNode) == value;
+		ListNode * const	nextNode		= itNode->next;
+		if (shouldRemove) {
+			safetyDestroyNodeInList(itNode, alloc);
+		}
+		return _deleteNodesFromListByEquate(
+			n + (shouldRemove ? 1 : 0),
+			value,
+			nextNode,
+			endNode,
+			alloc
+		);
+	}
+	template < typename Predicate >
+	static
 	size_type		_deleteNodesFromListByPredicateWithAccumulator(
 									const size_type n,
 									const Predicate predicate,
@@ -256,10 +298,7 @@ private:
 		ListNode * const	nextNode		= itNode->next;
 
 		if (shouldRemove) {
-			destroyNode(
-				drawNodeFromList(itNode),
-				alloc
-			);
+			safetyDestroyNodeInList(itNode, alloc);
 		}
 		return _deleteNodesFromListByPredicateWithAccumulator(
 			n + (shouldRemove ? 1 : 0),
@@ -269,7 +308,6 @@ private:
 			alloc
 		);
 	}
-
 	static
 	size_type		_getListSizeWithAccumulator(const size_type n,
 												const ListNode * const startNode,

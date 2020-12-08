@@ -315,7 +315,13 @@ public:
 		x.m_size -= movedSize;
 		m_size += movedSize;
 	}
-//	void remove( const value_type & val );
+	void remove( const value_type & val ) {
+		m_size -= _lst::deleteNodesFromListByEquate(
+			val,
+			m_end,
+			m_allocator
+		);
+	}
 	template < class Predicate >
 	void remove_if( Predicate pred ) {
 		m_size -= _lst::deleteNodesFromListByPredicate(
