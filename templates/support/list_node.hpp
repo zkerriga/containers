@@ -192,7 +192,7 @@ private:
 		);
 	}
 	static
-	size_type		_getNodesRangeSize(_NodesRange * range) _NOEXCEPT {
+	size_type		_getNodesRangeSize(const _NodesRange * range) _NOEXCEPT {
 		return _getListSizeWithAccumulator(1, range, range->prev);
 	}
 	static
@@ -235,8 +235,11 @@ public:
 			endNode
 		);
 		const size_type		rangeSize = _getNodesRangeSize(drawnRange);
-		linkNodes(nodeToInsert->prev, drawnRange);
-		linkNodes(drawnRange->prev, nodeToInsert);
+		ListNode * const	rangeStart = drawnRange;
+		ListNode * const	rangeEnd = drawnRange->prev;
+
+		linkNodes(nodeToInsert->prev, rangeStart);
+		linkNodes(rangeEnd, nodeToInsert);
 		return rangeSize;
 	}
 
