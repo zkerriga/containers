@@ -800,13 +800,14 @@ TEST_F(ListTestClass, pop_back) {
 	assertListEQFromIterators(s2.begin(), sIte, m2.begin(), mIte);
 }
 
-void printList(sList list) {
-	sList::const_iterator	sIt = list.begin();
-	sList::const_iterator	ite = list.end();
+template < typename List >
+void printList(List list) {
+	typename List::const_iterator	it = list.begin();
+	typename List::const_iterator	ite = list.end();
 
 	std::cout << "List = ";
-	while (sIt != ite) {
-		std::cout << *sIt++ << ", ";
+	while (it != ite) {
+		std::cout << *it++ << ", ";
 	}
 	std::cout << ";" << std::endl;
 }
@@ -935,27 +936,34 @@ TEST_F(ListTestClass, swap) {
 	ASSERT_EQ(*sIt, *mIt);
 }
 
-/*
 TEST_F(ListTestClass , resize) {
 	sEmptyList.resize(0);
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.resize(0);
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 	s1.resize(SIZE_LITTLE);
 	s1.resize(SIZE_LITTLE, INT_VALUE);
 	s1.resize(SIZE_LONG, INT_VALUE - 1);
+	m1.resize(SIZE_LITTLE);
+	m1.resize(SIZE_LITTLE, INT_VALUE);
+	m1.resize(SIZE_LONG, INT_VALUE - 1);
 
 	sList::const_iterator	sIt = s1.begin();
-	sList::const_iterator	ite = s1.end();
+	sList::const_iterator	sIte = s1.end();
+	mList::const_iterator	mIt = m1.begin();
+	mList::const_iterator	mIte = m1.end();
 	for (int i = 0; i < SIZE_LITTLE; ++i) {
-		ASSERT_EQ(*sIt++, i);
+		ASSERT_EQ(*sIt++, *mIt++);
 	}
 	for (int i = 0; i < SIZE_LONG - SIZE_LITTLE; ++i) {
-		ASSERT_EQ(*sIt++, INT_VALUE - 1);
+		ASSERT_EQ(*sIt++, *mIt++);
 	}
-	ASSERT_TRUE(sIt == ite);
+	ASSERT_EQ(sIt == sIte, mIt == mIte);
 }
 
+/*
 TEST_F(ListTestClass, clear) {
 	sEmptyList.clear();
 	ASSERT_EQ(sEmptyList.size(), 0);

@@ -268,7 +268,23 @@ public:
 		ft::swap(m_end, x.m_end);
 		ft::swap(m_size, x.m_size);
 	}
-//	void resize( size_type n, value_type val = value_type() );
+	void resize( size_type n, value_type val = value_type() ) {
+		if (n == m_size) {
+			return;
+		}
+		else if (n < m_size) {
+			_lst::safetyClearNLastNodes(m_size - n, m_end, m_allocator);
+		}
+		else {
+			_lst::addBeforeNodeNIdenticalValue(
+				n - m_size,
+				m_end,
+				val,
+				m_allocator
+			);
+		}
+		m_size = n;
+	}
 //	void clear();
 
 	/* Operations */

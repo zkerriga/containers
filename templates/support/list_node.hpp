@@ -142,6 +142,14 @@ public:
 		destroyNode(node, alloc);
 		return nextNode;
 	}
+	static
+	ListNode *		destroyNodeAndGetPrev(ListNode * const node,
+										  allocator_type & alloc) _NOEXCEPT {
+		ListNode * const	prevNode = node->prev;
+
+		destroyNode(node, alloc);
+		return prevNode;
+	}
 	inline static
 	void			linkNodes(ListNode * const prevNode,
 							  ListNode * const nextNode) {
@@ -164,7 +172,33 @@ private:
 				alloc
 		);
 	}
+	static
+	ListNode *		_clearNPrevNodesAndGetLast(const size_type n,
+											   ListNode * const currentNode,
+											   allocator_type & alloc
+											   ) _NOEXCEPT {
+		if (n == 0) {
+			return currentNode;
+		}
+		return _clearNPrevNodesAndGetLast(
+			n - 1,
+			destroyNodeAndGetPrev(currentNode, alloc),
+			alloc
+		);
+	}
+
 public:
+	static
+	void			safetyClearNLastNodes(const size_type n,
+										  ListNode * const endNode,
+										  allocator_type & alloc) _NOEXCEPT {
+		ListNode * const	lastAliveNode = _clearNPrevNodesAndGetLast(
+			n,
+			endNode->prev,
+			alloc
+		);
+		linkNodes(lastAliveNode, endNode);
+	}
 	/* EndNode will not be deleted! */
 	static
 	size_type		safetyClearRangeBetweenNodes(ListNode * const startNode,
