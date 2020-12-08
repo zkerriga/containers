@@ -986,38 +986,49 @@ TEST_F(ListTestClass, clear) {
 	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 }
 
-/*
 TEST_F(ListTestClass, splice) {
 	sList		s1(sEmptyList);
 	sList		s2(sTenList);
+	mList		m1(mEmptyList);
+	mList		m2(mTenList);
 
 	s1.splice(s1.begin(), s2);
-	assertListEQ(sTenList, s1);
-	assertListEQ(sEmptyList, s2);
+	m1.splice(m1.begin(), m2);
+	assertListEQ(s1, m1);
+	assertListEQ(s2, m2);
 
 	sList		s3(sTenList);
 	sList		s4(sRandomList);
+	mList		m3(mTenList);
+	mList		m4(mRandomList);
 
 	s4.splice(s4.begin(), s3, ++s3.begin());
+	m4.splice(m4.begin(), m3, ++m3.begin());
 	sList::const_iterator	sIt = s4.begin();
-	ASSERT_EQ(*sIt++, 1);
-	assertListEQFromListAndIterators(sRandomList, sIt, s4.end());
-	ASSERT_EQ(s3.size(), sTenList.size() - 1);
+	mList::const_iterator	mIt = m4.begin();
+	ASSERT_EQ(*sIt++, *mIt++);
+	assertListEQFromIterators(sIt, s4.end(), mIt, m4.end());
+	ASSERT_EQ(s3.size(), m3.size());
 
 	sList		s5(sTenList);
 	sList		s6(sRandomList);
+	mList		m5(mTenList);
+	mList		m6(mRandomList);
 
 	s6.splice(++s6.begin(), s5, s5.begin(), --s5.end());
+	m6.splice(++m6.begin(), m5, m5.begin(), --m5.end());
 	sIt = s6.begin();
-	ASSERT_EQ(*sIt++, sRandomList.front());
+	mIt = m6.begin();
+	ASSERT_EQ(*sIt++, *mIt++);
 	for (int i = 0; i < 9; ++i) {
-		ASSERT_EQ(*sIt++, i);
+		ASSERT_EQ(*sIt++, *mIt++);
 	}
-	assertListEQFromIterators(++sRandomList.begin(), sRandomList.end(), sIt, s6.end());
-	ASSERT_EQ(s5.size(), 1);
-	ASSERT_EQ(s5.front(), sTenList.back());
+	assertListEQFromIterators(sIt, s6.end(), mIt, m6.end());
+	ASSERT_EQ(s5.size(), m5.size());
+	ASSERT_EQ(s5.front(), m5.front());
 }
 
+/*
 TEST_F(ListTestClass, remove) {
 	sEmptyList.remove(INT_VALUE);
 	ASSERT_TRUE(sEmptyList.empty());

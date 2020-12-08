@@ -25,6 +25,8 @@ public:
 	ListNode *		next;
 	ListNode *		prev;
 
+private:
+	typedef ListNode		_NodesRange;
 public:
 	typedef void (*shiftFunction)(ListNode * &);
 	typedef int stepToNextType;
@@ -87,6 +89,20 @@ public:
 
 		linkNodes(prevNode, nextNode);
 		return drawingNode;
+	}
+	/*
+	 * The function returns a pointer to the beginning of the drawn list
+	 * with its end in prev.
+	 */
+	static
+	_NodesRange *		drawNodesRangeFromList(ListNode * const startNode,
+											   ListNode * const endNode) _NOEXCEPT {
+		ListNode * const	beforeStartNode = startNode->prev;
+		ListNode * const	lastRangeNode = endNode->prev;
+
+		linkNodes(beforeStartNode, endNode);
+		linkNodes(lastRangeNode, startNode);
+		return startNode;
 	}
 	static
 	void			createAndInsertBetween(const value_type & value,
@@ -156,7 +172,29 @@ public:
 		prevNode->next = nextNode;
 		nextNode->prev = prevNode;
 	}
+	/* todo: make inline all single-string-functions */
+	static
+	size_type		getListSize(const ListNode * const endNode) {
+		return _getListSizeWithAccumulator(0, endNode->next, endNode);
+	}
 private:
+	static
+	size_type		_getListSizeWithAccumulator(const size_type n,
+												const ListNode * const startNode,
+												const ListNode * const endNode) _NOEXCEPT {
+		if (startNode == endNode) {
+			return n;
+		}
+		return _getListSizeWithAccumulator(
+			n + 1,
+			startNode->next,
+			endNode
+		);
+	}
+	static
+	size_type		_getNodesRangeSize(_NodesRange * range) _NOEXCEPT {
+		return _getListSizeWithAccumulator(1, range, range->prev);
+	}
 	static
 	size_type		_clearListBetweenNodes(const size_type accumulator,
 										   ListNode * const itNode,
@@ -188,6 +226,20 @@ private:
 	}
 
 public:
+	static
+	size_type		moveBeforeNodeFromNodesRange(ListNode * const nodeToInsert,
+												 ListNode * const startNode,
+												 ListNode * const endNode) _NOEXCEPT {
+		_NodesRange * const	drawnRange = drawNodesRangeFromList(
+			startNode,
+			endNode
+		);
+		const size_type		rangeSize = _getNodesRangeSize(drawnRange);
+		linkNodes(nodeToInsert->prev, drawnRange);
+		linkNodes(drawnRange->prev, nodeToInsert);
+		return rangeSize;
+	}
+
 	static
 	void			safetyClearNLastNodes(const size_type n,
 										  ListNode * const endNode,

@@ -285,14 +285,36 @@ public:
 		}
 		m_size = n;
 	}
-	void clear() {
+	void clear() _NOEXCEPT {
 		_lst::safetyClearFullListWithoutEnd(m_end, m_allocator);
 	}
 
 	/* Operations */
-//	void splice( iterator position, list & x );
-//	void splice( iterator position, list & x, iterator i );
-//	void splice( iterator position, list & x, iterator first, iterator last );
+	void splice( iterator position, list & x ) {
+		splice(position, x, x.begin(), x.end());
+	}
+	void splice( iterator position, list & x, iterator i ) {
+		_lst * const	positionNode = position._getListNode();
+		_lst * const	drawnNode = _lst::drawNodeFromList(i._getListNode());
+		--x.m_size;
+
+		_lst::insertBetween(
+			drawnNode,
+			positionNode->prev,
+			positionNode
+		);
+		++m_size;
+	}
+	void splice( iterator position, list & x, iterator first, iterator last ) {
+		_lst * const	positionNode = position._getListNode();
+		const size_type	movedSize = _lst::moveBeforeNodeFromNodesRange(
+			positionNode,
+			first._getListNode(),
+			last._getListNode()
+		);
+		x.m_size -= movedSize;
+		m_size += movedSize;
+	}
 //	void remove( const value_type & val );
 //	template <class Predicate>
 //	void remove_if( Predicate pred );
