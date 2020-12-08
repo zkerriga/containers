@@ -801,12 +801,12 @@ TEST_F(ListTestClass, pop_back) {
 }
 
 void printList(sList list) {
-	sList::const_iterator	it = list.begin();
+	sList::const_iterator	sIt = list.begin();
 	sList::const_iterator	ite = list.end();
 
 	std::cout << "List = ";
-	while (it != ite) {
-		std::cout << *it++ << ", ";
+	while (sIt != ite) {
+		std::cout << *sIt++ << ", ";
 	}
 	std::cout << ";" << std::endl;
 }
@@ -865,37 +865,50 @@ TEST_F(ListTestClass, insert) {
 	}
 }
 
-/*
 TEST_F(ListTestClass, erase) {
 //	sEmptyList.erase(sEmptyList.begin());
 //	ASSERT_TRUE(sEmptyList.empty());
 
 	sEmptyList.push_front(INT_VALUE);
+	mEmptyList.push_front(INT_VALUE);
 	sEmptyList.erase(sEmptyList.begin());
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.erase(mEmptyList.begin());
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList					s1(sTenList);
-	sList::const_iterator	it = s1.begin();
+	sList::const_iterator	sIt = s1.begin();
 	s1.push_back(INT_VALUE);
-	s1.erase(--s1.end());
-	assertListEQFromListAndIterators(sTenList, it, s1.end());
+	mList					m1(mTenList);
+	mList::const_iterator	mIt = m1.begin();
+	m1.push_back(INT_VALUE);
+	ASSERT_EQ(s1.erase(--s1.end()) == s1.end(), m1.erase(--m1.end()) == m1.end());
+	assertListEQFromIterators(sIt, s1.end(), mIt, m1.end());
 
 	sList			s2(sTenList);
-	sList::iterator	it2 = s2.begin();
-	++it2, ++it2, ++it2;
+	sList::iterator	sIt2 = s2.begin();
+	mList			m2(mTenList);
+	mList::iterator	mIt2 = m2.begin();
+	++sIt2, ++sIt2, ++sIt2;
+	++mIt2, ++mIt2, ++mIt2;
 
-	s2.insert(it2, SIZE_LITTLE, INT_VALUE);
-	it2 = s2.begin();
-	++it2, ++it2, ++it2;
-	sList::iterator	ite2(it2);
+	s2.insert(sIt2, SIZE_LITTLE, INT_VALUE);
+	m2.insert(mIt2, SIZE_LITTLE, INT_VALUE);
+	sIt2 = s2.begin();
+	mIt2 = m2.begin();
+	++sIt2, ++sIt2, ++sIt2;
+	++mIt2, ++mIt2, ++mIt2;
+	sList::iterator	sIte2(sIt2);
+	mList::iterator	mIte2(mIt2);
 
-	for (int i = 0; i < SIZE_LITTLE; ++i)
-		++ite2;
-	s2.erase(it2, ite2);
-	ASSERT_EQ(s2.size(), 10);
-	assertListEQ(sTenList, s2);
+	for (int i = 0; i < SIZE_LITTLE; ++i) {
+		++sIte2; ++mIte2;
+	}
+	ASSERT_EQ(*s2.erase(sIt2, sIte2), *m2.erase(mIt2, mIte2));
+	ASSERT_EQ(s2.size(), m2.size());
+	assertListEQ(s2, m2);
 }
 
+/*
 TEST_F(ListTestClass, swap) {
 	sList		s1(sEmptyList);
 	sList		s2(sTenList);
@@ -921,15 +934,15 @@ TEST_F(ListTestClass , resize) {
 	s1.resize(SIZE_LITTLE, INT_VALUE);
 	s1.resize(SIZE_LONG, INT_VALUE - 1);
 
-	sList::const_iterator	it = s1.begin();
+	sList::const_iterator	sIt = s1.begin();
 	sList::const_iterator	ite = s1.end();
 	for (int i = 0; i < SIZE_LITTLE; ++i) {
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
 	for (int i = 0; i < SIZE_LONG - SIZE_LITTLE; ++i) {
-		ASSERT_EQ(*it++, INT_VALUE - 1);
+		ASSERT_EQ(*sIt++, INT_VALUE - 1);
 	}
-	ASSERT_TRUE(it == ite);
+	ASSERT_TRUE(sIt == ite);
 }
 
 TEST_F(ListTestClass, clear) {
@@ -961,21 +974,21 @@ TEST_F(ListTestClass, splice) {
 	sList		s4(sRandomList);
 
 	s4.splice(s4.begin(), s3, ++s3.begin());
-	sList::const_iterator	it = s4.begin();
-	ASSERT_EQ(*it++, 1);
-	assertListEQFromListAndIterators(sRandomList, it, s4.end());
+	sList::const_iterator	sIt = s4.begin();
+	ASSERT_EQ(*sIt++, 1);
+	assertListEQFromListAndIterators(sRandomList, sIt, s4.end());
 	ASSERT_EQ(s3.size(), sTenList.size() - 1);
 
 	sList		s5(sTenList);
 	sList		s6(sRandomList);
 
 	s6.splice(++s6.begin(), s5, s5.begin(), --s5.end());
-	it = s6.begin();
-	ASSERT_EQ(*it++, sRandomList.front());
+	sIt = s6.begin();
+	ASSERT_EQ(*sIt++, sRandomList.front());
 	for (int i = 0; i < 9; ++i) {
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
-	assertListEQFromIterators(++sRandomList.begin(), sRandomList.end(), it, s6.end());
+	assertListEQFromIterators(++sRandomList.begin(), sRandomList.end(), sIt, s6.end());
 	ASSERT_EQ(s5.size(), 1);
 	ASSERT_EQ(s5.front(), sTenList.back());
 }
@@ -1000,19 +1013,19 @@ TEST_F(ListTestClass, remove) {
 	ASSERT_EQ(s3.size(), 9);
 	ASSERT_EQ(s4.size(), 9);
 
-	sList::const_iterator	it = s2.begin();
+	sList::const_iterator	sIt = s2.begin();
 	for (int i = 1; i < 10; ++i) {
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
-	it = s3.begin();
+	sIt = s3.begin();
 	for (int i = 0; i < 10; ++i) {
 		if (i == 5)
 			continue;
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
-	it = s4.begin();
+	sIt = s4.begin();
 	for (int i = 0; i < 9; ++i) {
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
 }
 
@@ -1038,9 +1051,9 @@ TEST_F(ListTestClass, remove_if) {
 	ASSERT_EQ(s1.size(), sTenList.size());
 	s1.remove_if(check);
 	ASSERT_EQ(s1.size(), 5);
-	sList::const_iterator		it = s1.begin();
+	sList::const_iterator		sIt = s1.begin();
 	for (int i = 1; i < 10; i += 2) {
-		ASSERT_EQ(*it++, i);
+		ASSERT_EQ(*sIt++, i);
 	}
 	s1.remove_if(allTrue);
 	ASSERT_TRUE(s1.empty());

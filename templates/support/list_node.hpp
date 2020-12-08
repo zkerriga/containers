@@ -85,8 +85,7 @@ public:
 		ListNode * const	prevNode = drawingNode->prev;
 		ListNode * const	nextNode = drawingNode->next;
 
-		prevNode->next = nextNode;
-		nextNode->prev = prevNode;
+		linkNodes(prevNode, nextNode);
 		return drawingNode;
 	}
 	static
@@ -143,26 +142,48 @@ public:
 		destroyNode(node, alloc);
 		return nextNode;
 	}
-
-private:
 	inline static
-	void			_clearListFromNode(ListNode * const itNode,
-									   const ListNode * const endNode,
-									   allocator_type & alloc) _NOEXCEPT {
+	void			linkNodes(ListNode * const prevNode,
+							  ListNode * const nextNode) {
+		prevNode->next = nextNode;
+		nextNode->prev = prevNode;
+	}
+private:
+	static
+	size_type		_clearListBetweenNodes(const size_type accumulator,
+										   ListNode * const itNode,
+										   const ListNode * const endNode,
+										   allocator_type & alloc) _NOEXCEPT {
 		if (itNode == endNode) {
-			return;
+			return accumulator;
 		}
-		_clearListFromNode(
-			destroyNodeAndGetNext(itNode, alloc),
-			endNode,
-			alloc
+		return _clearListBetweenNodes(
+				accumulator + 1,
+				destroyNodeAndGetNext(itNode, alloc),
+				endNode,
+				alloc
 		);
 	}
 public:
+	/* EndNode will not be deleted! */
 	static
-	void			clearListWithoutEnd(ListNode * const endNode,
-										allocator_type & alloc) _NOEXCEPT {
-		_clearListFromNode(endNode->next, endNode, alloc);
+	size_type		safetyClearRangeBetweenNodes(ListNode * const startNode,
+												 ListNode * const endNode,
+												 allocator_type & alloc) _NOEXCEPT {
+		ListNode * const	prevNode = startNode->prev;
+		const size_type		deleteSize = _clearListBetweenNodes(
+			0,
+			startNode,
+			endNode,
+			alloc
+		);
+		linkNodes(prevNode, endNode);
+		return deleteSize;
+	}
+	static
+	void			clearFullListWithoutEnd(ListNode * const endNode,
+											allocator_type & alloc) _NOEXCEPT {
+		_clearListBetweenNodes(0, endNode->next, endNode, alloc);
 		setPrevNext(endNode, endNode, endNode);
 	}
 
