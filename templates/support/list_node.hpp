@@ -169,8 +169,6 @@ public:
 	size_type		getListSize(const ListNode * const endNode) _NOEXCEPT {
 		return _getListSizeWithAccumulator(0, endNode->next, endNode);
 	}
-
-public:
 	static
 	size_type		moveBeforeNodeFromNodesRange(ListNode * const nodeToInsert,
 												 ListNode * const startNode,
@@ -187,7 +185,6 @@ public:
 		linkNodes(rangeEnd, nodeToInsert);
 		return rangeSize;
 	}
-
 	static
 	void			safetyClearNLastNodes(const size_type n,
 										  ListNode * const endNode,
@@ -220,7 +217,6 @@ public:
 		_clearListBetweenNodes(0, endNode->next, endNode, alloc);
 		linkNodes(endNode, endNode);
 	}
-
 	/* Returns the number of added values */
 	template < class InputIterator >
 	inline static
@@ -231,11 +227,53 @@ public:
 		return _addBeforeNodeFromItWithAccumulator(0, it, ite, endNode, alloc);
 	}
 
+	template < typename Predicate >
+	inline static
+	size_type		deleteNodesFromListByPredicate(const Predicate predicate,
+												  ListNode * const endNode,
+												  allocator_type & alloc) _NOEXCEPT {
+		return _deleteNodesFromListByPredicateWithAccumulator(
+			0,
+			predicate,
+			endNode->next,
+			endNode,
+			alloc
+		);
+	}
 private:
+	template < typename Predicate >
+	inline static
+	size_type		_deleteNodesFromListByPredicateWithAccumulator(
+									const size_type n,
+									const Predicate predicate,
+									ListNode * const itNode,
+									ListNode * const endNode,
+									allocator_type & alloc) _NOEXCEPT {
+		if (itNode == endNode) {
+			return n;
+		}
+		const bool			shouldRemove	= predicate(getDataReference(itNode));
+		ListNode * const	nextNode		= itNode->next;
+
+		if (shouldRemove) {
+			destroyNode(
+				drawNodeFromList(itNode),
+				alloc
+			);
+		}
+		return _deleteNodesFromListByPredicateWithAccumulator(
+			n + (shouldRemove ? 1 : 0),
+			predicate,
+			nextNode,
+			endNode,
+			alloc
+		);
+	}
+
 	static
 	size_type		_getListSizeWithAccumulator(const size_type n,
-											    const ListNode * const startNode,
-											    const ListNode * const endNode) _NOEXCEPT {
+												const ListNode * const startNode,
+												const ListNode * const endNode) _NOEXCEPT {
 		if (startNode == endNode) {
 			return n;
 		}

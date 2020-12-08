@@ -316,8 +316,14 @@ public:
 		m_size += movedSize;
 	}
 //	void remove( const value_type & val );
-//	template <class Predicate>
-//	void remove_if( Predicate pred );
+	template < class Predicate >
+	void remove_if( Predicate pred ) {
+		m_size -= _lst::deleteNodesFromListByPredicate(
+			pred,
+			m_end,
+			m_allocator
+		);
+	}
 //	void unique();
 //	template <class BinaryPredicate>
 //	void unique( BinaryPredicate binary_pred );

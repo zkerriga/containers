@@ -1028,7 +1028,6 @@ TEST_F(ListTestClass, splice) {
 	ASSERT_EQ(s5.front(), m5.front());
 }
 
-/*
 TEST_F(ListTestClass, remove) {
 	sEmptyList.remove(INT_VALUE);
 	ASSERT_TRUE(sEmptyList.empty());
@@ -1080,21 +1079,29 @@ static bool check(int val) {
 TEST_F(ListTestClass, remove_if) {
 	sEmptyList.remove_if(allTrue);
 	sEmptyList.remove_if(allFalse);
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.remove_if(allTrue);
+	mEmptyList.remove_if(allFalse);
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
 	s1.remove_if(allFalse);
-	ASSERT_EQ(s1.size(), sTenList.size());
+	mList		m1(mTenList);
+	m1.remove_if(allFalse);
+	ASSERT_EQ(s1.size(), m1.size());
 	s1.remove_if(check);
-	ASSERT_EQ(s1.size(), 5);
+	m1.remove_if(check);
+	ASSERT_EQ(s1.size(), m1.size());
 	sList::const_iterator		sIt = s1.begin();
+	mList::const_iterator		mIt = m1.begin();
 	for (int i = 1; i < 10; i += 2) {
-		ASSERT_EQ(*sIt++, i);
+		ASSERT_EQ(*sIt++, *mIt++);
 	}
 	s1.remove_if(allTrue);
-	ASSERT_TRUE(s1.empty());
+	m1.remove_if(allTrue);
+	ASSERT_EQ(s1.empty(), m1.empty());
 }
 
+/*
 static bool binaryAllTrue(int prev, int cur) {
 	return true;
 }
