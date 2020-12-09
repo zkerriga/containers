@@ -341,7 +341,7 @@ public:
 			m_allocator
 		);
 	}
-	/*void merge( list & x ) {
+	void merge( list & x ) {
 		if (this != &x) {
 			merge(x, _defaultCompare);
 		}
@@ -349,11 +349,11 @@ public:
 	template < class Compare >
 	void merge( list & x, Compare comp ) {
 		if (this != &x) {
-
+			_lst::mergeTwoListsByCompare(comp, m_end, x.m_end);
 			m_size += x.m_size;
 			x.m_size = 0;
 		}
-	}*/
+	}
 //	void sort();
 //	template <class Compare>
 //	void sort( Compare comp );

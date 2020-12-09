@@ -282,13 +282,47 @@ public:
 	void			mergeTwoListsByCompare(const Compare compare,
 										   ListNode * const toEndNode,
 										   ListNode * const fromEndNode) {
-
+		_mergeTwoListsByCompare(
+			compare,
+			toEndNode->next,
+			toEndNode,
+			fromEndNode->next,
+			fromEndNode
+		);
 	}
 private:
-//	template < typename Compare >
-//	static
-
-//	inline static
+	template < typename Compare >
+	static
+	void			_mergeTwoListsByCompare(const Compare compare,
+											ListNode * const toItNode,
+											ListNode * const toEndNode,
+											ListNode * const fromItNode,
+											ListNode * const fromEndNode) _NOEXCEPT {
+		if (fromItNode == fromEndNode) {
+			return;
+		}
+		const bool			shouldMove = (toItNode == toEndNode) || compare(
+			getDataReference(fromItNode),
+			getDataReference(toItNode)
+		);
+		ListNode * const	toNext = (shouldMove ? toItNode : toItNode->next);
+		ListNode * const	fromNext = (shouldMove ? fromItNode->next : fromItNode);
+		if (shouldMove) {
+			insertBetween(
+				drawNodeFromList(fromItNode),
+				toItNode->prev,
+				toItNode
+			);
+		}
+		_mergeTwoListsByCompare(
+			compare,
+			toNext,
+			toEndNode,
+			fromNext,
+			fromEndNode
+		);
+	}
+	inline static
 	void			_swapPrevNext(ListNode * const node) _NOEXCEPT {
 		ListNode * const	tmp = node->next;
 		node->next = node->prev;

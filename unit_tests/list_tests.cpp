@@ -1187,11 +1187,7 @@ bool myCompare (int first, int second) {
 	return ( (first / 10) < (second / 10) );
 }
 
-bool except (int first, int second) {
-	throw std::exception();
-}
-
-/*TEST_F(ListTestClass, merge) {
+TEST_F(ListTestClass, merge) {
 	sList		s1;
 	mList		m1;
 	s1.push_back(22); m1.push_back(22);
@@ -1218,17 +1214,7 @@ bool except (int first, int second) {
 
 	assertListEQ(s1, m1);
 	ASSERT_EQ(s2.empty(), m2.empty());
-
-	try {
-		s1.merge(sTenList, except);
-	}
-	catch (std::exception &) {}
-	try {
-		m1.merge(mTenList, except);
-	}
-	catch (std::exception &) {}
-	assertListEQ(s1, m1);
-}*/
+}
 /*
 
 bool compareAllFalse(int first, int second) {
