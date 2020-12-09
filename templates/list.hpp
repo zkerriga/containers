@@ -330,9 +330,17 @@ public:
 			m_allocator
 		);
 	}
-//	void unique();
-//	template <class BinaryPredicate>
-//	void unique( BinaryPredicate binary_pred );
+	void unique() {
+		unique(_uniqueBinaryPredicate);
+	}
+	template < class BinaryPredicate >
+	void unique( BinaryPredicate binary_pred ) {
+		m_size -= _lst::deleteNodesFromListByBinaryPredicate(
+			binary_pred,
+			m_end,
+			m_allocator
+		);
+	}
 //	void merge( list & x );
 //	template <class Compare>
 //	void merge( list & x, Compare comp );
@@ -349,6 +357,10 @@ private:
 	size_type		m_size;
 	allocator_type	m_allocator;
 
+	static bool	_uniqueBinaryPredicate(const value_type & curr,
+									   const value_type & prev) _NOEXCEPT {
+		return (curr == prev);
+	}
 }; //class list
 
 #undef _ENABLE_INPUT_ITERATOR_TYPE

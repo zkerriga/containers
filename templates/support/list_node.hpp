@@ -260,7 +260,48 @@ public:
 			alloc
 		);
 	}
+	template < typename BinaryPredicate >
+	inline static
+	size_type		deleteNodesFromListByBinaryPredicate(
+											const BinaryPredicate predicate,
+											ListNode * const endNode,
+											allocator_type & alloc) _NOEXCEPT {
+		return _deleteNodesFromListByBinaryPredicate(
+			0,
+			predicate,
+			endNode->next->next,
+			endNode,
+			alloc
+		);
+	}
 private:
+	template < typename BinaryPredicate >
+	static
+	size_type		_deleteNodesFromListByBinaryPredicate(
+											const size_type n,
+											const BinaryPredicate predicate,
+											ListNode * const itNode,
+											ListNode * const endNode,
+											allocator_type & alloc) _NOEXCEPT {
+		if (itNode == endNode) {
+			return n;
+		}
+		const bool			shouldRemove = predicate(
+			getDataReference(itNode->prev),
+			getDataReference(itNode)
+		);
+		ListNode * const	nextNode = itNode->next;
+		if (shouldRemove) {
+			safetyDestroyNodeInList(itNode, alloc);
+		}
+		return _deleteNodesFromListByBinaryPredicate(
+			n + (shouldRemove ? 1 : 0),
+			predicate,
+			nextNode,
+			endNode,
+			alloc
+		);
+	}
 	static
 	size_type		_deleteNodesFromListByEquate(const size_type n,
 												 const value_type & value,

@@ -1119,51 +1119,71 @@ static bool binaryCheck(int cur, int prev) {
 	return (prev > cur);
 }
 
-/*
 TEST_F(ListTestClass, unique) {
 	sEmptyList.unique();
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.unique();
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 	s1.unique();
-	assertListEQ(sTenList, s1);
+	m1.unique();
+	assertListEQ(s1, m1);
 
 	sList		s2(SIZE_LONG, INT_VALUE);
+	mList		m2(SIZE_LONG, INT_VALUE);
 	s2.unique();
-	ASSERT_EQ(s2.size(), 1);
-	ASSERT_EQ(s2.front(), INT_VALUE);
+	m2.unique();
+	ASSERT_EQ(s2.size(), m2.size());
+	ASSERT_EQ(s2.front(), m2.front());
 
 	sList		s3(sTenList);
+	mList		m3(mTenList);
 	s3.insert(++s3.begin(), 1);
 	s3.insert(++s3.begin(), 1);
+	m3.insert(++m3.begin(), 1);
+	m3.insert(++m3.begin(), 1);
 
 	s3.unique();
-	assertListEQ(sTenList, s3);
+	m3.unique();
+	assertListEQ(s3, m3);
 
 	sList		s4(sTenList);
+	mList		m4(mTenList);
 	s4.push_back(9);
+	m4.push_back(9);
 	s4.unique();
-	assertListEQ(sTenList, s4);
+	m4.unique();
+	assertListEQ(s4, m4);
 
 	sEmptyList.unique(binaryAllFalse);
 	sEmptyList.unique(binaryAllTrue);
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.unique(binaryAllFalse);
+	mEmptyList.unique(binaryAllTrue);
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s5(sTenList);
+	mList		m5(mTenList);
 	s5.unique(binaryAllFalse);
-	ASSERT_FALSE(s5.empty());
+	m5.unique(binaryAllFalse);
+	ASSERT_EQ(s5.empty(), m5.empty());
 	s5.unique(binaryCheck);
-	ASSERT_EQ(s5.size(), 1);
-	ASSERT_EQ(s5.front(), 0);
+	m5.unique(binaryCheck);
+	ASSERT_EQ(s5.size(), m5.size());
+	ASSERT_EQ(s5.front(), m5.front());
 
 	sList		s6(sTenList);
+	mList		m6(mTenList);
 	s6.push_front(INT_VALUE);
+	m6.push_front(INT_VALUE);
 	s6.unique(binaryCheck);
-	ASSERT_EQ(s6.size(), 2);
-	ASSERT_EQ(s6.front(), INT_VALUE);
-	ASSERT_EQ(*(++s6.begin()), 0);
+	m6.unique(binaryCheck);
+	ASSERT_EQ(s6.size(), m6.size());
+	ASSERT_EQ(s6.front(), m6.front());
+	ASSERT_EQ(*(++s6.begin()), *(++m6.begin()));
 }
 
+/*
 bool myCompare (int first, int second) {
 	return ( (first / 10) < (second / 10) );
 }
