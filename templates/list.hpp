@@ -347,10 +347,14 @@ public:
 //	void sort();
 //	template <class Compare>
 //	void sort( Compare comp );
-//	void reverse();
+	void reverse() {
+		_lst::reverseFullList(m_end);
+	}
 
 	/* Observers */
-//	allocator_type get_allocator() const;
+	allocator_type get_allocator() const {
+		return m_allocator;
+	}
 
 private:
 	_lst *			m_end;

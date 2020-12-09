@@ -1260,37 +1260,50 @@ TEST_F(ListTestClass, sort) {
 	sList	sResult(result, result + 10);
 	assertListEQ(sResult, s1);
 }
+*/
 
 TEST_F(ListTestClass, reverse) {
 	sEmptyList.reverse();
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.reverse();
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 	s1.reverse();
-	assertListEQFromListAndRIterators(sTenList, s1.rbegin(), s1.rend());
+	m1.reverse();
+	assertListEQ(s1, m1);
 
 	sList		s2(sRandomList);
+	mList		m2(mRandomList);
 
-	s2.reverse();
-	s2.reverse();
-	assertListEQ(sRandomList, s2);
+	s2.reverse(); m2.reverse();
+	s2.reverse(); m2.reverse();
+	assertListEQ(s2, m2);
 }
 
 TEST_F(ListTestClass, get_allocator) {
 	sList	s1(sAl);
-	int *	p;
+	mList	m1(sAl);
+	int *	sP;
+	int *	mP;
 
-	p = s1.get_allocator().allocate(10);
+	sP = s1.get_allocator().allocate(10);
+	mP = m1.get_allocator().allocate(10);
 
-	for (int i = 0; i < 10; ++i)
-		p[i] = i;
+	for (int i = 0; i < 10; ++i) {
+		sP[i] = i;
+		mP[i] = i;
+	}
 
-	sList	s2(p, p + 10);
-	assertListEQ(sTenList, s2);
+	sList	s2(sP, sP + 10);
+	mList	m2(mP, mP + 10);
+	assertListEQ(s2, m2);
 
-	s1.get_allocator().deallocate(p,10);
+	s1.get_allocator().deallocate(sP, 10);
+	m1.get_allocator().deallocate(mP, 10);
 }
 
+/*
 TEST_F(ListTestClass, non_member_operators) {
 	sList	s1(sEmptyList);
 

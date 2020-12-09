@@ -226,7 +226,6 @@ public:
 												allocator_type & alloc) throw(std::bad_alloc) {
 		return _addBeforeNodeFromItWithAccumulator(0, it, ite, endNode, alloc);
 	}
-
 	template < typename Predicate >
 	inline static
 	size_type		deleteNodesFromListByPredicate(const Predicate predicate,
@@ -274,7 +273,29 @@ public:
 			alloc
 		);
 	}
+	inline static
+	void			reverseFullList(ListNode * const endNode) _NOEXCEPT {
+		_reverseFullList(endNode->next, endNode);
+	}
 private:
+	inline static
+	void			_swapPrevNext(ListNode * const node) _NOEXCEPT {
+		ListNode * const	tmp = node->next;
+		node->next = node->prev;
+		node->prev = tmp;
+	}
+	static
+	void			_reverseFullList(ListNode * const itNode,
+									 ListNode * const endNode) _NOEXCEPT {
+		_swapPrevNext(itNode);
+		if (itNode == endNode) {
+			return;
+		}
+		_reverseFullList(
+			itNode->prev,
+			endNode
+		);
+	}
 	template < typename BinaryPredicate >
 	static
 	size_type		_deleteNodesFromListByBinaryPredicate(
