@@ -290,7 +290,76 @@ public:
 			fromEndNode
 		);
 	}
+
+	template < typename Compare >
+	inline static
+	void			sort(ListNode * const endNode,
+						 const Compare compare) _NOEXCEPT {
+		_sort(endNode->next, endNode, compare);
+	}
 private:
+	template < typename Compare >
+	static
+	ListNode *		_sort(ListNode * const itNode,
+						  ListNode * const endNode,
+						  const Compare compare) _NOEXCEPT {
+		if (itNode == endNode || itNode->next == endNode) {
+			return itNode;
+		}
+		ListNode * const secondHalfList = _sortSplitListAndGetSecondList(
+			itNode,
+			itNode,
+			endNode
+		);
+		return _sortMerge(
+			_sort(itNode, endNode, compare),
+			_sort(secondHalfList, endNode, compare),
+			endNode,
+			compare
+		);
+	}
+	static
+	ListNode *		_sortSplitListAndGetSecondList(
+								ListNode * const fastNode,
+								ListNode * const slowNode,
+								ListNode * const endNode) _NOEXCEPT {
+		if (fastNode->next == endNode || fastNode->next->next == endNode) {
+			ListNode * const	secondList = slowNode->next;
+			linkNodes(slowNode, endNode);
+			return secondList;
+		}
+		return _sortSplitListAndGetSecondList(
+			fastNode->next->next,
+			slowNode->next,
+			endNode
+		);
+	}
+	template < typename Compare >
+	static
+	ListNode *		_sortMerge(ListNode * const firstNode,
+							   ListNode * const secondNode,
+							   ListNode * const endNode,
+							   const Compare compare) _NOEXCEPT {
+		if (firstNode == endNode) {
+			return secondNode;
+		}
+		if (secondNode == endNode) {
+			return firstNode;
+		}
+		if (compare(getDataReference(firstNode), getDataReference(secondNode))) {
+			firstNode->next = _sortMerge(firstNode->next, secondNode, endNode, compare);
+			firstNode->next->prev = firstNode;
+			linkNodes(endNode, firstNode);
+			return firstNode;
+		}
+		else {
+			secondNode->next = _sortMerge(firstNode, secondNode->next, endNode, compare);
+			secondNode->next->prev = secondNode;
+			linkNodes(endNode, secondNode);
+			return secondNode;
+		}
+	}
+
 	template < typename Compare >
 	static
 	void			_mergeTwoListsByCompare(const Compare compare,

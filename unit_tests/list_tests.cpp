@@ -1215,7 +1215,6 @@ TEST_F(ListTestClass, merge) {
 	assertListEQ(s1, m1);
 	ASSERT_EQ(s2.empty(), m2.empty());
 }
-/*
 
 bool compareAllFalse(int first, int second) {
 	return false;
@@ -1235,27 +1234,32 @@ bool compareStupid(int first, int second) {
 
 TEST_F(ListTestClass, sort) {
 	sEmptyList.sort();
-	ASSERT_TRUE(sEmptyList.empty());
+	mEmptyList.sort();
+	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
+	mList		m1(mTenList);
 	s1.sort();
-	assertListEQ(sTenList, s1);
+	m1.sort();
+	assertListEQ(s1, m1);
 
 	s1.sort(compareAllFalse);
-	assertListEQ(sTenList, s1);
+	m1.sort(compareAllFalse);
+	assertListEQ(s1, m1);
 
 	s1.sort(compareAllTrue);
-	assertListEQFromListAndRIterators(sTenList, s1.rbegin(), s1.rend());
+	m1.sort(compareAllTrue);
+	assertListEQ(s1, m1);
 
 	s1.sort(compareNormal);
-	assertListEQ(sTenList, s1);
+	m1.sort(compareNormal);
+	assertListEQ(s1, m1);
 
 	s1.sort(compareStupid);
-	int		result[] = {2, 0, 1, 3, 4, 5, 6, 7, 8, 9};
-	sList	sResult(result, result + 10);
-	assertListEQ(sResult, s1);
+	m1.sort(compareStupid);
+//	const int	result[] = {2, 0, 1, 3, 4, 5, 6, 7, 8, 9};
+	assertListEQ(s1, m1);
 }
-*/
 
 TEST_F(ListTestClass, reverse) {
 	sEmptyList.reverse();

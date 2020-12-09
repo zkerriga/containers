@@ -354,9 +354,13 @@ public:
 			x.m_size = 0;
 		}
 	}
-//	void sort();
-//	template <class Compare>
-//	void sort( Compare comp );
+	void sort() {
+		sort(_defaultCompare);
+	}
+	template <class Compare>
+	void sort( Compare comp ) {
+		_lst::sort(m_end, comp);
+	}
 	void reverse() {
 		_lst::reverseFullList(m_end);
 	}
