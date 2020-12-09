@@ -230,7 +230,7 @@ public:
 	inline static
 	size_type		deleteNodesFromListByPredicate(const Predicate predicate,
 												  ListNode * const endNode,
-												  allocator_type & alloc) _NOEXCEPT {
+												  allocator_type & alloc) {
 		return _deleteNodesFromListByPredicateWithAccumulator(
 			0,
 			predicate,
@@ -264,7 +264,7 @@ public:
 	size_type		deleteNodesFromListByBinaryPredicate(
 											const BinaryPredicate predicate,
 											ListNode * const endNode,
-											allocator_type & alloc) _NOEXCEPT {
+											allocator_type & alloc) {
 		return _deleteNodesFromListByBinaryPredicate(
 			0,
 			predicate,
@@ -277,8 +277,18 @@ public:
 	void			reverseFullList(ListNode * const endNode) _NOEXCEPT {
 		_reverseFullList(endNode->next, endNode);
 	}
+	template < typename Compare >
+	static
+	void			mergeTwoListsByCompare(const Compare compare,
+										   ListNode * const toEndNode,
+										   ListNode * const fromEndNode) {
+
+	}
 private:
-	inline static
+//	template < typename Compare >
+//	static
+
+//	inline static
 	void			_swapPrevNext(ListNode * const node) _NOEXCEPT {
 		ListNode * const	tmp = node->next;
 		node->next = node->prev;
@@ -303,7 +313,7 @@ private:
 											const BinaryPredicate predicate,
 											ListNode * const itNode,
 											ListNode * const endNode,
-											allocator_type & alloc) _NOEXCEPT {
+											allocator_type & alloc) {
 		if (itNode == endNode) {
 			return n;
 		}
@@ -352,7 +362,7 @@ private:
 									const Predicate predicate,
 									ListNode * const itNode,
 									ListNode * const endNode,
-									allocator_type & alloc) _NOEXCEPT {
+									allocator_type & alloc) {
 		if (itNode == endNode) {
 			return n;
 		}

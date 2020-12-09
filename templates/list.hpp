@@ -293,7 +293,7 @@ public:
 	void splice( iterator position, list & x ) {
 		splice(position, x, x.begin(), x.end());
 	}
-	void splice( iterator position, list & x, iterator i ) {
+	void splice( iterator position, list & x, iterator i ) _NOEXCEPT {
 		_lst * const	positionNode = position._getListNode();
 		_lst * const	drawnNode = _lst::drawNodeFromList(i._getListNode());
 		--x.m_size;
@@ -305,7 +305,7 @@ public:
 		);
 		++m_size;
 	}
-	void splice( iterator position, list & x, iterator first, iterator last ) {
+	void splice( iterator position, list & x, iterator first, iterator last ) _NOEXCEPT {
 		_lst * const	positionNode = position._getListNode();
 		const size_type	movedSize = _lst::moveBeforeNodeFromNodesRange(
 			positionNode,
@@ -315,7 +315,7 @@ public:
 		x.m_size -= movedSize;
 		m_size += movedSize;
 	}
-	void remove( const value_type & val ) {
+	void remove( const value_type & val ) _NOEXCEPT {
 		m_size -= _lst::deleteNodesFromListByEquate(
 			val,
 			m_end,
@@ -341,9 +341,19 @@ public:
 			m_allocator
 		);
 	}
-//	void merge( list & x );
-//	template <class Compare>
-//	void merge( list & x, Compare comp );
+	/*void merge( list & x ) {
+		if (this != &x) {
+			merge(x, _defaultCompare);
+		}
+	}
+	template < class Compare >
+	void merge( list & x, Compare comp ) {
+		if (this != &x) {
+
+			m_size += x.m_size;
+			x.m_size = 0;
+		}
+	}*/
 //	void sort();
 //	template <class Compare>
 //	void sort( Compare comp );
@@ -361,9 +371,13 @@ private:
 	size_type		m_size;
 	allocator_type	m_allocator;
 
-	static bool	_uniqueBinaryPredicate(const value_type & curr,
-									   const value_type & prev) _NOEXCEPT {
+	static bool	_uniqueBinaryPredicate(const value_type & prev,
+									   const value_type & curr) _NOEXCEPT {
 		return (curr == prev);
+	}
+	static bool	_defaultCompare(const value_type & val1,
+								const value_type & val2) _NOEXCEPT {
+		return (val1 < val2);
 	}
 }; //class list
 

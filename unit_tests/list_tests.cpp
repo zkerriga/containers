@@ -1183,7 +1183,6 @@ TEST_F(ListTestClass, unique) {
 	ASSERT_EQ(*(++s6.begin()), *(++m6.begin()));
 }
 
-/*
 bool myCompare (int first, int second) {
 	return ( (first / 10) < (second / 10) );
 }
@@ -1192,35 +1191,45 @@ bool except (int first, int second) {
 	throw std::exception();
 }
 
-TEST_F(ListTestClass, merge) {
+/*TEST_F(ListTestClass, merge) {
 	sList		s1;
-	s1.push_back(22);
-	s1.push_back(29);
-	s1.push_back(31);
+	mList		m1;
+	s1.push_back(22); m1.push_back(22);
+	s1.push_back(29); m1.push_back(29);
+	s1.push_back(31); m1.push_back(31);
 
 	sList		s2;
-	s2.push_back(14);
-	s2.push_back(37);
-	s2.push_back(71);
+	mList		m2;
+	s2.push_back(14); m2.push_back(14);
+	s2.push_back(37); m2.push_back(37);
+	s2.push_back(71); m2.push_back(71);
 
 	s1.merge(s2);
-	ASSERT_TRUE(s2.empty());
+	m1.merge(m2);
+	ASSERT_EQ(s2.empty(), m2.empty());
 
-	s2.push_back(21);
+	s2.push_back(21); m2.push_back(21);
 	s1.merge(s2, myCompare);
+	m1.merge(m2, myCompare);
 
-	int		result[] = {14, 22, 29, 21, 31, 37, 71};
+	const int	result[] = {14, 22, 29, 21, 31, 37, 71};
 	sList	sResult(result, result + 7);
+	mList	mResult(result, result + 7);
 
-	assertListEQ(sResult, s1);
-	ASSERT_TRUE(s2.empty());
+	assertListEQ(s1, m1);
+	ASSERT_EQ(s2.empty(), m2.empty());
 
 	try {
 		s1.merge(sTenList, except);
 	}
 	catch (std::exception &) {}
-	assertListEQ(sResult, s1);
-}
+	try {
+		m1.merge(mTenList, except);
+	}
+	catch (std::exception &) {}
+	assertListEQ(s1, m1);
+}*/
+/*
 
 bool compareAllFalse(int first, int second) {
 	return false;
