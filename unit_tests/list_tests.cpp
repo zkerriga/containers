@@ -1302,34 +1302,56 @@ TEST_F(ListTestClass, get_allocator) {
 	m1.get_allocator().deallocate(mP, 10);
 }
 
-/*
 TEST_F(ListTestClass, non_member_operators) {
 	sList	s1(sEmptyList);
+	mList	m1(mEmptyList);
 
-	ASSERT_TRUE(s1 == sEmptyList);
-	ASSERT_TRUE(s1 < sTenList);
-	ASSERT_FALSE(s1 > sTenList);
-	ASSERT_TRUE(s1 != sTenList);
+	ASSERT_EQ(s1 == sEmptyList, m1 == mEmptyList);
+	ASSERT_EQ(s1 < sTenList, m1 < mTenList);
+	ASSERT_EQ(s1 > sTenList, m1 > mTenList);
+	ASSERT_EQ(s1 != sTenList, m1 != mTenList);
 
 	sList	s2(sTenList);
-	ASSERT_TRUE(s2 <= sTenList);
-	ASSERT_TRUE(s2 >= sTenList);
+	mList	m2(mTenList);
+	ASSERT_EQ(s2 <= sTenList, m2 <= mTenList);
+	ASSERT_EQ(s2 >= sTenList, m2 >= mTenList);
+
+	sList	s3(sEmptyList);
+	sList	s4(sEmptyList);
+	mList	m3(mEmptyList);
+	mList	m4(mEmptyList);
+
+	s3.push_back(1); s4.push_back(1);
+	s3.push_back(2); s4.push_back(2);
+	s3.push_back(3);
+	m3.push_back(1); m4.push_back(1);
+	m3.push_back(2); m4.push_back(2);
+	m3.push_back(3);
+	ASSERT_EQ(s3 < s4, m3 < m4);
+	ASSERT_EQ(s3 > s4, m3 > m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(ListTestClass, non_member_swap) {
 	sList		s1(sEmptyList);
 	sList		s2(sTenList);
+	mList		m1(mEmptyList);
+	mList		m2(mTenList);
 
 	std::swap(s1, s2);
-	assertListEQ(sEmptyList, s2);
-	assertListEQ(sTenList, s1);
+	std::swap(m1, m2);
+	assertListEQ(s2, m2);
+	assertListEQ(s1, m1);
 
 	sList		s3(sRandomList);
 	sList		s4(sTenList);
+	mList		m3(mRandomList);
+	mList		m4(mTenList);
 
 	std::swap(s3, s4);
-	assertListEQ(sTenList, s3);
-	assertListEQ(sRandomList, s4);
+	std::swap(m3, m4);
+	assertListEQ(s3, m3);
+	assertListEQ(s4, m4);
 }
-*/
+
 #undef DEBUG

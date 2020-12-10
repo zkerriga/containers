@@ -387,27 +387,70 @@ private:
 
 #undef _ENABLE_INPUT_ITERATOR_TYPE
 
-/* todo */
-template <class T, class Alloc>
-bool operator == ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+template < class T, class Alloc >
+bool operator == ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	typedef typename list<T, Alloc>::const_iterator _iter;
 
-template <class T, class Alloc>
-bool operator != ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+	if (lhs.size() != rhs.size())
+		return false;
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
+	while (lIt != lIte && rIt != rIte) {
+		if (!(*lIt == *rIt)) {
+			return false;
+		}
+		++rIt;
+		++lIt;
+	}
+	return (lIt == lIte && rIt == rIte);
+}
 
-template <class T, class Alloc>
-bool operator <  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+template < class T, class Alloc >
+bool operator != ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	return !operator==(lhs, rhs);
+}
 
-template <class T, class Alloc>
-bool operator <= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+template < class T, class Alloc >
+bool operator <  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	typedef typename list<T, Alloc>::const_iterator _iter;
 
-template <class T, class Alloc>
-bool operator >  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
 
-template <class T, class Alloc>
-bool operator >= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs );
+	while (lIt != lIte && rIt != rIte) {
+		if (*lIt < *rIt) {
+			return true;
+		}
+		if (*rIt < *lIt) {
+			return false;
+		}
+		++lIt;
+		++rIt;
+	}
+	return (lIt == lIte && rIt != rIte);
+}
 
-template <class T, class Alloc>
-void swap( list<T,Alloc> & x, list<T,Alloc> & y );
-/* todo */
+template < class T, class Alloc >
+bool operator <= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	return (!operator<(rhs, lhs));
+}
+template < class T, class Alloc >
+bool operator >  ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	return operator<(rhs, lhs);
+}
+
+template < class T, class Alloc >
+bool operator >= ( const list<T,Alloc> & lhs, const list<T,Alloc> & rhs ) {
+	return (!operator<(lhs, rhs));
+}
+
+template < class T, class Alloc >
+void swap( list<T,Alloc> & x, list<T,Alloc> & y ) {
+	x.swap(y);
+}
 
 } //namespace ft
