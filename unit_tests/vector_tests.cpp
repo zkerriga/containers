@@ -24,20 +24,25 @@ using mVec		= ft::vector<Any>;
 using sAlloc	= std::allocator<Any>;
 
 class VecTest : public ::testing::Test {
+public:
 	VecTest() {
 		// код инициализации
 		sTen.reserve(10);
+		mTen.reserve(10);
 		for (int i = 1; i < 11; ++i) {
 			sTen.push_back(Any(i));
+			mTen.push_back(Any(i));
 		}
 
 		srand(time(nullptr));
 		const int size = rand() % 100 + 1;
 		sRandom.reserve(size);
+		mRandom.reserve(size);
 		int randomInt = 0;
 		for (int i = 0; i < size; ++i) {
 			randomInt = rand();
 			sRandom.push_back(Any(randomInt));
+			mRandom.push_back(Any(randomInt));
 		}
 	}
 	virtual void SetUp() {
@@ -50,21 +55,25 @@ class VecTest : public ::testing::Test {
 	~VecTest() {
 		// очистка всех ресурсов, вызов исключений не допускается
 	}
+
 public:
 	sVec		sEmpty;
 	sVec		sTen;
 	sVec		sRandom;
 
+	mVec		mEmpty;
+	mVec		mTen;
+	mVec		mRandom;
+
 	sAlloc		sAl;
 };
 
-/*void assertListEQ(const sList & stdList, const mList & myList) {
-	ASSERT_EQ(stdList.size(), myList.size());
-
-	sList::const_iterator	sIt = stdList.begin();
-	sList::const_iterator	sIte = stdList.end();
-	mList::const_iterator	mIt = myList.begin();
-	mList::const_iterator	mIte = myList.end();
+void assertVecEQ(const sVec & sV, const mVec & mV) {
+	ASSERT_EQ(sV.size(), mV.size());
+	sVec::const_iterator	sIt		= sV.begin();
+	sVec::const_iterator	sIte	= sV.end();
+	sVec::const_iterator	mIt		= mV.begin();
+	sVec::const_iterator	mIte	= mV.end();
 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
@@ -73,7 +82,8 @@ public:
 		++mIt;
 	}
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}*/
+}
+
 /*void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
 							   mList::const_iterator mIt, mList::const_iterator mIte) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
@@ -115,6 +125,11 @@ TEST(vector, basic_types) {
 	mVec::size_type					s12;
 }
 
+TEST_F(VecTest, basic_construct) {
+	assertVecEQ(sEmpty, mEmpty);
+	assertVecEQ(sTen, mTen);
+	assertVecEQ(sRandom, mRandom);
+}
 
 
 #undef DEBUG
