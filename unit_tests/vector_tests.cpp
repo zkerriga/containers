@@ -68,7 +68,7 @@ public:
 	sAlloc		sAl;
 };
 
-void assertVecEQ(const sVec & sV, const mVec & mV) {
+/*void assertVecEQ(const sVec & sV, const mVec & mV) {
 	ASSERT_EQ(sV.size(), mV.size());
 	sVec::const_iterator	sIt		= sV.begin();
 	sVec::const_iterator	sIte	= sV.end();
@@ -82,7 +82,7 @@ void assertVecEQ(const sVec & sV, const mVec & mV) {
 		++mIt;
 	}
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
+}*/
 
 /*void assertListEQFromIterators(sList::const_iterator sIt, sList::const_iterator sIte,
 							   mList::const_iterator mIt, mList::const_iterator mIte) {
@@ -125,10 +125,22 @@ TEST(vector, basic_types) {
 	mVec::size_type					s12;
 }
 
+TEST(vector, create) {
+	sVec	s1;
+	mVec	m1;
+
+	s1.push_back(Any(1));	m1.push_back(Any(1));
+	s1.push_back(Any(2));	m1.push_back(Any(2));
+	s1.push_back(Any(3));	m1.push_back(Any(3));
+
+	ASSERT_EQ(s1.size(), m1.size());
+	EXPECT_EQ(s1.capacity(), m1.capacity());
+}
+
 TEST_F(VecTest, basic_construct) {
-	assertVecEQ(sEmpty, mEmpty);
-	assertVecEQ(sTen, mTen);
-	assertVecEQ(sRandom, mRandom);
+//	assertVecEQ(sEmpty, mEmpty);
+//	assertVecEQ(sTen, mTen);
+//	assertVecEQ(sRandom, mRandom);
 }
 
 

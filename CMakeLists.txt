@@ -6,23 +6,24 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused -Wconversion -O2")
 
 set(LIST_DIR list/)
 
-set(TEMPLATES templates/)
+set(TEMPLATE_DIR templates/)
 set(SUPPORT ${TEMPLATE_DIR}support/)
 
-include_directories(${TEMPLATES} ${SUPPORT})
+include_directories(${TEMPLATE_DIR} ${SUPPORT})
 
 set(LIST_SRC
-        ${TEMPLATES}list.hpp
-        ${TEMPLATES}${SUPPORT}list_node.hpp
-        ${TEMPLATES}${SUPPORT}list_iterators.hpp
+        ${TEMPLATE_DIR}list.hpp
+        ${SUPPORT}list_node.hpp
+        ${SUPPORT}list_iterators.hpp
         )
 
 set(VECTOR_SRC
-        ${TEMPLATES}vector.hpp
+        ${TEMPLATE_DIR}vector.hpp
+        ${SUPPORT}vector_mem_worker.hpp
         )
 
 set(SRCS
-        ${TEMPLATES}utils.hpp
+        ${TEMPLATE_DIR}utils.hpp
 #        ${LIST_SRC}
         ${VECTOR_SRC}
         )
