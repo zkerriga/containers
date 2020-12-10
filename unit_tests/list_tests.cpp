@@ -824,8 +824,7 @@ TEST_F(ListTestClass, insert) {
 	ASSERT_EQ(*s1.insert(s1.end(), INT_VALUE - 1), *m1.insert(m1.end(), INT_VALUE - 1));
 	ASSERT_EQ(s1.size(), m1.size());
 	ASSERT_EQ(s1.front(), m1.front());
-	s1.pop_front();
-	m1.pop_front();
+	s1.pop_front(); m1.pop_front();
 
 	s1.push_front(0); m1.push_front(0);
 	s1.push_back(9); m1.push_back(9);
@@ -1090,13 +1089,16 @@ TEST_F(ListTestClass, remove_if) {
 	ASSERT_EQ(sEmptyList.empty(), mEmptyList.empty());
 
 	sList		s1(sTenList);
-	s1.remove_if(allFalse);
 	mList		m1(mTenList);
+
+	s1.remove_if(allFalse);
 	m1.remove_if(allFalse);
 	ASSERT_EQ(s1.size(), m1.size());
+
 	s1.remove_if(check);
 	m1.remove_if(check);
 	ASSERT_EQ(s1.size(), m1.size());
+
 	sList::const_iterator		sIt = s1.begin();
 	mList::const_iterator		mIt = m1.begin();
 	for (int i = 1; i < 10; i += 2) {
@@ -1139,10 +1141,8 @@ TEST_F(ListTestClass, unique) {
 
 	sList		s3(sTenList);
 	mList		m3(mTenList);
-	s3.insert(++s3.begin(), 1);
-	s3.insert(++s3.begin(), 1);
-	m3.insert(++m3.begin(), 1);
-	m3.insert(++m3.begin(), 1);
+	s3.insert(++s3.begin(), 1); m3.insert(++m3.begin(), 1);
+	s3.insert(++s3.begin(), 1); m3.insert(++m3.begin(), 1);
 
 	s3.unique();
 	m3.unique();
@@ -1150,8 +1150,7 @@ TEST_F(ListTestClass, unique) {
 
 	sList		s4(sTenList);
 	mList		m4(mTenList);
-	s4.push_back(9);
-	m4.push_back(9);
+	s4.push_back(9); m4.push_back(9);
 	s4.unique();
 	m4.unique();
 	assertListEQ(s4, m4);
@@ -1239,8 +1238,8 @@ TEST_F(ListTestClass, sort) {
 
 	sList		s1(sTenList);
 	mList		m1(mTenList);
-	s1.sort();
-	m1.sort();
+
+	s1.sort(); m1.sort();
 	assertListEQ(s1, m1);
 
 	s1.sort(compareAllFalse);
@@ -1268,8 +1267,8 @@ TEST_F(ListTestClass, reverse) {
 
 	sList		s1(sTenList);
 	mList		m1(mTenList);
-	s1.reverse();
-	m1.reverse();
+
+	s1.reverse(); m1.reverse();
 	assertListEQ(s1, m1);
 
 	sList		s2(sRandomList);
