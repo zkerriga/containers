@@ -72,8 +72,8 @@ public:
 	ASSERT_EQ(sV.size(), mV.size());
 	sVec::const_iterator	sIt		= sV.begin();
 	sVec::const_iterator	sIte	= sV.end();
-	sVec::const_iterator	mIt		= mV.begin();
-	sVec::const_iterator	mIte	= mV.end();
+	mVec::const_iterator	mIt		= mV.begin();
+	mVec::const_iterator	mIte	= mV.end();
 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
@@ -141,6 +141,12 @@ TEST_F(VecTest, basic_construct) {
 //	assertVecEQ(sEmpty, mEmpty);
 //	assertVecEQ(sTen, mTen);
 //	assertVecEQ(sRandom, mRandom);
+}
+
+TEST_F(VecTest, iterator) {
+	sVec::iterator	sIt = sTen.begin();
+
+	sIt.opera
 }
 
 

@@ -20,6 +20,7 @@ set(LIST_SRC
 set(VECTOR_SRC
         ${TEMPLATE_DIR}vector.hpp
         ${SUPPORT}vector_mem_worker.hpp
+        ${SUPPORT}vector_iterators.hpp
         )
 
 set(SRCS
