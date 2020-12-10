@@ -346,18 +346,16 @@ private:
 		if (secondNode == endNode) {
 			return firstNode;
 		}
-		if (compare(getDataReference(firstNode), getDataReference(secondNode))) {
+		if (!compare(getDataReference(secondNode), getDataReference(firstNode))) {
 			firstNode->next = _sortMerge(firstNode->next, secondNode, endNode, compare);
 			firstNode->next->prev = firstNode;
 			linkNodes(endNode, firstNode);
 			return firstNode;
 		}
-		else {
-			secondNode->next = _sortMerge(firstNode, secondNode->next, endNode, compare);
-			secondNode->next->prev = secondNode;
-			linkNodes(endNode, secondNode);
-			return secondNode;
-		}
+		secondNode->next = _sortMerge(firstNode, secondNode->next, endNode, compare);
+		secondNode->next->prev = secondNode;
+		linkNodes(endNode, secondNode);
+		return secondNode;
 	}
 
 	template < typename Compare >

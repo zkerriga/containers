@@ -330,7 +330,7 @@ public:
 			m_allocator
 		);
 	}
-	void unique() {
+	void unique() _NOEXCEPT {
 		unique(_uniqueBinaryPredicate);
 	}
 	template < class BinaryPredicate >
@@ -341,7 +341,7 @@ public:
 			m_allocator
 		);
 	}
-	void merge( list & x ) {
+	void merge( list & x ) _NOEXCEPT {
 		if (this != &x) {
 			merge(x, _defaultCompare);
 		}
@@ -354,19 +354,19 @@ public:
 			x.m_size = 0;
 		}
 	}
-	void sort() {
+	void sort() _NOEXCEPT {
 		sort(_defaultCompare);
 	}
 	template <class Compare>
 	void sort( Compare comp ) {
 		_lst::sort(m_end, comp);
 	}
-	void reverse() {
+	void reverse() _NOEXCEPT {
 		_lst::reverseFullList(m_end);
 	}
 
 	/* Observers */
-	allocator_type get_allocator() const {
+	allocator_type get_allocator() const _NOEXCEPT {
 		return m_allocator;
 	}
 
