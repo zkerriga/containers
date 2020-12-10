@@ -11,11 +11,20 @@ set(SUPPORT ${TEMPLATE_DIR}support/)
 
 include_directories(${TEMPLATES} ${SUPPORT})
 
-set(SRCS
+set(LIST_SRC
         ${TEMPLATES}list.hpp
-        ${TEMPLATES}utils.hpp
         ${TEMPLATES}${SUPPORT}list_node.hpp
         ${TEMPLATES}${SUPPORT}list_iterators.hpp
+        )
+
+set(VECTOR_SRC
+        ${TEMPLATES}vector.hpp
+        )
+
+set(SRCS
+        ${TEMPLATES}utils.hpp
+#        ${LIST_SRC}
+        ${VECTOR_SRC}
         )
 
 add_executable(containers
@@ -25,7 +34,6 @@ add_executable(containers
 
 add_executable(feature
         feature.cpp
-        templates/support/list_node.hpp
         )
 
 add_library(testlib ${SRCS} main.cpp)
