@@ -7,7 +7,7 @@
 #include "vector.hpp"
 #include "Any.hpp"
 
-#define INT_VAL 1232349
+#define ANY_INT Any(1232349)
 #define SIZE_LITTLE 5
 #define SIZE_LONG 34
 
@@ -68,7 +68,7 @@ public:
 	sAlloc		sAl;
 };
 
-/*void assertVecEQ(const sVec & sV, const mVec & mV) {
+void assertVecEQ(const sVec & sV, const mVec & mV) {
 	ASSERT_EQ(sV.size(), mV.size());
 	sVec::const_iterator	sIt		= sV.begin();
 	sVec::const_iterator	sIte	= sV.end();
@@ -82,7 +82,7 @@ public:
 		++mIt;
 	}
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}*/
+}
 
 /*void assertListEQFromIterators(sVec::const_iterator sIt, sVec::const_iterator sIte,
 							   mVec::const_iterator mIt, mVec::const_iterator mIte) {
@@ -138,9 +138,9 @@ TEST(vector, create) {
 }
 
 TEST_F(VecTest, basic_construct) {
-//	assertVecEQ(sEmpty, mEmpty);
-//	assertVecEQ(sTen, mTen);
-//	assertVecEQ(sRandom, mRandom);
+	assertVecEQ(sEmpty, mEmpty);
+	assertVecEQ(sTen, mTen);
+	assertVecEQ(sRandom, mRandom);
 }
 
 TEST(vector, iterator_types) {
@@ -154,6 +154,7 @@ TEST(vector, iterator_types) {
 	mVec::iterator::pointer						m3;
 	mVec::iterator::iterator_category			m4;
 }
+
 TEST_F(VecTest, iterators_construct) {
 	mVec::const_iterator	mc1 = mEmpty.begin();
 	mVec::const_iterator	mc2(mc1);
@@ -185,17 +186,18 @@ TEST_F(VecTest, iterators_construct) {
 */
 }
 
-/*
 TEST_F(VecTest, const_iterators_empty) {
-	sVec::const_iterator	sIt = sEmpty.begin();
-	sVec::const_iterator	sIte = sEmpty.end();
+	sVec::const_iterator	sIt		= sEmpty.begin();
+	sVec::const_iterator	sIte	= sEmpty.end();
+	mVec::const_iterator	mIt		= mEmpty.end();
+	mVec::const_iterator	mIte	= mEmpty.end();
 
-	mVec::const_iterator	mIt = mEmpty.end();
-	mVec::const_iterator	mIte = mEmpty.end();
-
-	ASSERT_EQ(*sIt == *sIte, *mIt == *mIte);
 	ASSERT_EQ(sIt == sIte, mIt == mIte);
 	ASSERT_EQ(sIt != sIte, mIt != mIte);
+	ASSERT_EQ(sIt < sIte, mIt < mIte);
+	ASSERT_EQ(sIt > sIte, mIt > mIte);
+	ASSERT_EQ(sIt <= sIte, mIt <= mIte);
+	ASSERT_EQ(sIt >= sIte, mIt >= mIte);
 
 	sVec::const_iterator	s3(sIt);
 	mVec::const_iterator	m3(mIt);
@@ -204,38 +206,37 @@ TEST_F(VecTest, const_iterators_empty) {
 	s4 = sIte;
 	m4 = mIte;
 
-	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
 	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(VecTest, iterators_empty) {
-	sVec::iterator	sIt = sEmpty.begin();
-	sVec::iterator	sIte = sEmpty.end();
-
-	mVec::iterator	mIt		= mEmpty.begin();
+	sVec::iterator	sIt		= sEmpty.begin();
+	sVec::iterator	sIte	= sEmpty.end();
+	mVec::iterator	mIt		= mEmpty.end();
 	mVec::iterator	mIte	= mEmpty.end();
 
-	ASSERT_EQ(*sIt == *sIte, *mIt == *mIte);
 	ASSERT_EQ(sIt == sIte, mIt == mIte);
 	ASSERT_EQ(sIt != sIte, mIt != mIte);
+	ASSERT_EQ(sIt < sIte, mIt < mIte);
+	ASSERT_EQ(sIt > sIte, mIt > mIte);
+	ASSERT_EQ(sIt <= sIte, mIt <= mIte);
+	ASSERT_EQ(sIt >= sIte, mIt >= mIte);
 
 	sVec::iterator	s3(sIt);
-	sVec::iterator	s4;
-	s4 = sIte;
-
 	mVec::iterator	m3(mIt);
+	sVec::iterator	s4;
 	mVec::iterator	m4;
+	s4 = sIte;
 	m4 = mIte;
 
-	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
 	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
 TEST_F(VecTest, const_iterator_bi) {
-	sVec::const_iterator			sIt = sTenList.begin();
-	sVec::const_iterator			sIte = sTenList.end();
-	mVec::const_iterator			mIt = mTenList.begin();
-	mVec::const_iterator			mIte = mTenList.end();
+	sVec::const_iterator			sIt		= sTen.begin();
+	sVec::const_iterator			sIte	= sTen.end();
+	mVec::const_iterator			mIt		= mTen.begin();
+	mVec::const_iterator			mIte	= mTen.end();
 
 	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
@@ -258,7 +259,6 @@ TEST_F(VecTest, const_iterator_bi) {
 
 	int counter = 0;
 	while (mIt != mIte) {
-//		ASSERT_EQ(*sIt, counter);
 		ASSERT_EQ(*sIt, *mIt);
 		++counter;
 		++sIt; ++mIt;
@@ -267,10 +267,10 @@ TEST_F(VecTest, const_iterator_bi) {
 }
 
 TEST_F(VecTest, iterator_bi) {
-	sVec::iterator			sIt = sTenList.begin();
-	sVec::iterator			sIte = sTenList.end();
-	mVec::iterator			mIt = mTenList.begin();
-	mVec::iterator			mIte = mTenList.end();
+	sVec::iterator			sIt = sTen.begin();
+	sVec::iterator			sIte = sTen.end();
+	mVec::iterator			mIt = mTen.begin();
+	mVec::iterator			mIte = mTen.end();
 	ASSERT_EQ(sIt != sIte, mIt != mIte);
 
 	sVec::iterator			s3(sIt);
@@ -300,23 +300,65 @@ TEST_F(VecTest, iterator_bi) {
 	}
 	ASSERT_EQ(counter, 10);
 
-	sIt = sTenList.begin();
-	sIte = sTenList.end();
-	mIt = mTenList.begin();
-	mIte = mTenList.end();
+	sIt = sTen.begin();
+	sIte = sTen.end();
+	mIt = mTen.begin();
+	mIte = mTen.end();
 	while (sIt != sIte) {
-		*sIt = INT_VALUE; *mIt = INT_VALUE;
+		*sIt = ANY_INT; *mIt = ANY_INT;
 		++sIt; ++mIt;
 	}
-	sVec	s5(10, INT_VALUE);
-	assertListEQ(s5, mTenList);
+	sVec	s5(10, ANY_INT);
+	assertVecEQ(s5, mTen);
+}
+
+TEST_F(VecTest, iterator_random_access) {
+	sVec::iterator			s1		= sTen.begin();
+	mVec::iterator			m1		= mTen.begin();
+
+	s1 = (s1 + 2);		m1 = (m1 + 2);
+	s1 = (2 + s1);		m1 = (2 + m1);
+	s1 = (s1 - 1);		m1 = (m1 - 1);
+//	s1 = (1 - s1);		m1 = (1 - m1);
+
+	ASSERT_EQ(*s1, *m1);
+	ASSERT_EQ(s1[0], m1[0]);
+	ASSERT_EQ(s1[1], m1[1]);
+	ASSERT_EQ(s1[3], m1[3]);
+	ASSERT_EQ(s1[-1], m1[-1]);
+	ASSERT_EQ(s1->getInt(), m1->getInt());
+
+	s1 += 2;		m1 += 2;
+	s1 -= 1;		m1 -= 1;
+	ASSERT_EQ(*s1, *m1);
+}
+
+TEST_F(VecTest, const_iterator_random_access) {
+	sVec::const_iterator	s1		= sTen.begin();
+	mVec::const_iterator	m1		= mTen.begin();
+
+	s1 = (s1 + 2);		m1 = (m1 + 2);
+	s1 = (2 + s1);		m1 = (2 + m1);
+	s1 = (s1 - 1);		m1 = (m1 - 1);
+//	s1 = (1 - s1);		m1 = (1 - m1);
+
+	ASSERT_EQ(*s1, *m1);
+	ASSERT_EQ(s1[0], m1[0]);
+	ASSERT_EQ(s1[1], m1[1]);
+	ASSERT_EQ(s1[3], m1[3]);
+	ASSERT_EQ(s1[-1], m1[-1]);
+	ASSERT_EQ(s1->getInt(), m1->getInt());
+
+	s1 += 2;		m1 += 2;
+	s1 -= 1;		m1 -= 1;
+	ASSERT_EQ(*s1, *m1);
 }
 
 TEST_F(VecTest, const_iterator_reverse_empty) {
-	sVec::const_reverse_iterator	sRit = sEmpty.rbegin();
-	sVec::const_reverse_iterator	sRite = sEmpty.rend();
-	mVec::const_reverse_iterator	mRit = mEmpty.rbegin();
-	mVec::const_reverse_iterator	mRite = mEmpty.rend();
+	sVec::const_reverse_iterator	sRit	= sEmpty.rbegin();
+	sVec::const_reverse_iterator	sRite	= sEmpty.rend();
+	mVec::const_reverse_iterator	mRit	= mEmpty.rbegin();
+	mVec::const_reverse_iterator	mRite	= mEmpty.rend();
 
 	ASSERT_EQ(*sRit == *sRite, *mRit == *mRite);
 	ASSERT_EQ(sRit == sRite, mRit == mRite);
@@ -329,10 +371,10 @@ TEST_F(VecTest, const_iterator_reverse_empty) {
 	mVec::const_reverse_iterator	m4;
 	m4 = mRite;
 
-	ASSERT_EQ(*s3 == *s4, *m3 == *m4);
 	ASSERT_EQ(s3 == s4, m3 == m4);
 }
 
+/*
 TEST_F(VecTest, iterator_reverse_empty) {
 	sVec::reverse_iterator	sRit = sEmpty.rbegin();
 	sVec::reverse_iterator	sRite = sEmpty.rend();
@@ -355,10 +397,10 @@ TEST_F(VecTest, iterator_reverse_empty) {
 }
 
 TEST_F(VecTest, const_iterator_reverse_bi) {
-	sVec::const_reverse_iterator	sRit = sTenList.rbegin();
-	sVec::const_reverse_iterator	sRite = sTenList.rend();
-	mVec::const_reverse_iterator	mRit = mTenList.rbegin();
-	mVec::const_reverse_iterator	mRite = mTenList.rend();
+	sVec::const_reverse_iterator	sRit = sTen.rbegin();
+	sVec::const_reverse_iterator	sRite = sTen.rend();
+	mVec::const_reverse_iterator	mRit = mTen.rbegin();
+	mVec::const_reverse_iterator	mRite = mTen.rend();
 
 	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
@@ -390,10 +432,10 @@ TEST_F(VecTest, const_iterator_reverse_bi) {
 }
 
 TEST_F(VecTest, iterator_reverse_bi) {
-	sVec::reverse_iterator			sRit = sTenList.rbegin();
-	sVec::reverse_iterator			sRite = sTenList.rend();
-	mVec::reverse_iterator			mRit = mTenList.rbegin();
-	mVec::reverse_iterator			mRite = mTenList.rend();
+	sVec::reverse_iterator			sRit = sTen.rbegin();
+	sVec::reverse_iterator			sRite = sTen.rend();
+	mVec::reverse_iterator			mRit = mTen.rbegin();
+	mVec::reverse_iterator			mRite = mTen.rend();
 
 	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
@@ -422,51 +464,51 @@ TEST_F(VecTest, iterator_reverse_bi) {
 	}
 	ASSERT_EQ(counter, -1);
 
-	sRit = sTenList.rbegin();
-	sRite = sTenList.rend();
-	mRit = mTenList.rbegin();
-	mRite = mTenList.rend();
+	sRit = sTen.rbegin();
+	sRite = sTen.rend();
+	mRit = mTen.rbegin();
+	mRite = mTen.rend();
 	while (mRit != mRite) {
-		*sRit = INT_VALUE; *mRit = INT_VALUE;
+		*sRit = ANY_INT; *mRit = ANY_INT;
 		++sRit; ++mRit;
 	}
-	sVec	s5(10, INT_VALUE);
-	assertListEQ(s5, mTenList);
+	sVec	s5(10, ANY_INT);
+	assertListEQ(s5, mTen);
 }
 
 TEST_F(VecTest, const_iterators_end) {
-	sVec::const_iterator			s1 = sTenList.begin();
-	sVec::const_reverse_iterator	sr2 = sTenList.rend();
-	mVec::const_iterator			m1 = mTenList.begin();
-	mVec::const_reverse_iterator	mr2 = mTenList.rend();
+	sVec::const_iterator			s1 = sTen.begin();
+	sVec::const_reverse_iterator	sr2 = sTen.rend();
+	mVec::const_iterator			m1 = mTen.begin();
+	mVec::const_reverse_iterator	mr2 = mTen.rend();
 
 	--sr2; --mr2;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);
 
-	s1 = sTenList.end();
-	sr2 = sTenList.rbegin();
-	m1 = mTenList.end();
-	mr2 = mTenList.rbegin();
+	s1 = sTen.end();
+	sr2 = sTen.rbegin();
+	m1 = mTen.end();
+	mr2 = mTen.rbegin();
 	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);
 }
 
 TEST_F(VecTest, iterators_end) {
-	sVec::iterator			s1 = sTenList.begin();
-	sVec::reverse_iterator	sr2 = sTenList.rend();
-	mVec::iterator			m1 = mTenList.begin();
-	mVec::reverse_iterator	mr2 = mTenList.rend();
+	sVec::iterator			s1 = sTen.begin();
+	sVec::reverse_iterator	sr2 = sTen.rend();
+	mVec::iterator			m1 = mTen.begin();
+	mVec::reverse_iterator	mr2 = mTen.rend();
 
 	--sr2; --mr2;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);
 
-	s1 = sTenList.end();
-	sr2 = sTenList.rbegin();
-	m1 = mTenList.end();
-	mr2 = mTenList.rbegin();
+	s1 = sTen.end();
+	sr2 = sTen.rbegin();
+	m1 = mTen.end();
+	mr2 = mTen.rbegin();
 	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);

@@ -221,14 +221,3 @@ operator+(typename Iterator::difference_type n, Iterator it) {
 	it += n;
 	return it;
 }
-
-template < class Iterator >
-inline
-typename std::enable_if<
-		std::is_same<Iterator, _VectorIterator<typename Iterator::value_type> >::value
-		|| std::is_same<Iterator, _VectorConstIterator<typename Iterator::value_type> >::value,
-		Iterator>::type
-operator-(typename Iterator::difference_type n, Iterator it) {
-	it -= n;
-	return it;
-}
