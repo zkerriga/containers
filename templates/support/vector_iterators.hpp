@@ -17,6 +17,10 @@
 #include <type_traits>
 
 template < typename value_type >
+class _VectorConstIterator;
+
+
+template < typename value_type >
 class _VectorIterator : public std::iterator< std::random_access_iterator_tag,
 											  value_type > {
 	typedef std::iterator< std::random_access_iterator_tag,
@@ -24,6 +28,7 @@ class _VectorIterator : public std::iterator< std::random_access_iterator_tag,
 	typedef typename _stdIt::difference_type				_difference_type;
 	typedef typename _stdIt::pointer						_pointer;
 	typedef typename _stdIt::reference						_reference;
+	typedef _VectorConstIterator< value_type >				_ConstIterator;
 public:
 	_VectorIterator() : m_p(nullptr) {}
 	_VectorIterator(const _VectorIterator & other) {
@@ -84,6 +89,25 @@ public:
 	}
 	bool				operator<=(const _VectorIterator & other) const _NOEXCEPT {
 		return (m_p <= other.m_p);
+	}
+
+	bool				operator==(const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p == other.operator->());
+	}
+	bool				operator!=(const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p != other.operator->());
+	}
+	bool				operator< (const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p < other.operator->());
+	}
+	bool				operator> (const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p > other.operator->());
+	}
+	bool				operator>=(const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p >= other.operator->());
+	}
+	bool				operator<=(const _ConstIterator & other) const _NOEXCEPT {
+		return (m_p <= other.operator->());
 	}
 
 	_VectorIterator &	operator++() _NOEXCEPT {

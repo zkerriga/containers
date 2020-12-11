@@ -527,4 +527,46 @@ TEST_F(VecTest, iterators_end) {
 	ASSERT_EQ(*m1, *mr2);
 }
 
+TEST_F(VecTest, iterators_compare) {
+	sVec::const_iterator	sCI	= sTen.begin();
+	sVec::iterator			sI	= sTen.begin();
+	mVec::const_iterator	mCI	= mTen.begin();
+	mVec::iterator			mI	= mTen.begin();
+
+	ASSERT_EQ(sCI == sI, mCI == mI);
+	ASSERT_EQ(sCI != sI, mCI != mI);
+	ASSERT_EQ(sCI < sI, mCI < mI);
+	ASSERT_EQ(sCI > sI, mCI > mI);
+	ASSERT_EQ(sCI >= sI, mCI >= mI);
+	ASSERT_EQ(sCI <= sI, mCI <= mI);
+
+	ASSERT_EQ(sI == sCI, mI == mCI);
+	ASSERT_EQ(sI != sCI, mI != mCI);
+	ASSERT_EQ(sI <  sCI, mI <  mCI);
+	ASSERT_EQ(sI >  sCI, mI >  mCI);
+	ASSERT_EQ(sI >= sCI, mI >= mCI);
+	ASSERT_EQ(sI <= sCI, mI <= mCI);
+}
+
+TEST_F(VecTest, reverse_iterators_compare) {
+	sVec::const_reverse_iterator	sCI	= sTen.rbegin();
+	sVec::reverse_iterator			sI	= sTen.rbegin();
+	mVec::const_reverse_iterator	mCI	= mTen.rbegin();
+	mVec::reverse_iterator			mI	= mTen.rbegin();
+
+	ASSERT_EQ(sCI == sI, mCI == mI);
+	ASSERT_EQ(sCI != sI, mCI != mI);
+	ASSERT_EQ(sCI < sI, mCI < mI);
+	ASSERT_EQ(sCI > sI, mCI > mI);
+	ASSERT_EQ(sCI >= sI, mCI >= mI);
+	ASSERT_EQ(sCI <= sI, mCI <= mI);
+
+	ASSERT_EQ(sI == sCI, mI == mCI);
+	ASSERT_EQ(sI != sCI, mI != mCI);
+	ASSERT_EQ(sI <  sCI, mI <  mCI);
+	ASSERT_EQ(sI >  sCI, mI >  mCI);
+	ASSERT_EQ(sI >= sCI, mI >= mCI);
+	ASSERT_EQ(sI <= sCI, mI <= mCI);
+}
+
 #undef DEBUG
