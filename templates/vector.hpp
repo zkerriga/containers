@@ -225,8 +225,39 @@ public:
 		m_allocator.destroy(m_array + m_size - 1);
 		--m_size;
 	}
-//	iterator	insert(iterator position, const value_type & val);
-//	void		insert(iterator position, size_type n, const value_type & val);
+	iterator	insert(iterator position, const value_type & val) {
+		value_type * const		pos		= position.operator->();
+		const difference_type	delta	= pos - m_array;
+
+		if (m_size + 1 > m_capacity) {
+			reserve(m_size * 2);
+		}
+		std::memmove(
+			m_array + delta + 1,
+			m_array + delta,
+			(m_size - delta) * sizeof(value_type)
+		);
+		m_allocator.construct(m_array + delta, val);
+		++m_size;
+		return iterator(m_array + delta);
+	}
+	void		insert(iterator position, size_type n, const value_type & val) {
+		value_type * const		pos		= position.operator->();
+		const difference_type	delta	= pos - m_array;
+
+		if (m_size + n > m_capacity) {
+			reserve(m_size + n);
+		}
+		std::memmove(
+			m_array + delta + n,
+			m_array + delta,
+			(m_size - delta) * sizeof(value_type)
+		);
+		for (size_type i = 0; i < n; ++i) {
+			m_allocator.construct(m_array + delta + i, val);
+		}
+		m_size += n;
+	}
 //	template < class InputIterator >
 //	void		insert(iterator position, InputIterator first, InputIterator last);
 //	iterator	erase(iterator position);

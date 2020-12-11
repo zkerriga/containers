@@ -740,6 +740,55 @@ TEST_F(VecTest, pop_back) {
 	assertVecEQ(sRandom, mRandom);
 }
 
+template < class Vec >
+void printVec(const Vec vec) {
+	typename Vec::const_iterator	it	= vec.begin();
+	typename Vec::const_iterator	ite	= vec.end();
+
+	std::cout << "Size " << vec.size() << ": ";
+	while (it != ite) {
+		std::cout << *it++ << ',';
+	}
+	std::cout << ';' << std::endl;
+}
+
+TEST_F(VecTest, iterator_difference) {
+	ASSERT_EQ(sEmpty.end() - sEmpty.begin(), mEmpty.end() - mEmpty.begin());
+	ASSERT_EQ(sTen.end() - sTen.begin(), mTen.end() - mTen.begin());
+	ASSERT_EQ(sTen.end() - sTen.end(), mTen.end() - mTen.end());
+	ASSERT_EQ(sTen.begin() - sTen.end(), mTen.begin() - mTen.end());
+
+	ASSERT_EQ(sTen.rend() - sTen.rbegin(), mTen.rend() - mTen.rbegin());
+}
+
+TEST_F(VecTest, insert) {
+	sVec	s1(sEmpty);
+	mVec	m1(mEmpty);
+
+	ASSERT_EQ(*s1.insert(s1.begin(), Any(1)), *m1.insert(m1.begin(), Any(1)));
+	ASSERT_EQ(*s1.insert(s1.begin(), Any(2)), *m1.insert(m1.begin(), Any(2)));
+	ASSERT_EQ(*s1.insert(s1.begin(), Any(3)), *m1.insert(m1.begin(), Any(3)));
+	ASSERT_EQ(*s1.insert(++s1.begin(), Any(4)), *m1.insert(++m1.begin(), Any(4)));
+	assertVecEQ(s1, m1);
+
+	s1.insert(s1.begin() + 1, SIZE_LITTLE, ANY_INT);
+	m1.insert(m1.begin() + 1, SIZE_LITTLE, ANY_INT);
+	assertVecEQ(s1, m1);
+
+	s1.insert(s1.begin(), SIZE_LITTLE, Any());
+	m1.insert(m1.begin(), SIZE_LITTLE, Any());
+	assertVecEQ(s1, m1);
+	s1.insert(s1.end() - 1, SIZE_LITTLE, Any(123));
+	m1.insert(m1.end() - 1, SIZE_LITTLE, Any(123));
+	assertVecEQ(s1, m1);
+}
+
+// 1 2 3 4 5
+//   |
+// delta = 1
+// size = 5
+// move = 4
+
 /* todo */
 
 TEST_F(VecTest, swap) {
