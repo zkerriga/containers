@@ -18,6 +18,7 @@
 
 #include "vector_mem_worker.hpp"
 #include "vector_iterators.hpp"
+#include "utils.hpp"
 
 namespace ft {
 
@@ -197,9 +198,22 @@ public:
 	}
 
 	/* Modifiers */
-//	template < class InputIterator >
-//	void		assign(InputIterator first, InputIterator last);
-//	void		assign(size_type n, const value_type & val);
+	template < class InputIterator >
+	void		assign(InputIterator first,
+					   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last) {
+		clear();
+		while (first != last) {
+			push_back(*first);
+			++first;
+		}
+	}
+	void		assign(size_type n, const value_type & val) {
+		clear();
+		reserve(n);
+		for (size_type i = 0; i < n; ++i) {
+			push_back(val);
+		}
+	}
 	void		push_back(const value_type & val) {
 		if (m_size == m_capacity) {
 			reserve(m_capacity * 2);
@@ -207,18 +221,31 @@ public:
 		m_allocator.construct(m_array + m_size, val);
 		++m_size;
 	}
-//	void		pop_back();
+	void		pop_back() {
+		m_allocator.destroy(m_array + m_size - 1);
+		--m_size;
+	}
 //	iterator	insert(iterator position, const value_type & val);
 //	void		insert(iterator position, size_type n, const value_type & val);
 //	template < class InputIterator >
 //	void		insert(iterator position, InputIterator first, InputIterator last);
 //	iterator	erase(iterator position);
 //	iterator	erase(iterator first, iterator last);
-//	void		swap(vector & x);
-//	void		clear();
+	void		swap(vector & x) {
+		ft::swap(m_allocator, x.m_allocator);
+		ft::swap(m_capacity, x.m_capacity);
+		ft::swap(m_size, x.m_size);
+		ft::swap(m_array, x.m_array);
+	}
+	void		clear() _NOEXCEPT {
+		_MemWorker::destructElements(m_array, m_array + m_size, m_allocator);
+		m_size = 0;
+	}
 
 	/* Allocator */
-//	allocator_type	get_allocator() const;
+	allocator_type	get_allocator() const {
+		return m_allocator;
+	}
 
 private:
 	value_type *			m_array;

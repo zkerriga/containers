@@ -84,8 +84,10 @@ void assertVecEQ(const sVec & sV, const mVec & mV) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
-/*void assertListEQFromIterators(sVec::const_iterator sIt, sVec::const_iterator sIte,
-							   mVec::const_iterator mIt, mVec::const_iterator mIte) {
+void assertVecEQFromIterators(sVec::const_iterator sIt,
+							  sVec::const_iterator sIte,
+							  mVec::const_iterator mIt,
+							  mVec::const_iterator mIte) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
 		EXPECT_EQ(*sIt, *mIt);
@@ -93,20 +95,7 @@ void assertVecEQ(const sVec & sV, const mVec & mV) {
 		++mIt;
 	}
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}*/
-/*void assertListEQFromListAndIterators(sVec stdList,
-									  mVec::const_iterator mIt, mVec::const_iterator mIte) {
-	sVec::const_iterator	sIt = stdList.begin();
-	sVec::const_iterator	sIte = stdList.end();
-
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
-		++sIt;
-		++mIt;
-	}
-	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}*/
+}
 
 TEST(vector, basic_types) {
 	Any	a;
@@ -720,6 +709,96 @@ TEST_F(VecTest, back) {
 	sTen.resize(SIZE_LITTLE);
 	mTen.resize(SIZE_LITTLE);
 	ASSERT_EQ(sTen.back(), mTen.back());
+}
+
+TEST_F(VecTest, assign) {
+	sVec		s1(sEmpty);
+	mVec		m1(mEmpty);
+
+	s1.assign(sTen.begin(), sTen.end());
+	m1.assign(mTen.begin(), mTen.end());
+	assertVecEQ(s1, m1);
+
+	s1.assign(SIZE_LONG, ANY_INT);
+	m1.assign(SIZE_LONG, ANY_INT);
+	assertVecEQ(s1, m1);
+
+	s1.assign(SIZE_LITTLE, Any());
+	m1.assign(SIZE_LITTLE, Any());
+	assertVecEQ(s1, m1);
+}
+
+TEST_F(VecTest, pop_back) {
+	sTen.pop_back();
+	mTen.pop_back();
+	assertVecEQ(sTen, mTen);
+
+	for (size_t i = sRandom.size(); i > 0; --i) {
+		sRandom.pop_back();
+		mRandom.pop_back();
+	}
+	assertVecEQ(sRandom, mRandom);
+}
+
+
+
+TEST_F(VecTest, swap) {
+	sVec	s1(sTen);
+	sVec	s2(sRandom);
+
+	mVec	m1(mTen);
+	mVec	m2(mRandom);
+
+	sVec::const_iterator	sIt		= s1.begin();
+	mVec::const_iterator	mIt		= m1.begin();
+	sVec::const_iterator	sIte	= s1.end();
+	mVec::const_iterator	mIte	= m1.end();
+
+	s1.swap(s2);
+	m1.swap(m2);
+	assertVecEQFromIterators(sIt, sIte, mIt, mIte);
+	assertVecEQ(s2, m2);
+
+	s1.swap(s2);
+	m1.swap(m2);
+	assertVecEQ(s1, m1);
+	assertVecEQ(s2, m2);
+}
+
+TEST_F(VecTest, clear) {
+	sEmpty.clear();
+	mEmpty.clear();
+	assertVecEQ(sEmpty, mEmpty);
+	sTen.clear();
+	mTen.clear();
+	assertVecEQ(sTen, mTen);
+	sRandom.clear();
+	mRandom.clear();
+	sRandom.clear();
+	mRandom.clear();
+	assertVecEQ(sRandom, mRandom);
+}
+
+TEST_F(VecTest, get_allocator) {
+	sVec	s1(sAl);
+	mVec	m1(sAl);
+	Any *	sP;
+	Any *	mP;
+
+	sP = s1.get_allocator().allocate(10);
+	mP = m1.get_allocator().allocate(10);
+
+	for (int i = 0; i < 10; ++i) {
+		sP[i] = Any(i);
+		mP[i] = Any(i);
+	}
+
+	sVec	s2(sP, sP + 10);
+	mVec	m2(mP, mP + 10);
+	assertVecEQ(s2, m2);
+
+	s1.get_allocator().deallocate(sP, 10);
+	m1.get_allocator().deallocate(mP, 10);
 }
 
 #undef DEBUG
