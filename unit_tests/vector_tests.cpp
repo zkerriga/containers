@@ -593,6 +593,12 @@ TEST_F(VecTest, constructors) {
 	sVec	s6(sTen);
 	mVec	m6(mTen);
 	assertVecEQ(s6, m6);
+
+	s1 = s4;	m1 = m4;
+	assertVecEQ(s1, m1);
+
+	s6 = s3;	m6 = m3;
+	assertVecEQ(s6, m6);
 }
 
 #undef DEBUG
