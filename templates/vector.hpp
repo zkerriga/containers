@@ -17,6 +17,7 @@
 #include <stdexcept>
 
 #include "vector_mem_worker.hpp"
+#include "vector_iterators.hpp"
 
 namespace ft {
 
@@ -36,9 +37,9 @@ private:
 						  allocator_type,
 						  size_type >		_MemWorker;
 public:
+	typedef _VectorIterator< value_type >		iterator;
+	typedef _VectorConstIterator< value_type >	const_iterator;
 	/* todo */
-	class iterator {};
-	class const_iterator {};
 	class reverse_iterator {};
 	class const_reverse_iterator {};
 	/* todo */
@@ -62,10 +63,18 @@ public:
 //	vector& operator=(const vector & x);
 
 	/* Iterators */
-//	iterator				begin();
-//	const_iterator			begin() const;
-//	iterator				end();
-//	const_iterator			end() const;
+	iterator				begin() {
+		return iterator(m_array);
+	}
+	const_iterator			begin() const {
+		return const_iterator(m_array);
+	}
+	iterator				end() {
+		return iterator(m_array + m_size);
+	}
+	const_iterator			end() const {
+		return const_iterator(m_array + m_size);
+	}
 //	reverse_iterator		rbegin();
 //	const_reverse_iterator	rbegin() const;
 //	reverse_iterator		rend();
