@@ -258,8 +258,14 @@ public:
 		}
 		m_size += n;
 	}
-//	template < class InputIterator >
-//	void		insert(iterator position, InputIterator first, InputIterator last);
+	template < class InputIterator >
+	void		insert(iterator position,
+					   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) first,
+					   InputIterator last) {
+		while (first != last) {
+			position = insert(position, *first++) + 1;
+		}
+	}
 //	iterator	erase(iterator position);
 //	iterator	erase(iterator first, iterator last);
 	void		swap(vector & x) {

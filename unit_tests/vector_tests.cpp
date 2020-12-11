@@ -781,13 +781,18 @@ TEST_F(VecTest, insert) {
 	s1.insert(s1.end() - 1, SIZE_LITTLE, Any(123));
 	m1.insert(m1.end() - 1, SIZE_LITTLE, Any(123));
 	assertVecEQ(s1, m1);
-}
 
-// 1 2 3 4 5
-//   |
-// delta = 1
-// size = 5
-// move = 4
+	sVec	s2(sEmpty);
+	mVec	m2(mEmpty);
+
+	s2.insert(s2.begin(), sTen.begin(), sTen.end());
+	m2.insert(m2.begin(), sTen.begin(), sTen.end());
+	assertVecEQ(s2, m2);
+
+	s2.insert(s2.begin() + 5, sTen.begin(), sTen.end());
+	m2.insert(m2.begin() + 5, sTen.begin(), sTen.end());
+	assertVecEQ(s2, m2);
+}
 
 /* todo */
 
