@@ -39,10 +39,8 @@ private:
 public:
 	typedef _VectorIterator< value_type >			iterator;
 	typedef _VectorConstIterator< value_type >		const_iterator;
-	/* todo */
 	typedef std::reverse_iterator<iterator>			reverse_iterator;
 	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
-	/* todo */
 
 	/* Initialize */
 	explicit vector(const allocator_type & alloc = allocator_type())

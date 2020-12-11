@@ -433,20 +433,20 @@ TEST_F(VecTest, const_iterator_reverse_bi) {
 	}
 	ASSERT_EQ(counter, 0);
 }
-/*
+
 TEST_F(VecTest, iterator_reverse_bi) {
-	sVec::reverse_iterator			sRit = sTen.rbegin();
-	sVec::reverse_iterator			sRite = sTen.rend();
-	mVec::reverse_iterator			mRit = mTen.rbegin();
-	mVec::reverse_iterator			mRite = mTen.rend();
+	sVec::reverse_iterator	sRit	= sTen.rbegin();
+	sVec::reverse_iterator	sRite	= sTen.rend();
+	mVec::reverse_iterator	mRit	= mTen.rbegin();
+	mVec::reverse_iterator	mRite	= mTen.rend();
 
 	ASSERT_EQ(sRit != sRite, mRit != mRite);
 
-	sVec::reverse_iterator			s3(sRit);
-	sVec::reverse_iterator			s4;
+	sVec::reverse_iterator	s3(sRit);
+	sVec::reverse_iterator	s4;
 	s4 = sRit;
-	mVec::reverse_iterator			m3(mRit);
-	mVec::reverse_iterator			m4;
+	mVec::reverse_iterator	m3(mRit);
+	mVec::reverse_iterator	m4;
 	m4 = mRit;
 
 	++sRit; ++mRit;
@@ -459,31 +459,20 @@ TEST_F(VecTest, iterator_reverse_bi) {
 	ASSERT_EQ(*s3, *m3);
 	ASSERT_EQ(*s4, *m4);
 
-	int counter = 9;
+	int counter = 10;
 	while (mRit != mRite) {
 		ASSERT_EQ(*sRit, *mRit);
 		--counter;
 		++sRit; ++mRit;
 	}
-	ASSERT_EQ(counter, -1);
-
-	sRit = sTen.rbegin();
-	sRite = sTen.rend();
-	mRit = mTen.rbegin();
-	mRite = mTen.rend();
-	while (mRit != mRite) {
-		*sRit = ANY_INT; *mRit = ANY_INT;
-		++sRit; ++mRit;
-	}
-	sVec	s5(10, ANY_INT);
-	assertListEQ(s5, mTen);
+	ASSERT_EQ(counter, 0);
 }
 
 TEST_F(VecTest, const_iterators_end) {
-	sVec::const_iterator			s1 = sTen.begin();
-	sVec::const_reverse_iterator	sr2 = sTen.rend();
-	mVec::const_iterator			m1 = mTen.begin();
-	mVec::const_reverse_iterator	mr2 = mTen.rend();
+	sVec::const_iterator			s1	= sTen.begin();
+	sVec::const_reverse_iterator	sr2	= sTen.rend();
+	mVec::const_iterator			m1	= mTen.begin();
+	mVec::const_reverse_iterator	mr2	= mTen.rend();
 
 	--sr2; --mr2;
 	ASSERT_EQ(*s1, *sr2);
@@ -496,6 +485,27 @@ TEST_F(VecTest, const_iterators_end) {
 	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);
+}
+
+TEST_F(VecTest, reverse_iterator_random_access) {
+	sVec::reverse_iterator		s1	= sTen.rbegin();
+	mVec::reverse_iterator		m1	= mTen.rbegin();
+
+	s1 = (s1 + 2);		m1 = (m1 + 2);
+	s1 = (2 + s1);		m1 = (2 + m1);
+	s1 = (s1 - 1);		m1 = (m1 - 1);
+//	s1 = (1 - s1);		m1 = (1 - m1);
+
+	ASSERT_EQ(*s1, *m1);
+	ASSERT_EQ(s1[0], m1[0]);
+	ASSERT_EQ(s1[1], m1[1]);
+	ASSERT_EQ(s1[3], m1[3]);
+	ASSERT_EQ(s1[-1], m1[-1]);
+	ASSERT_EQ(s1->getInt(), m1->getInt());
+
+	s1 += 2;		m1 += 2;
+	s1 -= 1;		m1 -= 1;
+	ASSERT_EQ(*s1, *m1);
 }
 
 TEST_F(VecTest, iterators_end) {
@@ -515,6 +525,6 @@ TEST_F(VecTest, iterators_end) {
 	--s1; --m1;
 	ASSERT_EQ(*s1, *sr2);
 	ASSERT_EQ(*m1, *mr2);
-}*/
+}
 
 #undef DEBUG
