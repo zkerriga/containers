@@ -569,4 +569,30 @@ TEST_F(VecTest, reverse_iterators_compare) {
 	ASSERT_EQ(sI <= sCI, mI <= mCI);
 }
 
+TEST_F(VecTest, constructors) {
+	sVec	s1(0);
+	mVec	m1(0);
+	assertVecEQ(s1, m1);
+
+	sVec	s2(SIZE_LITTLE);
+	mVec	m2(SIZE_LITTLE);
+	assertVecEQ(s2, m2);
+
+	sVec	s3(SIZE_LITTLE, ANY_INT);
+	mVec	m3(SIZE_LITTLE, ANY_INT);
+	assertVecEQ(s3, m3);
+
+	sVec	s4(sTen.begin(), sTen.end());
+	mVec	m4(sTen.begin(), sTen.end());
+	assertVecEQ(s4, m4);
+
+	sVec	s5(sTen.end(), sTen.end());
+	mVec	m5(sTen.end(), sTen.end());
+	assertVecEQ(s5, m5);
+
+	sVec	s6(sTen);
+	mVec	m6(mTen);
+	assertVecEQ(s6, m6);
+}
+
 #undef DEBUG

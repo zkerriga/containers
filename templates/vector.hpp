@@ -21,6 +21,9 @@
 
 namespace ft {
 
+#define _ENABLE_INPUT_ITERATOR_TYPE(type_name) \
+			typename std::enable_if< std::__is_input_iterator< type_name >::value,type_name >::type
+
 template < class T, class Alloc = std::allocator<T> >
 class vector {
 public:
@@ -49,16 +52,52 @@ public:
 	{
 		m_array = m_allocator.allocate(m_capacity);
 	}
-//	explicit vector(size_type n, const value_type & val = value_type(),
-//					const allocator_type & alloc = allocator_type());
-//	template < class InputIterator >
-//	vector(InputIterator first, InputIterator last,
-//		   const allocator_type & alloc = allocator_type());
-//	vector(const vector & x);
+	explicit vector(size_type n, const value_type & val = value_type(),
+					const allocator_type & alloc = allocator_type())
+		: m_array(nullptr), m_size(n),
+		  m_capacity(n ? n : mc_startCapacity), m_allocator(alloc)
+	{
+		m_array = m_allocator.allocate(m_capacity);
+		for (size_type i = 0; i < n; ++i) {
+			m_allocator.construct(m_array + i, val);
+		}
+	}
+	template < class InputIterator >
+	vector(InputIterator first,
+		   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last,
+		   const allocator_type & alloc = allocator_type())
+		: m_array(nullptr), m_size(0),
+		  m_capacity(mc_startCapacity), m_allocator(alloc)
+	{
+		m_array = m_allocator.allocate(m_capacity);
+		while (first != last) {
+			push_back(*first);
+			++first;
+		}
+	}
+	vector(const vector & x) : m_array(nullptr) {
+		*this = x;
+	}
 
 	/* Member functions */
-//	~vector();
-//	vector& operator=(const vector & x);
+	~vector() {
+		_MemWorker::fullDestruct(m_array, m_size, m_capacity, m_allocator);
+	}
+	vector & operator=(const vector & x) {
+		if (this != &x) {
+			if (m_array) {
+				_MemWorker::fullDestruct(m_array, m_size, m_capacity, m_allocator);
+			}
+			m_allocator = x.m_allocator;
+			m_capacity = x.m_capacity;
+			m_size = x.m_size;
+			m_array = m_allocator.allocate(m_capacity);
+			for (size_type i = 0; i < m_size; ++i) {
+				m_allocator.construct(m_array + i, *(x.m_array + i));
+			}
+		}
+		return *this;
+	}
 
 	/* Iterators */
 	iterator				begin() {
