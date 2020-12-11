@@ -37,11 +37,11 @@ private:
 						  allocator_type,
 						  size_type >		_MemWorker;
 public:
-	typedef _VectorIterator< value_type >		iterator;
-	typedef _VectorConstIterator< value_type >	const_iterator;
+	typedef _VectorIterator< value_type >			iterator;
+	typedef _VectorConstIterator< value_type >		const_iterator;
 	/* todo */
-	class reverse_iterator {};
-	class const_reverse_iterator {};
+	typedef std::reverse_iterator<iterator>			reverse_iterator;
+	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
 	/* todo */
 
 	/* Initialize */
@@ -75,10 +75,20 @@ public:
 	const_iterator			end() const {
 		return const_iterator(m_array + m_size);
 	}
-//	reverse_iterator		rbegin();
-//	const_reverse_iterator	rbegin() const;
-//	reverse_iterator		rend();
-//	const_reverse_iterator	rend() const;
+	reverse_iterator		rbegin() {
+		return reverse_iterator(end());
+	}
+	const_reverse_iterator	rbegin() const {
+		return const_reverse_iterator(end());
+	}
+
+	typedef iterator (*iter_f)();
+	reverse_iterator		rend() {
+		return reverse_iterator(begin());
+	}
+	const_reverse_iterator	rend() const {
+		return const_reverse_iterator(begin());
+	}
 
 	/* Capacity */
 	size_type		size() const {

@@ -29,7 +29,7 @@ public:
 	_VectorIterator(const _VectorIterator & other) {
 		*this = other;
 	}
-	~_VectorIterator() {}
+	virtual ~_VectorIterator() {}
 	_VectorIterator&	operator= (const _VectorIterator & other) {
 		if (this != &other) {
 			m_p = other.m_p;
@@ -42,7 +42,7 @@ public:
 	_reference			operator* () const _NOEXCEPT {
 		return *m_p;
 	}
-	_pointer				operator->() const _NOEXCEPT {
+	_pointer			operator->() const _NOEXCEPT {
 		return m_p;
 	}
 
@@ -210,6 +210,64 @@ public:
 private:
 	_pointer		m_p;
 }; //class _VectorConstIterator
+
+/*template < typename value_type >
+class _VectorReverseIterator : public _VectorIterator< value_type > {
+	typedef _VectorIterator< value_type >	_base;
+	typedef typename _base::reference		_reference;
+	typedef typename _base::pointer			_pointer;
+	typedef typename _base::difference_type	_difference_type;
+
+public:
+	_VectorReverseIterator() : _base() {}
+	_VectorReverseIterator(const _VectorReverseIterator &other) {
+		*this = other;
+	}
+	~_VectorReverseIterator() {}
+	_VectorReverseIterator & operator = (const _VectorReverseIterator &other) {
+		_base::operator=(other);
+		return *this;
+	}
+
+	_VectorReverseIterator		operator+ (_difference_type n) const _NOEXCEPT {
+		return _base::operator-(n);
+	}
+	_VectorReverseIterator		operator- (_difference_type n) const _NOEXCEPT {
+		return _base::operator+(n);
+	}
+	_VectorReverseIterator &	operator-=(_difference_type n) _NOEXCEPT {
+		return _base::operator+=(n);
+	}
+	_VectorReverseIterator &	operator+=(_difference_type n) _NOEXCEPT {
+		return _base::operator-=(n);
+	}
+
+	bool						operator< (const _VectorReverseIterator & other) const _NOEXCEPT {
+		return _base::operator>(other);
+	}
+	bool						operator> (const _VectorReverseIterator & other) const _NOEXCEPT {
+		return _base::operator<(other);
+	}
+	bool						operator>=(const _VectorReverseIterator & other) const _NOEXCEPT {
+		return _base::operator<=(other);
+	}
+	bool						operator<=(const _VectorReverseIterator & other) const _NOEXCEPT {
+		return _base::operator>=(other);
+	}
+
+	_VectorReverseIterator &	operator++() _NOEXCEPT {
+		return _base::operator--();
+	}
+	_VectorReverseIterator &	operator--() _NOEXCEPT {
+		return _base::operator++();
+	}
+	_VectorReverseIterator		operator++(int) _NOEXCEPT {
+		return _base::operator--(1);
+	}
+	_VectorReverseIterator		operator--(int) _NOEXCEPT {
+		return _base::operator++(1);
+	}
+};*/
 
 template < class Iterator >
 inline
