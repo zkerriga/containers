@@ -740,7 +740,7 @@ TEST_F(VecTest, pop_back) {
 	assertVecEQ(sRandom, mRandom);
 }
 
-
+/* todo */
 
 TEST_F(VecTest, swap) {
 	sVec	s1(sTen);
@@ -799,6 +799,58 @@ TEST_F(VecTest, get_allocator) {
 
 	s1.get_allocator().deallocate(sP, 10);
 	m1.get_allocator().deallocate(mP, 10);
+}
+
+TEST_F(VecTest, non_member_operators) {
+	sVec	s1(sEmpty);
+	mVec	m1(mEmpty);
+
+	ASSERT_EQ(s1 == sEmpty, m1 == mEmpty);
+	ASSERT_EQ(s1 < sTen, m1 < mTen);
+	ASSERT_EQ(s1 > sTen, m1 > mTen);
+	ASSERT_EQ(s1 != sTen, m1 != mTen);
+
+	sVec	s2(sTen);
+	mVec	m2(mTen);
+	ASSERT_EQ(s2 <= sTen, m2 <= mTen);
+	ASSERT_EQ(s2 >= sTen, m2 >= mTen);
+
+	sVec	s3(sEmpty);
+	sVec	s4(sEmpty);
+	mVec	m3(mEmpty);
+	mVec	m4(mEmpty);
+
+	s3.push_back(Any(1));	s4.push_back(Any(1));
+	s3.push_back(Any(2));	s4.push_back(Any(2));
+	s3.push_back(Any(3));
+	m3.push_back(Any(1));	m4.push_back(Any(1));
+	m3.push_back(Any(2));	m4.push_back(Any(2));
+	m3.push_back(Any(3));
+	ASSERT_EQ(s3 < s4, m3 < m4);
+	ASSERT_EQ(s3 > s4, m3 > m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
+}
+
+TEST_F(VecTest, non_member_swap) {
+	sVec		s1(sEmpty);
+	sVec		s2(sTen);
+	mVec		m1(mEmpty);
+	mVec		m2(mTen);
+
+	std::swap(s1, s2);
+	std::swap(m1, m2);
+	assertVecEQ(s2, m2);
+	assertVecEQ(s1, m1);
+
+	sVec		s3(sRandom);
+	sVec		s4(sTen);
+	mVec		m3(mRandom);
+	mVec		m4(mTen);
+
+	std::swap(s3, s4);
+	std::swap(m3, m4);
+	assertVecEQ(s3, m3);
+	assertVecEQ(s4, m4);
 }
 
 #undef DEBUG

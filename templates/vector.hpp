@@ -257,30 +257,74 @@ private:
 
 }; //class vector
 
-/* todo */
+
 /* Non-member function overloads */
 template < class T, class Alloc >
-bool operator == (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
+bool operator==(const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	typedef typename vector<T, Alloc>::const_iterator _iter;
+
+	if (lhs.size() != rhs.size()) {
+		return false;
+	}
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
+	while (lIt != lIte && rIt != rIte) {
+		if (!(*lIt == *rIt)) {
+			return false;
+		}
+		++rIt;
+		++lIt;
+	}
+	return (lIt == lIte && rIt == rIte);
+}
 
 template < class T, class Alloc >
-bool operator != (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
+bool operator!=(const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	return !operator==(lhs, rhs);
+}
 
 template < class T, class Alloc >
-bool operator <  (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
+bool operator< (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	typedef typename vector<T, Alloc>::const_iterator _iter;
+
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
+
+	while (lIt != lIte && rIt != rIte) {
+		if (*lIt < *rIt) {
+			return true;
+		}
+		if (*rIt < *lIt) {
+			return false;
+		}
+		++lIt;
+		++rIt;
+	}
+	return (lIt == lIte && rIt != rIte);
+}
 
 template < class T, class Alloc >
-bool operator <= (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
+bool operator<=(const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	return (!operator<(rhs, lhs));
+}
 
 template < class T, class Alloc >
-bool operator >  (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
+bool operator> (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	return operator<(rhs, lhs);
+}
 
 template < class T, class Alloc >
-bool operator >= (const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs);
-/* todo */
+bool operator>=(const vector<T,Alloc>& lhs, const vector<T,Alloc> & rhs) {
+	return (!operator<(lhs, rhs));
+}
 
 template < class T, class Alloc >
-void swap(vector<T,Alloc>& x, vector<T,Alloc> & y);
-
-/* todo: vector<bool> ???? */
+void swap(vector<T,Alloc>& x, vector<T,Alloc> & y) {
+	x.swap(y);
+}
 
 } //namespace ft
