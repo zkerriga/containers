@@ -152,7 +152,9 @@ public:
 	size_type		capacity() const _NOEXCEPT {
 		return m_capacity;
 	}
-//	bool			empty() const;
+	bool			empty() const {
+		return (m_size == 0);
+	}
 	void			reserve(size_type n) {
 		if (n > m_capacity) {
 			m_array = _MemWorker::reallocate(

@@ -633,4 +633,24 @@ TEST_F(VecTest, resize) {
 	ASSERT_EQ(s1.capacity(), m1.capacity());
 }
 
+TEST_F(VecTest, capacity) {
+	ASSERT_EQ(sTen.capacity(), mTen.capacity());
+	ASSERT_EQ(mRandom.capacity(), mRandom.capacity());
+
+	sTen.push_back(ANY_INT);	mTen.push_back(ANY_INT);
+	sTen.push_back(ANY_INT);	mTen.push_back(ANY_INT);
+	sTen.push_back(ANY_INT);	mTen.push_back(ANY_INT);
+	ASSERT_EQ(sTen.capacity(), mTen.capacity());
+
+	sRandom.push_back(ANY_INT);	mRandom.push_back(ANY_INT);
+	sRandom.push_back(ANY_INT);	mRandom.push_back(ANY_INT);
+	sRandom.push_back(ANY_INT);	mRandom.push_back(ANY_INT);
+	ASSERT_EQ(mRandom.capacity(), mRandom.capacity());
+}
+
+TEST_F(VecTest, empty) {
+	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
+	ASSERT_EQ(sTen.empty(), mTen.empty());
+}
+
 #undef DEBUG
