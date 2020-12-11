@@ -152,7 +152,7 @@ public:
 	size_type		capacity() const _NOEXCEPT {
 		return m_capacity;
 	}
-	bool			empty() const {
+	bool			empty() const _NOEXCEPT {
 		return (m_size == 0);
 	}
 	void			reserve(size_type n) {
@@ -165,14 +165,36 @@ public:
 	}
 
 	/* Element access */
-//	reference			operator[](size_type n);
-//	const_reference		operator[](size_type n) const;
-//	reference			at(size_type n);
-//	const_reference		at(size_type n) const;
-//	reference			front();
-//	const_reference		front() const;
-//	reference			back();
-//	const_reference		back() const;
+	reference			operator[](size_type n) _NOEXCEPT {
+		return *(m_array + n);
+	}
+	const_reference		operator[](size_type n) const _NOEXCEPT {
+		return *(m_array + n);
+	}
+	reference			at(size_type n) throw(std::out_of_range) {
+		if (n >= m_size) {
+			throw std::out_of_range("vector: incorrect index!");
+		}
+		return operator[](n);
+	}
+	const_reference		at(size_type n) const throw(std::out_of_range) {
+		if (n >= m_size) {
+			throw std::out_of_range("vector: incorrect index!");
+		}
+		return operator[](n);
+	}
+	reference			front() _NOEXCEPT {
+		return *m_array;
+	}
+	const_reference		front() const _NOEXCEPT {
+		return *m_array;
+	}
+	reference			back() _NOEXCEPT {
+		return *(m_array + m_size - 1);
+	}
+	const_reference		back() const _NOEXCEPT {
+		return *(m_array + m_size - 1);
+	}
 
 	/* Modifiers */
 //	template < class InputIterator >

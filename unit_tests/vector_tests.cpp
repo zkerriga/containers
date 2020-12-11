@@ -653,4 +653,73 @@ TEST_F(VecTest, empty) {
 	ASSERT_EQ(sTen.empty(), mTen.empty());
 }
 
+TEST_F(VecTest, operator_access) {
+	ASSERT_EQ(sTen[0], mTen[0]);
+	ASSERT_EQ(sTen[3], mTen[3]);
+	ASSERT_EQ(sTen[9], mTen[9]);
+
+	sVec	s1(sTen);
+	mVec	m1(mTen);
+	s1[3] = Any();
+	m1[3] = Any();
+	assertVecEQ(s1, m1);
+	s1[0] = Any();
+	m1[0] = Any();
+	assertVecEQ(s1, m1);
+	s1[9] = Any();
+	m1[9] = Any();
+	assertVecEQ(s1, m1);
+}
+
+TEST_F(VecTest, operator_at) {
+	ASSERT_EQ(sTen.at(0), mTen.at(0));
+	ASSERT_EQ(sTen.at(3), mTen.at(3));
+	ASSERT_EQ(sTen.at(9), mTen.at(9));
+
+	sVec	s1(sTen);
+	mVec	m1(mTen);
+	s1.at(3) = Any();
+	m1.at(3) = Any();
+	assertVecEQ(s1, m1);
+	s1.at(0) = Any();
+	m1.at(0) = Any();
+	assertVecEQ(s1, m1);
+	s1.at(9) = Any();
+	m1.at(9) = Any();
+	assertVecEQ(s1, m1);
+
+	try {
+		m1.at(-1);
+		ASSERT_TRUE(false);
+	}
+	catch (std::out_of_range &) {
+		ASSERT_TRUE(true);
+	}
+	try {
+		m1.at(10);
+		ASSERT_TRUE(false);
+	}
+	catch (std::out_of_range &) {
+		ASSERT_TRUE(true);
+	}
+}
+
+TEST_F(VecTest, front) {
+	ASSERT_EQ(sTen.front(), mTen.front());
+	ASSERT_EQ(sRandom.front(), mRandom.front());
+
+	sTen.resize(SIZE_LITTLE);
+	mTen.resize(SIZE_LITTLE);
+	ASSERT_EQ(sTen.front(), mTen.front());
+}
+
+TEST_F(VecTest, back) {
+	ASSERT_EQ(sTen.back(), mTen.back());
+	ASSERT_EQ(sRandom.back(), mRandom.back());
+
+	sTen.resize(SIZE_LITTLE);
+	mTen.resize(SIZE_LITTLE);
+	ASSERT_EQ(sTen.back(), mTen.back());
+}
+
 #undef DEBUG
