@@ -794,7 +794,38 @@ TEST_F(VecTest, insert) {
 	assertVecEQ(s2, m2);
 }
 
-/* todo */
+TEST_F(VecTest, erase) {
+	sVec	s1(sTen);
+	mVec	m1(mTen);
+
+	s1.erase(s1.end() - 1);
+	m1.erase(m1.end() - 1);
+	assertVecEQ(s1, m1);
+
+	s1.erase(s1.begin());
+	m1.erase(m1.begin());
+	assertVecEQ(s1, m1);
+
+	s1.erase(s1.begin() + 2);
+	m1.erase(m1.begin() + 2);
+	assertVecEQ(s1, m1);
+
+	sVec	s2(sTen);
+	mVec	m2(mTen);
+
+	ASSERT_EQ(
+	*s2.erase(s2.begin(), s2.end() - 1),
+	*m2.erase(m2.begin(), m2.end() - 1));
+	assertVecEQ(s1, m1);
+
+	sVec	s3(sTen);
+	mVec	m3(mTen);
+
+	ASSERT_EQ(
+			*s3.erase(s3.begin() + 3, s3.end() - 1),
+			*m3.erase(m3.begin() + 3, m3.end() - 1));
+	assertVecEQ(s1, m1);
+}
 
 TEST_F(VecTest, swap) {
 	sVec	s1(sTen);

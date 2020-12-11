@@ -266,8 +266,34 @@ public:
 			position = insert(position, *first++) + 1;
 		}
 	}
-//	iterator	erase(iterator position);
-//	iterator	erase(iterator first, iterator last);
+	iterator	erase(iterator position) {
+		value_type * const		pos		= position.operator->();
+		const difference_type	delta	= pos - m_array;
+
+		m_allocator.destroy(pos);
+		std::memmove(
+			m_array + delta,
+			m_array + delta + 1,
+			(m_size - delta) * sizeof(value_type)
+		);
+		--m_size;
+		return iterator(m_array + delta);
+	}
+	iterator	erase(iterator first, iterator last) {
+		value_type * const		firstPtr	= first.operator->();
+		value_type * const		lastPtr		= last.operator->();
+		const difference_type	delta		= firstPtr - m_array;
+		const difference_type	size		= lastPtr - firstPtr;
+
+		_MemWorker::destructElements(firstPtr, lastPtr, m_allocator);
+		std::memmove(
+			m_array + delta,
+			m_array + delta + size,
+			(m_size - delta - size) * sizeof(value_type)
+		);
+		m_size -= size;
+		return iterator(m_array + delta);
+	}
 	void		swap(vector & x) {
 		ft::swap(m_allocator, x.m_allocator);
 		ft::swap(m_capacity, x.m_capacity);
