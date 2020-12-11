@@ -118,8 +118,6 @@ public:
 	const_reverse_iterator	rbegin() const {
 		return const_reverse_iterator(end());
 	}
-
-	typedef iterator (*iter_f)();
 	reverse_iterator		rend() {
 		return reverse_iterator(begin());
 	}
@@ -128,12 +126,30 @@ public:
 	}
 
 	/* Capacity */
-	size_type		size() const {
+	size_type		size() const _NOEXCEPT {
 		return m_size;
 	}
-//	size_type		max_size() const;
-//	void			resize(size_type n, value_type val = value_type());
-	size_type		capacity() const {
+	size_type		max_size() const _NOEXCEPT {
+		return (static_cast<size_type>(-1) / sizeof(value_type));
+	}
+	void			resize(size_type n, value_type val = value_type()) {
+		if (n == m_size) {
+			return;
+		}
+		if (n < m_size) {
+			_MemWorker::destructElements(m_array + n, m_array + m_size, m_allocator);
+		}
+		else {
+			if (n > m_capacity) {
+				reserve(n);
+			}
+			for (size_type i = m_size; i < n; ++i) {
+				push_back(val);
+			}
+		}
+		m_size = n;
+	}
+	size_type		capacity() const _NOEXCEPT {
 		return m_capacity;
 	}
 //	bool			empty() const;

@@ -601,4 +601,36 @@ TEST_F(VecTest, constructors) {
 	assertVecEQ(s6, m6);
 }
 
+TEST_F(VecTest, max_size) {
+	ASSERT_EQ(sEmpty.max_size(), mEmpty.max_size());
+	ASSERT_EQ(sTen.max_size(), mTen.max_size());
+}
+
+TEST_F(VecTest, resize) {
+	sEmpty.resize(0);
+	mEmpty.resize(0);
+	assertVecEQ(sEmpty, mEmpty);
+
+	sVec	s1(sEmpty);
+	mVec	m1(mEmpty);
+
+	s1.resize(SIZE_LITTLE);
+	m1.resize(SIZE_LITTLE);
+	assertVecEQ(s1, m1);
+
+	s1.resize(SIZE_LITTLE + 1, ANY_INT);
+	m1.resize(SIZE_LITTLE + 1, ANY_INT);
+	assertVecEQ(s1, m1);
+
+	s1.resize(SIZE_LONG);
+	m1.resize(SIZE_LONG);
+	assertVecEQ(s1, m1);
+
+	s1.resize(SIZE_LITTLE);
+	m1.resize(SIZE_LITTLE);
+	assertVecEQ(s1, m1);
+
+	ASSERT_EQ(s1.capacity(), m1.capacity());
+}
+
 #undef DEBUG

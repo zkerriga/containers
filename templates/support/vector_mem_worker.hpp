@@ -19,17 +19,17 @@ template < typename value_type,
 		   typename allocator_type,
 		   typename size_type >
 class MemoryWorker {
+public:
 	static
-	void			_destructElements(value_type * const current,
-									  const value_type * const end,
-									  allocator_type & alloc) _NOEXCEPT {
-		if (current == end) {
+	void			destructElements(value_type * const start,
+									 const value_type * const end,
+									 allocator_type & alloc) _NOEXCEPT {
+		if (start == end) {
 			return;
 		}
-		alloc.destroy(current);
-		_destructElements(current + 1, end, alloc);
+		alloc.destroy(start);
+		destructElements(start + 1, end, alloc);
 	}
-public:
 	static
 	value_type *	reallocate(value_type * const sourceArray,
 							   const size_type realSize,
@@ -46,7 +46,7 @@ public:
 								 const size_type realSize,
 								 const size_type capacity,
 								 allocator_type & alloc) _NOEXCEPT {
-		_destructElements(sourceArray, sourceArray + realSize, alloc);
+		destructElements(sourceArray, sourceArray + realSize, alloc);
 		alloc.deallocate(sourceArray, capacity);
 	}
 }; //class MemWorker
