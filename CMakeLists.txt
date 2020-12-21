@@ -23,10 +23,15 @@ set(VECTOR_SRC
         ${SUPPORT}vector_iterators.hpp
         )
 
+set(MAP_SRC
+        ${TEMPLATE_DIR}map.hpp
+        )
+
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
 #        ${LIST_SRC}
 #        ${VECTOR_SRC}
+        ${MAP_SRC}
         )
 
 add_executable(containers

@@ -12,6 +12,7 @@ include_directories(
 set(TEST_FILES
 #        list_tests.cpp
 #        vector_tests.cpp
+        map_tests.cpp
         )
 
 add_executable(Google_Tests_run ${TEST_FILES} Any.hpp)
