@@ -85,6 +85,51 @@ void assertMapEQ(const sMap & sM, const mMap & mM) {
 //	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
+bool cmp(const sMap::value_type &, const sMap::value_type &) {
+	return true;
+}
+
+TEST(map, types) {
+	sMap::key_type					s1;
+	sMap::mapped_type				s2;
+	sMap::value_type				s3;
+	sMap::key_compare				s4;
+	sMap::allocator_type			s5;
+	sMap::reference					s6 = s3;
+	sMap::const_reference			s7 = s3;
+	sMap::pointer					s8 = &s3;
+	sMap::const_pointer				s9 = &s3;
+	sMap::difference_type			s10;
+	sMap::size_type					s11;
+
+	mMap::key_type					m1;
+	mMap::mapped_type				m2;
+	mMap::value_type				m3;
+	mMap::key_compare				m4;
+	mMap::allocator_type			m5;
+	mMap::reference					m6 = m3;
+	mMap::const_reference			m7 = m3;
+	mMap::pointer					m8 = &m3;
+	mMap::const_pointer				m9 = &m3;
+	mMap::difference_type			m10;
+	mMap::size_type					m11;
+}
+
+TEST_F(MapTest, basic_iterators) {
+	sMap::iterator					s1 = sAlpha.begin();
+	sMap::const_iterator			s2 = s1;
+	sMap::reverse_iterator			s3 = sAlpha.rbegin();
+	sMap::const_reverse_iterator	s4 = s3;
+
+	mMap::iterator					m1 = mAlpha.begin();
+	mMap::const_iterator			m2 = m1;
+	mMap::reverse_iterator			m3 = mAlpha.rbegin();
+	mMap::const_reverse_iterator	m4 = m3;
+}
+
+
+
+
 TEST_F(MapTest, test_for_tests) {
 	ASSERT_TRUE(true);
 	assertMapEQ(sEmpty, mEmpty);
