@@ -25,6 +25,8 @@ set(VECTOR_SRC
 
 set(MAP_SRC
         ${TEMPLATE_DIR}map.hpp
+        ${SUPPORT}map_iterators.hpp
+        ${SUPPORT}tree_node.hpp
         )
 
 set(SRCS

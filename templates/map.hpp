@@ -10,34 +10,42 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#pragma once
+
 #include <memory>
 #include <type_traits>
 #include <stdexcept>
 
 #include "utils.hpp"
+#include "map_iterators.hpp"
+#include "tree_node.hpp"
 
 namespace ft {
 
 template < class Key,
 		   class T,
-		   class Comapare = less< Key >,
+		   class Comapare = std::less< Key >,
 		   class Alloc = std::allocator< std::pair< const Key, T > > >
 class map {
 public:
-	typedef Key								key_type;
-	typedef T								mapped_type;
-	typedef std::pair< const Key, T >		value_type;
-	typedef Comapare						key_compare;
+	typedef Key											key_type;
+	typedef T											mapped_type;
+	typedef std::pair< const Key, T >					value_type;
+	typedef Comapare									key_compare;
 	/* todo */
 //	class value_compare;
-	typedef Alloc							allocator_type;
-	typedef allocator_type::reference		reference;
-	typedef allocator_type::const_reference	const_reference;
-	typedef allocator_type::pointer			pointer;
-	typedef allocator_type::const_pointer	const_pointer;
-	typedef std::ptrdiff_t					difference_type;
-	typedef std::size_t						size_type;
+	typedef Alloc										allocator_type;
+	typedef typename allocator_type::reference			reference;
+	typedef typename allocator_type::const_reference	const_reference;
+	typedef typename allocator_type::pointer			pointer;
+	typedef typename allocator_type::const_pointer		const_pointer;
+	typedef std::ptrdiff_t								difference_type;
+	typedef std::size_t									size_type;
 
+private:
+	typedef TreeNode< value_type >						_tree;
+
+public:
 	/* todo */
 	class iterator;
 	class const_iterator;
@@ -68,8 +76,12 @@ public:
 //	const_reverse_iterator	rend() const;
 
 	/* Capacity */
-//	bool		empty() const;
-//	size_type	size() const;
+	bool		empty() const {
+		return (m_size == 0);
+	}
+	size_type	size() const {
+		return m_size;
+	}
 //	size_type	max_size() const;
 
 	/* Element access */
@@ -107,6 +119,20 @@ public:
 	/* Allocator */
 //	allocator_type	get_allocator() const;
 
+private:
+	typedef
+	typename allocator_type::template rebind<_tree>::other	allocator_rebind;
+	/*
+	 * EXPERIMENTAL:
+	 * m_end->parent == root node
+	 * m_end->left   == first node (in order)
+	 * m_end->right  == last node (in order)
+	 */
+	_tree *				m_end;
+	size_type			m_size;
+	allocator_type		m_valueAlloc;
+	allocator_rebind	m_treeAlloc;
+	const key_compare	mc_compare;
 }; //class map
 
 } //namespace ft

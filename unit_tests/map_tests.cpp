@@ -2,8 +2,10 @@
 #include <map>
 #include <iterator>
 #include <limits>
+#include <algorithm>
 
 #include "Any.hpp"
+#include "map.hpp"
 
 #define INT_VALUE 1232349
 #define SIZE_T_VALUE 9000000000
@@ -19,7 +21,7 @@
 #endif //ifdef DEBUG
 
 using sMap		= std::map<char, Any>;
-using mMap		= std::map<char, Any>;
+using mMap		=  ft::map<char, Any>;
 //using sAlloc	= std::allocator<Any>;
 
 class MapTest : public ::testing::Test {
@@ -40,8 +42,8 @@ public:
 		std::cout << "Seed = " << seed << std::endl;
 		for (int i = 0; i < size; ++i) {
 			randChar = getRandPrintable();
-			sRand[randChar] = Any(randChar);
-			mRand[randChar] = Any(randChar);
+			sRando[randChar] = Any(randChar);
+			mRando[randChar] = Any(randChar);
 		}
 	}
 	virtual void TearDown() {
@@ -58,11 +60,11 @@ public:
 public:
 	sMap		sEmpty;
 	sMap		sAlpha;
-	sMap		sRand;
+	sMap		sRando;
 
 	mMap		mEmpty;
 	mMap		mAlpha;
-	mMap		mRand;
+	mMap		mRando;
 };
 
 void assertMapEQ(const sMap & sM, const mMap & mM) {
@@ -87,5 +89,23 @@ TEST_F(MapTest, test_for_tests) {
 	ASSERT_TRUE(true);
 	assertMapEQ(sEmpty, mEmpty);
 	assertMapEQ(sAlpha, mAlpha);
-	assertMapEQ(sRand, mRand);
+	assertMapEQ(sRando, mRando);
+}
+
+//TEST_F(MapTest, check) {
+//	std::for_each(sAlpha.begin(), sAlpha.end(), [](std::pair<const char, Any> & pair){
+//		std::cout << pair.first << '-' << pair.second << std::endl;
+//	});
+//}
+
+TEST_F(MapTest, empty) {
+	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
+	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
+	ASSERT_EQ(sRando.empty(), mRando.empty());
+}
+
+TEST_F(MapTest, size) {
+	ASSERT_EQ(sEmpty.size(), mEmpty.size());
+	ASSERT_EQ(sAlpha.size(), mAlpha.size());
+	ASSERT_EQ(sRando.size(), mRando.size());
 }
