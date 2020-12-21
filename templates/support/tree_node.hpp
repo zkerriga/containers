@@ -21,11 +21,14 @@ public:
 	TreeNode *		parent;
 
 	static
-	TreeNode *		createNewNode(TreeNode * (*allocateNode)()) {
-		TreeNode * const	node = allocateNode();
+	TreeNode *		createNewNode(TreeNode * const allocatedNodeMemory,
+								  value_type * const allocatedValueMemory) {
+		TreeNode * const	node = allocatedNodeMemory;
 
+		node->data = allocatedValueMemory;
 		rightLink(node, node);
 		leftLink(node, node);
+		return node;
 	}
 	inline static
 	void			rightLink(TreeNode * const parent, TreeNode * const right) {

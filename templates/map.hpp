@@ -55,8 +55,12 @@ public:
 
 
 	/* Initialize */
-//	explicit map(const key_compare & comp = key_compare(),
-//				 const allocator_type & alloc = allocator_type());
+	explicit map(const key_compare & comp = key_compare(),
+				 const allocator_type & alloc = allocator_type())
+		: m_end(nullptr), m_size(0), mc_compare(comp), m_valueAlloc(alloc)
+	{
+		m_end = _tree::createNewNode(_allocateNode(), _allocateValue());
+	}
 //	template < class InputIterator >
 //	map(InputIterator first, InputIterator last,
 //		const key_compare & comp = key_compare(),
@@ -130,9 +134,18 @@ private:
 	 */
 	_tree *				m_end;
 	size_type			m_size;
+	const key_compare	mc_compare;
 	allocator_type		m_valueAlloc;
 	allocator_rebind	m_treeAlloc;
-	const key_compare	mc_compare;
+
+	inline
+	_tree *			_allocateNode() throw(std::bad_alloc) {
+		return m_treeAlloc.allocate(1);
+	}
+	inline
+	value_type *	_allocateValue() throw(std::bad_alloc) {
+		return m_valueAlloc.allocate(1);
+	}
 }; //class map
 
 } //namespace ft
