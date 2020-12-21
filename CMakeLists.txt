@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.17)
 project(containers)
 
-set(CMAKE_CXX_STANDARD 98)
+set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused -Wconversion -O2")
 
 set(LIST_DIR list/)
@@ -26,7 +26,7 @@ set(VECTOR_SRC
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
 #        ${LIST_SRC}
-        ${VECTOR_SRC}
+#        ${VECTOR_SRC}
         )
 
 add_executable(containers
