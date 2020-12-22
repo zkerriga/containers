@@ -209,10 +209,10 @@ TEST_F(MapTest, basic_iterators) {
 	sMap::reverse_iterator			s3 = sAlpha.rbegin();
 	sMap::const_reverse_iterator	s4 = s3;
 
-//	mMap::iterator					m1 = mAlpha.begin();
-//	mMap::const_iterator			m2 = m1;
-//	mMap::reverse_iterator			m3 = mAlpha.rbegin();
-//	mMap::const_reverse_iterator	m4 = m3;
+	mMap::iterator					m1 = mAlpha.begin();
+	mMap::const_iterator			m2 = m1;
+	mMap::reverse_iterator			m3 = mAlpha.rbegin();
+	mMap::const_reverse_iterator	m4 = m3;
 }
 
 
