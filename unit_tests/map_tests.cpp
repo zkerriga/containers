@@ -147,7 +147,13 @@ TEST(map, tree_steps) {
 	_tree *		next = node10;
 	while (next != end) {
 		std::cout << *next->data << std::endl;
-		next = const_cast<_tree *>(_tree::iterateNode(next, _tree::step::right, _tree::step::left));
+		next = _tree::iterateNode(next, _tree::step::right, _tree::step::left);
+	}
+	std::cout << std::endl;
+	_tree *		prev = node50;
+	while (prev != end) {
+		std::cout << *prev->data << std::endl;
+		prev = _tree::iterateNode(prev, _tree::step::left, _tree::step::right);
 	}
 }
 

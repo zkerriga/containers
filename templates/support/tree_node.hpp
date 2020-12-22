@@ -55,12 +55,13 @@ struct TreeNode {
 		left->parent = parent;
 	}
 	inline
-	bool			isEndNode() const {
-		return (data == nullptr);
-	}
 //	bool			isRed() const {
 //		return (color == red);
 //	}
+	bool			isEndNode() const {
+		return (data == nullptr);
+	}
+
 	struct step {
 		typedef TreeNode * (*type)(const TreeNode *);
 
@@ -81,75 +82,23 @@ struct TreeNode {
 	TreeNode *		iterateNode(TreeNode * const node,
 								typename step::type step,
 								typename step::type antiStep) {
-		if (step(node)) {
-			return getLastNodeByStep(step(node), antiStep);
-		}
-		return getFirstStepParent(node, step);
+		return step(node)
+				? getLastNodeByStep(step(node), antiStep)
+				: getFirstStepParent(node, step);
 	}
 	static
 	TreeNode *		getFirstStepParent(TreeNode * const node,
 									   typename step::type step) {
-		if (!node->isStepChild(step)) {
-			return node->parent;
-		}
-		return getFirstStepParent(node->parent, step);
+		return node->isStepChild(step)
+				? getFirstStepParent(node->parent, step)
+				: node->parent;
 	}
 	static
 	TreeNode *		getLastNodeByStep(TreeNode * const root,
 									  typename step::type step) {
-		if (root->isEndNode() || !step(root)) {
-			return root;
-		}
-		return getLastNodeByStep(step(root), step);
+		return (root->isEndNode() || !step(root))
+				? root
+				: getLastNodeByStep(step(root), step);
 	}
-
-//	inline
-//	bool			isLeftChild() const {
-//		return (this == this->parent->left);
-//	}
-
-//	static
-//	TreeNode *		getFirstLeftParent(const TreeNode * const node) noexcept {
-//		if (!node->isLeftChild()) {
-//			return node->parent;
-//		}
-//		return getFirstLeftParent(node->parent);
-//	}
-//	static
-//	TreeNode *		getFirstRightParent(const TreeNode * const node) noexcept {
-//		if (node->isLeftChild()) {
-//			return node->parent;
-//		}
-//		return getFirstRightParent(node->parent);
-//	}
-
-//	static
-//	TreeNode *		getPrevNode(const TreeNode * const node) noexcept {
-//		if (node->left) {
-//			return getMaximalNode(node->left);
-//		}
-//		return getFirstLeftParent(node);
-//	}
-//	static
-//	TreeNode *		getNextNode(const TreeNode * const node) noexcept {
-//		if (node->right) {
-//			return getMinimalNode(node->right);
-//		}
-//		return getFirstRightParent(node);
-//	}
-//	static
-//	TreeNode *		getMinimalNode(const TreeNode * const root) noexcept {
-//		if (root->isEndNode() || !root->left) {
-//			return root;
-//		}
-//		return getMinimalNode(root->left);
-//	}
-//	static
-//	TreeNode *		getMaximalNode(const TreeNode * const root) noexcept {
-//		if (root->isEndNode() || !root->right) {
-//			return root;
-//		}
-//		return getMaximalNode(root->right);
-//	}
 
 }; //class TreeNode
