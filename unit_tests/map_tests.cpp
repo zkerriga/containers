@@ -115,16 +115,52 @@ TEST(map, types) {
 	mMap::size_type					m11;
 }
 
+TEST(map, tree_steps) {
+	typedef TreeNode< int >		_tree;
+	std::allocator<_tree>		sAl;
+	int n20 = 20;
+	int n10 = 10;
+	int n15 = 15;
+	int n40 = 40;
+	int n30 = 30;
+	int n50 = 50;
+
+	_tree *		end = _tree::createEndNode(sAl.allocate(1));
+	_tree *		node20 = _tree::createNode(sAl.allocate(1), n20);
+	_tree *		node10 = _tree::createNode(sAl.allocate(1), n10);
+	_tree *		node15 = _tree::createNode(sAl.allocate(1), n15);
+	_tree *		node40 = _tree::createNode(sAl.allocate(1), n40);
+	_tree *		node30 = _tree::createNode(sAl.allocate(1), n30);
+	_tree *		node50 = _tree::createNode(sAl.allocate(1), n50);
+
+	_tree::leftLink(end, node10);
+	_tree::rightLink(node10, node15);
+	_tree::leftLink(node10, node20);
+
+	_tree::rightLink(node20, node40);
+	_tree::leftLink(node30, node40);
+	_tree::rightLink(node40, node50);
+
+	_tree::rightLink(node50, end);
+	end->parent = node20;
+
+	_tree *		next = node10;
+	while (next != end) {
+		std::cout << *next->data << std::endl;
+		next = const_cast<_tree *>(_tree::iterateNode(next, _tree::step::right, _tree::step::left));
+	}
+}
+
 TEST_F(MapTest, basic_iterators) {
 	sMap::iterator					s1 = sAlpha.begin();
 	sMap::const_iterator			s2 = s1;
 	sMap::reverse_iterator			s3 = sAlpha.rbegin();
 	sMap::const_reverse_iterator	s4 = s3;
 
-	mMap::iterator					m1 = mAlpha.begin();
-	mMap::const_iterator			m2 = m1;
-	mMap::reverse_iterator			m3 = mAlpha.rbegin();
-	mMap::const_reverse_iterator	m4 = m3;
+//	mMap::iterator					m1 = mAlpha.begin();
+//	mMap::const_iterator			m2 = m1;
+//	mMap::reverse_iterator			m3 = mAlpha.rbegin();
+//	mMap::const_reverse_iterator	m4 = m3;
 }
 
 

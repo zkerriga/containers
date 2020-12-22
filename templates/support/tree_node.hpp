@@ -35,13 +35,14 @@ struct TreeNode {
 	}
 	static
 	TreeNode *		createNode(TreeNode * const allocatedNodeMemory,
-							   const value_type & constructedValue) {
+							   value_type & constructedValue) {
 		TreeNode * const	node = allocatedNodeMemory;
 
 		node->data = &constructedValue;
 		node->left = nullptr;
 		node->right = nullptr;
 		node->parent = nullptr;
+		return node;
 	}
 	inline static
 	void			rightLink(TreeNode * const parent, TreeNode * const right) {
@@ -57,53 +58,98 @@ struct TreeNode {
 	bool			isEndNode() const {
 		return (data == nullptr);
 	}
-	inline
-	bool			isLeftChild() const {
-		return (this == this->parent->left);
-	}
 //	bool			isRed() const {
 //		return (color == red);
 //	}
-	static
-	TreeNode *		getPrevNode(const TreeNode * const node) noexcept {
-		if (node->left) {
-			return getMaximalNode(node->left);
+	struct step {
+		typedef TreeNode * (*type)(const TreeNode *);
+
+		inline static
+		TreeNode *	left(const TreeNode * const node) {
+			return node->left;
 		}
-		return getFirstLeftParent(node);
+		inline static
+		TreeNode *	right(const TreeNode * const node) {
+			return node->right;
+		}
+	};
+
+	bool			isStepChild(typename step::type step) const {
+		return (this == step(this->parent));
 	}
 	static
-	TreeNode *		getNextNode(const TreeNode * const node) noexcept {
-		if (node->right) {
-			return getMinimalNode(node->right);
+	TreeNode *		iterateNode(TreeNode * const node,
+								typename step::type step,
+								typename step::type antiStep) {
+		if (step(node)) {
+			return getLastNodeByStep(step(node), antiStep);
 		}
-		return getFirstRightParent(node);
+		return getFirstStepParent(node, step);
 	}
 	static
-	TreeNode *		getFirstLeftParent(const TreeNode * const node) noexcept {
-		if (!node->isLeftChild()) {
+	TreeNode *		getFirstStepParent(TreeNode * const node,
+									   typename step::type step) {
+		if (!node->isStepChild(step)) {
 			return node->parent;
 		}
-		return getFirstLeftParent(node->parent);
+		return getFirstStepParent(node->parent, step);
 	}
 	static
-	TreeNode *		getFirstRightParent(const TreeNode * const node) noexcept {
-		if (node->isLeftChild()) {
-			return node->parent;
-		}
-		return getFirstRightParent(node->parent);
-	}
-	static
-	TreeNode *		getMinimalNode(const TreeNode * const root) noexcept {
-		if (root->isEndNode() || !root->left) {
+	TreeNode *		getLastNodeByStep(TreeNode * const root,
+									  typename step::type step) {
+		if (root->isEndNode() || !step(root)) {
 			return root;
 		}
-		return getMinimalNode(root->left);
+		return getLastNodeByStep(step(root), step);
 	}
-	static
-	TreeNode *		getMaximalNode(const TreeNode * const root) noexcept {
-		if (root->isEndNode() || !root->right) {
-			return root;
-		}
-		return getMaximalNode(root->right);
-	}
+
+//	inline
+//	bool			isLeftChild() const {
+//		return (this == this->parent->left);
+//	}
+
+//	static
+//	TreeNode *		getFirstLeftParent(const TreeNode * const node) noexcept {
+//		if (!node->isLeftChild()) {
+//			return node->parent;
+//		}
+//		return getFirstLeftParent(node->parent);
+//	}
+//	static
+//	TreeNode *		getFirstRightParent(const TreeNode * const node) noexcept {
+//		if (node->isLeftChild()) {
+//			return node->parent;
+//		}
+//		return getFirstRightParent(node->parent);
+//	}
+
+//	static
+//	TreeNode *		getPrevNode(const TreeNode * const node) noexcept {
+//		if (node->left) {
+//			return getMaximalNode(node->left);
+//		}
+//		return getFirstLeftParent(node);
+//	}
+//	static
+//	TreeNode *		getNextNode(const TreeNode * const node) noexcept {
+//		if (node->right) {
+//			return getMinimalNode(node->right);
+//		}
+//		return getFirstRightParent(node);
+//	}
+//	static
+//	TreeNode *		getMinimalNode(const TreeNode * const root) noexcept {
+//		if (root->isEndNode() || !root->left) {
+//			return root;
+//		}
+//		return getMinimalNode(root->left);
+//	}
+//	static
+//	TreeNode *		getMaximalNode(const TreeNode * const root) noexcept {
+//		if (root->isEndNode() || !root->right) {
+//			return root;
+//		}
+//		return getMaximalNode(root->right);
+//	}
+
 }; //class TreeNode
