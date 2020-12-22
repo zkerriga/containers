@@ -100,9 +100,7 @@ public:
 		return *this;
 	}
 	_MapConstIterator &	operator= (const _MapIterator<value_type> & other) {
-		if (this != &other) {
-			m_p = other._getTreePointer();
-		}
+		m_p = other._getTreePointer();
 		return *this;
 	}
 
@@ -142,6 +140,19 @@ private:
 	_tree *		m_p;
 }; //class _MapConstIterator
 
+//// Primary template.
+///// Define a member typedef @c type only if a boolean constant is true.
+//template<bool, typename _Tp = void>
+//struct enable_if
+//{ };
+//
+//// Partial specialization for true.
+//template<typename _Tp>
+//struct enable_if<true, _Tp>
+//{ typedef _Tp type; };
+
+
+
 template < class LeftIterator, class RightIterator >
 struct enable_if_MapIterators {
 	typedef
@@ -150,17 +161,17 @@ struct enable_if_MapIterators {
 		|| std::is_same< LeftIterator, _MapConstIterator< typename LeftIterator::value_type > >::value)
 		&& (std::is_same< RightIterator, _MapIterator< typename RightIterator::value_type > >::value
 		|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
-		bool >::type	type;
+		bool >		enable;
 };
 
 template < class LeftIterator, class RightIterator >
-typename enable_if_MapIterators<LeftIterator,RightIterator>::type
+typename enable_if_MapIterators< LeftIterator, RightIterator >::enable::type
 operator==(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
 	return (lhs._getTreePointer() == rhs._getTreePointer());
 }
 
 template < class LeftIterator, class RightIterator >
-typename enable_if_MapIterators<LeftIterator,RightIterator>::type
+typename enable_if_MapIterators< LeftIterator, RightIterator >::enable::type
 operator!=(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
 	return !operator==(lhs, rhs);
 }

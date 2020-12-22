@@ -82,6 +82,8 @@ struct TreeNode {
 	TreeNode *		iterateNode(TreeNode * const node,
 								typename step::type step,
 								typename step::type antiStep) {
+		if (node->isEndNode())
+			return antiStep(node);
 		return step(node)
 				? getLastNodeByStep(step(node), antiStep)
 				: getFirstStepParent(node, step);

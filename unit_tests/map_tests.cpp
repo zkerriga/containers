@@ -188,6 +188,8 @@ TEST(map, iterator_basic) {
 	_tree::rightLink(node40, node50);
 	_tree::rightLink(node50, end);
 	end->parent = node20;
+	end->left = node10;
+	end->right = node50;
 
 	mMap::iterator		it(node10);
 	mMap::iterator		ite(end);
@@ -201,6 +203,10 @@ TEST(map, iterator_basic) {
 		std::cout << it->first << '-' << it->second << std::endl;
 		--it;
 	}
+
+	std::cout << "ITE" << std::endl;
+	--ite;
+	std::cout << ite->first << '-' << ite->second << std::endl;
 }
 
 TEST_F(MapTest, basic_iterators) {
@@ -213,6 +219,11 @@ TEST_F(MapTest, basic_iterators) {
 	mMap::const_iterator			m2 = m1;
 	mMap::reverse_iterator			m3 = mAlpha.rbegin();
 	mMap::const_reverse_iterator	m4 = m3;
+
+	ASSERT_EQ(s1 == s2, m1 == m2);
+	ASSERT_EQ(s1 != s2, m1 != m2);
+	ASSERT_EQ(s3 == s4, m3 == m4);
+	ASSERT_EQ(s3 != s4, m3 != m4);
 }
 
 
