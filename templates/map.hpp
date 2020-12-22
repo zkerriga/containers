@@ -59,7 +59,7 @@ public:
 				 const allocator_type & alloc = allocator_type())
 		: m_end(nullptr), m_size(0), mc_compare(comp), m_valueAlloc(alloc)
 	{
-		m_end = _tree::createNewNode(_allocateNode(), _allocateValue());
+		m_end = _tree::createEndNode(_allocateNode());
 	}
 //	template < class InputIterator >
 //	map(InputIterator first, InputIterator last,
@@ -128,6 +128,7 @@ private:
 	typename allocator_type::template rebind<_tree>::other	allocator_rebind;
 	/*
 	 * EXPERIMENTAL:
+	 * m_end->data   == nullptr
 	 * m_end->parent == root node
 	 * m_end->left   == first node (in order)
 	 * m_end->right  == last node (in order)
