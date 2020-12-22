@@ -49,11 +49,11 @@ public:
 	}
 
 	_MapIterator &		operator++() noexcept {
-		/* todo */
+		m_p = _tree::iterateNode(m_p, _tree::step::right, _tree::step::left);
 		return *this;
 	}
 	_MapIterator &		operator--() noexcept {
-		/* todo */
+		m_p = _tree::iterateNode(m_p, _tree::step::left, _tree::step::right);
 		return *this;
 	}
 	_MapIterator		operator++(int) noexcept {
@@ -67,6 +67,17 @@ public:
 		return _MapIterator(tmp);
 	}
 
+	friend
+	bool				operator==(const _MapIterator & lhs,
+								   const _MapIterator & rhs) noexcept {
+		return (lhs.m_p == rhs.m_p);
+	}
 private:
 	_tree *		m_p;
 };
+
+template < typename value_type >
+bool operator!=(const _MapIterator<value_type> & lhs,
+				const _MapIterator<value_type> & rhs) noexcept {
+	return !operator==(lhs, rhs);
+}

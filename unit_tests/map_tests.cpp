@@ -157,6 +157,52 @@ TEST(map, tree_steps) {
 	}
 }
 
+TEST(map, iterator_basic) {
+	typedef TreeNode< std::pair<const char, Any> >	_tree;
+	std::allocator<_tree>						sAl;
+	const char	chArr[]		= {'a', 'b', 'c', 'd', 'e', 'f'};
+	Any		anyArr[]	= {Any(chArr[0]), Any(chArr[1]), Any(chArr[2]),
+						   Any(chArr[3]), Any(chArr[4]), Any(chArr[5])};
+
+	std::pair< const char, Any >	pairs[] = {
+			std::make_pair(chArr[0], anyArr[0]),
+			std::make_pair(chArr[1], anyArr[1]),
+			std::make_pair(chArr[2], anyArr[2]),
+			std::make_pair(chArr[3], anyArr[3]),
+			std::make_pair(chArr[4], anyArr[4]),
+			std::make_pair(chArr[5], anyArr[5])
+	};
+
+	_tree *		end = _tree::createEndNode(sAl.allocate(1));
+	_tree *		node20 = _tree::createNode(sAl.allocate(1), pairs[2]);
+	_tree *		node10 = _tree::createNode(sAl.allocate(1), pairs[0]);
+	_tree *		node15 = _tree::createNode(sAl.allocate(1), pairs[1]);
+	_tree *		node40 = _tree::createNode(sAl.allocate(1), pairs[4]);
+	_tree *		node30 = _tree::createNode(sAl.allocate(1), pairs[3]);
+	_tree *		node50 = _tree::createNode(sAl.allocate(1), pairs[5]);
+	_tree::leftLink(end, node10);
+	_tree::rightLink(node10, node15);
+	_tree::leftLink(node10, node20);
+	_tree::rightLink(node20, node40);
+	_tree::leftLink(node30, node40);
+	_tree::rightLink(node40, node50);
+	_tree::rightLink(node50, end);
+	end->parent = node20;
+
+	mMap::iterator		it(node10);
+	mMap::iterator		ite(end);
+	while (it != ite) {
+		std::cout << it->first << '-' << it->second << std::endl;
+		++it;
+	}
+	std::cout << std::endl;
+	it = mMap::iterator(node50);
+	while (it != ite) {
+		std::cout << it->first << '-' << it->second << std::endl;
+		--it;
+	}
+}
+
 TEST_F(MapTest, basic_iterators) {
 	sMap::iterator					s1 = sAlpha.begin();
 	sMap::const_iterator			s2 = s1;
