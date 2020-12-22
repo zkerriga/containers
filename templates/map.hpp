@@ -46,10 +46,10 @@ private:
 	typedef TreeNode< value_type >						_tree;
 
 public:
+	typedef _MapIterator< value_type >					iterator;
+	typedef std::reverse_iterator< iterator >			reverse_iterator;
 	/* todo */
-	class iterator;
 	class const_iterator;
-	class reverse_iterator;
 	class const_reverse_iterator;
 	/* todo */
 
