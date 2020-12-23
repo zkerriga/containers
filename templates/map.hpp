@@ -102,7 +102,12 @@ public:
 //	size_type	max_size() const;
 
 	/* Element access */
-//	mapped_type & operator[](const key_type & k);
+	mapped_type & operator[](const key_type & k) {
+		/* todo: Are you sure? */
+		return insert(
+			std::make_pair(k, mapped_type())
+		).first->second;
+	}
 
 	/* Modifiers */
 //	pair< iterator, bool >

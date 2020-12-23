@@ -30,7 +30,7 @@ public:
 		// код инициализации
 		for (char ch = 'a'; ch < 'm'; ++ch) {
 			sAlpha[ch] = Any(ch);
-//			mAlpha[ch] = Any(ch);
+			mAlpha[ch] = Any(ch);
 		}
 	}
 	virtual void SetUp() {
@@ -43,7 +43,7 @@ public:
 		for (int i = 0; i < size; ++i) {
 			randChar = getRandPrintable();
 			sRando[randChar] = Any(randChar);
-//			mRando[randChar] = Any(randChar);
+			mRando[randChar] = Any(randChar);
 		}
 	}
 	virtual void TearDown() {
@@ -73,20 +73,16 @@ void assertMapEQ(const sMap & sM, const mMap & mM) {
 
 	sMap::const_iterator	sIt		= sM.begin();
 	sMap::const_iterator	sIte	= sM.end();
-//	mMap::const_iterator	mIt		= mM.begin();
-//	mMap::const_iterator	mIte	= mM.end();
+	mMap::const_iterator	mIt		= mM.begin();
+	mMap::const_iterator	mIte	= mM.end();
 
-//	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-//	while (sIt != sIte && mIt != mIte) {
-//		EXPECT_EQ(*sIt, *mIt);
-//		++sIt;
-//		++mIt;
-//	}
-//	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-}
-
-bool cmp(const sMap::value_type &, const sMap::value_type &) {
-	return true;
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
 TEST(map, types) {
@@ -115,7 +111,7 @@ TEST(map, types) {
 	mMap::size_type					m11;
 }
 
-TEST(map, tree_steps) {
+TEST(tree, tree_steps) {
 	typedef TreeNode< int >		_tree;
 	std::allocator<_tree>		sAl;
 	int n20 = 20;
@@ -157,7 +153,7 @@ TEST(map, tree_steps) {
 	}
 }
 
-TEST(map, iterator_basic) {
+TEST(tree, iterator_basic) {
 	typedef TreeNode< std::pair<const char, Any> >	_tree;
 	std::allocator<_tree>						sAl;
 	const char	chArr[]		= {'a', 'b', 'c', 'd', 'e', 'f'};
@@ -226,15 +222,14 @@ TEST_F(MapTest, basic_iterators) {
 	ASSERT_EQ(s3 != s4, m3 != m4);
 }
 
-
-
-
 TEST_F(MapTest, test_for_tests) {
 	ASSERT_TRUE(true);
 	assertMapEQ(sEmpty, mEmpty);
-//	assertMapEQ(sAlpha, mAlpha);
-//	assertMapEQ(sRando, mRando);
+	assertMapEQ(sAlpha, mAlpha);
+	assertMapEQ(sRando, mRando);
 }
+
+/* todo */
 
 TEST_F(MapTest, empty) {
 	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
