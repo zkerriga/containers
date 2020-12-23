@@ -140,38 +140,25 @@ private:
 	_tree *		m_p;
 }; //class _MapConstIterator
 
-//// Primary template.
-///// Define a member typedef @c type only if a boolean constant is true.
-//template<bool, typename _Tp = void>
-//struct enable_if
-//{ };
-//
-//// Partial specialization for true.
-//template<typename _Tp>
-//struct enable_if<true, _Tp>
-//{ typedef _Tp type; };
-
-
 
 template < class LeftIterator, class RightIterator >
-struct enable_if_MapIterators {
-	typedef
-	typename std::enable_if<
+typename std::enable_if<
 		(std::is_same< LeftIterator, _MapIterator< typename LeftIterator::value_type > >::value
-		|| std::is_same< LeftIterator, _MapConstIterator< typename LeftIterator::value_type > >::value)
+		 || std::is_same< LeftIterator, _MapConstIterator< typename LeftIterator::value_type > >::value)
 		&& (std::is_same< RightIterator, _MapIterator< typename RightIterator::value_type > >::value
-		|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
-		bool >		enable;
-};
-
-template < class LeftIterator, class RightIterator >
-typename enable_if_MapIterators< LeftIterator, RightIterator >::enable::type
+			|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
+		bool >::type
 operator==(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
 	return (lhs._getTreePointer() == rhs._getTreePointer());
 }
 
 template < class LeftIterator, class RightIterator >
-typename enable_if_MapIterators< LeftIterator, RightIterator >::enable::type
+typename std::enable_if<
+		(std::is_same< LeftIterator, _MapIterator< typename LeftIterator::value_type > >::value
+		 || std::is_same< LeftIterator, _MapConstIterator< typename LeftIterator::value_type > >::value)
+		&& (std::is_same< RightIterator, _MapIterator< typename RightIterator::value_type > >::value
+			|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
+		bool >::type
 operator!=(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
 	return !operator==(lhs, rhs);
 }

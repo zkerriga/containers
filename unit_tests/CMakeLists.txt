@@ -13,7 +13,7 @@ set(TEST_FILES
 #        list_tests.cpp
 #        vector_tests.cpp
         map_tests.cpp
-        tree_print.cpp
+        utils.hpp
         )
 
 add_executable(Google_Tests_run ${TEST_FILES} Any.hpp)

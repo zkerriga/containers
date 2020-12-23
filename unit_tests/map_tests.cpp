@@ -2,10 +2,10 @@
 #include <map>
 #include <iterator>
 #include <limits>
-#include <algorithm>
 
 #include "Any.hpp"
 #include "map.hpp"
+#include "utils.hpp"
 
 #define INT_VALUE 1232349
 #define SIZE_T_VALUE 9000000000
@@ -24,13 +24,17 @@ using sMap		= std::map<char, Any>;
 using mMap		=  ft::map<char, Any>;
 //using sAlloc	= std::allocator<Any>;
 
+char getRandAlpha() {
+	return static_cast<char>(random() % ('z' - 'a') + 'a');
+}
+
 class MapTest : public ::testing::Test {
 public:
 	MapTest() {
 		// код инициализации
 		for (char ch = 'a'; ch < 'm'; ++ch) {
 			sAlpha[ch] = Any(ch);
-			mAlpha[ch] = Any(ch);
+//			mAlpha[ch] = Any(ch);
 		}
 	}
 	virtual void SetUp() {
@@ -41,9 +45,9 @@ public:
 		char		randChar;
 		std::cout << "Seed = " << seed << std::endl;
 		for (int i = 0; i < size; ++i) {
-			randChar = getRandPrintable();
+			randChar = getRandAlpha();
 			sRando[randChar] = Any(randChar);
-			mRando[randChar] = Any(randChar);
+//			mRando[randChar] = Any(randChar);
 		}
 	}
 	virtual void TearDown() {
@@ -52,9 +56,6 @@ public:
 	}
 	~MapTest() {
 		// очистка всех ресурсов, вызов исключений не допускается
-	}
-	inline static char	getRandPrintable() {
-		return static_cast<char>(rand() % ('z' - 'a') + 'a');
 	}
 
 public:
@@ -111,48 +112,6 @@ TEST(map, types) {
 	mMap::size_type					m11;
 }
 
-TEST(tree, tree_steps) {
-	typedef TreeNode< int >		_tree;
-	std::allocator<_tree>		sAl;
-	int n20 = 20;
-	int n10 = 10;
-	int n15 = 15;
-	int n40 = 40;
-	int n30 = 30;
-	int n50 = 50;
-
-	_tree *		end = _tree::createEndNode(sAl.allocate(1));
-	_tree *		node20 = _tree::createNode(sAl.allocate(1), n20);
-	_tree *		node10 = _tree::createNode(sAl.allocate(1), n10);
-	_tree *		node15 = _tree::createNode(sAl.allocate(1), n15);
-	_tree *		node40 = _tree::createNode(sAl.allocate(1), n40);
-	_tree *		node30 = _tree::createNode(sAl.allocate(1), n30);
-	_tree *		node50 = _tree::createNode(sAl.allocate(1), n50);
-
-	_tree::leftLink(end, node10);
-	_tree::rightLink(node10, node15);
-	_tree::leftLink(node10, node20);
-
-	_tree::rightLink(node20, node40);
-	_tree::leftLink(node30, node40);
-	_tree::rightLink(node40, node50);
-
-	_tree::rightLink(node50, end);
-	end->parent = node20;
-
-	_tree *		next = node10;
-	while (next != end) {
-		std::cout << *next->data << std::endl;
-		next = _tree::iterateNode(next, _tree::step::right, _tree::step::left);
-	}
-	std::cout << std::endl;
-	_tree *		prev = node50;
-	while (prev != end) {
-		std::cout << *prev->data << std::endl;
-		prev = _tree::iterateNode(prev, _tree::step::left, _tree::step::right);
-	}
-}
-
 TEST(tree, iterator_basic) {
 	typedef TreeNode< std::pair<const char, Any> >	_tree;
 	std::allocator<_tree>						sAl;
@@ -169,13 +128,13 @@ TEST(tree, iterator_basic) {
 			std::make_pair(chArr[5], anyArr[5])
 	};
 
-	_tree *		end = _tree::createEndNode(sAl.allocate(1));
-	_tree *		node20 = _tree::createNode(sAl.allocate(1), pairs[2]);
-	_tree *		node10 = _tree::createNode(sAl.allocate(1), pairs[0]);
-	_tree *		node15 = _tree::createNode(sAl.allocate(1), pairs[1]);
-	_tree *		node40 = _tree::createNode(sAl.allocate(1), pairs[4]);
-	_tree *		node30 = _tree::createNode(sAl.allocate(1), pairs[3]);
-	_tree *		node50 = _tree::createNode(sAl.allocate(1), pairs[5]);
+	_tree *		end = _tree::end::create(sAl.allocate(1));
+	_tree *		node20 = _tree::create(sAl.allocate(1), pairs[2]);
+	_tree *		node10 = _tree::create(sAl.allocate(1), pairs[0]);
+	_tree *		node15 = _tree::create(sAl.allocate(1), pairs[1]);
+	_tree *		node40 = _tree::create(sAl.allocate(1), pairs[4]);
+	_tree *		node30 = _tree::create(sAl.allocate(1), pairs[3]);
+	_tree *		node50 = _tree::create(sAl.allocate(1), pairs[5]);
 	_tree::leftLink(end, node10);
 	_tree::rightLink(node10, node15);
 	_tree::leftLink(node10, node20);
@@ -183,10 +142,11 @@ TEST(tree, iterator_basic) {
 	_tree::leftLink(node30, node40);
 	_tree::rightLink(node40, node50);
 	_tree::rightLink(node50, end);
-	end->parent = node20;
-	end->left = node10;
-	end->right = node50;
+	_tree::end::setRoot(end, node20);
+	_tree::end::setFirst(end, node10);
+	_tree::end::setLast(end, node50);
 
+	printTree::print(end, 5);
 	mMap::iterator		it(node10);
 	mMap::iterator		ite(end);
 	while (it != ite) {
@@ -225,8 +185,8 @@ TEST_F(MapTest, basic_iterators) {
 TEST_F(MapTest, test_for_tests) {
 	ASSERT_TRUE(true);
 	assertMapEQ(sEmpty, mEmpty);
-	assertMapEQ(sAlpha, mAlpha);
-	assertMapEQ(sRando, mRando);
+//	assertMapEQ(sAlpha, mAlpha);
+//	assertMapEQ(sRando, mRando);
 }
 
 /* todo */

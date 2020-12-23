@@ -14,15 +14,15 @@
 
 template < typename value_type >
 struct TreeNode {
-private:
-	static const bool	black	= false;
-	static const bool	red		= true;
-
 	value_type *	data;
+private:
 	TreeNode *		left;
 	TreeNode *		right;
 	TreeNode *		parent;
 	bool			color;
+
+	static const bool	black	= false;
+	static const bool	red		= true;
 
 public:
 	static
@@ -82,7 +82,7 @@ public:
 	static
 	TreeNode *		getFirstStepParent(TreeNode * const node,
 									   typename step::type step) {
-		return node->isStepChild(step)
+		return isStepChild(node, step)
 				? getFirstStepParent(node->parent, step)
 				: node->parent;
 	}
@@ -92,6 +92,11 @@ public:
 		return (end::isEndNode(root) || !step(root))
 				? root
 				: getLastNodeByStep(step(root), step);
+	}
+
+	inline static
+	const value_type &	getData(const TreeNode * const node) {
+		return *(node->data);
 	}
 
 	struct end {
@@ -120,6 +125,18 @@ public:
 		inline static
 		TreeNode *	getLast(const TreeNode * const endNode) {
 			return endNode->right;
+		}
+		inline static
+		void		setRoot(TreeNode * const endNode, TreeNode * const root) {
+			endNode->parent = root;
+		}
+		inline static
+		void		setFirst(TreeNode * const endNode, TreeNode * const firstNode) {
+			endNode->left = firstNode;
+		}
+		inline static
+		void		setLast(TreeNode * const endNode, TreeNode * const lastNode) {
+			endNode->right = lastNode;
 		}
 	}; // subclass end
 

@@ -110,8 +110,10 @@ public:
 	}
 
 	/* Modifiers */
-//	pair< iterator, bool >
-//					insert(const value_type & val);
+	std::pair< iterator, bool >
+					insert(const value_type & val) {
+		/* todo */
+	}
 //	iterator		insert(iterator position, const value_type & val);
 //	template < class InputIterator >
 //	void			insert(InputIterator first, InputIterator last);
@@ -133,9 +135,9 @@ public:
 //	const_iterator	lower_bound(const key_type & k) const;
 //	iterator		upper_bound(const key_type & k);
 //	const_iterator	upper_bound(const key_type & k) const;
-//	pair< const_iterator, const_iterator >
+//	std::pair< const_iterator, const_iterator >
 //					equal_range(const key_type & k) const;
-//	pair< iterator, iterator >
+//	std::pair< iterator, iterator >
 //					equal_range(const key_type & k);
 
 	/* Allocator */
@@ -158,7 +160,7 @@ private:
 	allocator_rebind	m_treeAlloc;
 
 	inline
-	_tree *			_allocateNode() throw(std::bad_alloc) {
+	_tree *			_allocateNode() {
 		return m_treeAlloc.allocate(1);
 	}
 
