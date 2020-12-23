@@ -24,19 +24,10 @@ private:
 	TreeNode *		parent;
 	bool			color;
 
+public:
 	static
-	TreeNode *		createEndNode(TreeNode * const allocatedNodeMemory) {
-		TreeNode * const	node = allocatedNodeMemory;
-
-		node->data = nullptr;
-		rightLink(node, node);
-		leftLink(node, node);
-		node->color = black;
-		return node;
-	}
-	static
-	TreeNode *		createNode(TreeNode * const allocatedNodeMemory,
-							   value_type & constructedValue) {
+	TreeNode *		create(TreeNode * const allocatedNodeMemory,
+						   value_type & constructedValue) {
 		TreeNode * const	node = allocatedNodeMemory;
 
 		node->data = &constructedValue;
@@ -55,12 +46,9 @@ private:
 		parent->left = left;
 		left->parent = parent;
 	}
-	inline
-//	bool			isRed() const {
-//		return (color == red);
-//	}
-	bool			isEndNode() const {
-		return (data == nullptr);
+	inline static
+	bool			isRed(const TreeNode * const node) {
+		return node->color;
 	}
 
 	struct step {
@@ -74,17 +62,19 @@ private:
 		TreeNode *	right(const TreeNode * const node) {
 			return node->right;
 		}
-	};
+	}; // subclass step
 
-	bool			isStepChild(typename step::type step) const {
-		return (this == step(this->parent));
+	inline static
+	bool			isStepChild(const TreeNode * const node, typename step::type step) {
+		return (node == step(node->parent));
 	}
 	static
 	TreeNode *		iterateNode(TreeNode * const node,
 								typename step::type step,
 								typename step::type antiStep) {
-		if (node->isEndNode())
+		if (end::isEndNode(node)) {
 			return antiStep(node);
+		}
 		return step(node)
 				? getLastNodeByStep(step(node), antiStep)
 				: getFirstStepParent(node, step);
@@ -99,9 +89,38 @@ private:
 	static
 	TreeNode *		getLastNodeByStep(TreeNode * const root,
 									  typename step::type step) {
-		return (root->isEndNode() || !step(root))
+		return (end::isEndNode(root) || !step(root))
 				? root
 				: getLastNodeByStep(step(root), step);
 	}
+
+	struct end {
+		static
+		TreeNode *	create(TreeNode * const allocatedNodeMemory) {
+			TreeNode * const	node = allocatedNodeMemory;
+
+			node->data = nullptr;
+			rightLink(node, node);
+			leftLink(node, node);
+			node->color = black;
+			return node;
+		}
+		inline static
+		bool		isEndNode(const TreeNode * const node) {
+			return !(node->data);
+		}
+		inline static
+		TreeNode *	getRoot(const TreeNode * const endNode) {
+			return endNode->parent;
+		}
+		inline static
+		TreeNode *	getFirst(const TreeNode * const endNode) {
+			return endNode->left;
+		}
+		inline static
+		TreeNode *	getLast(const TreeNode * const endNode) {
+			return endNode->right;
+		}
+	}; // subclass end
 
 }; //class TreeNode

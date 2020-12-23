@@ -56,7 +56,7 @@ public:
 				 const allocator_type & alloc = allocator_type())
 		: m_end(nullptr), m_size(0), mc_compare(comp), m_valueAlloc(alloc)
 	{
-		m_end = _tree::createEndNode(_allocateNode());
+		m_end = _tree::end::create(_allocateNode());
 	}
 //	template < class InputIterator >
 //	map(InputIterator first, InputIterator last,
@@ -68,10 +68,10 @@ public:
 
 	/* Iterators */
 	iterator				begin() {
-		return iterator(m_end->left);
+		return iterator(_tree::end::getFirst(m_end));
 	}
 	const_iterator			begin() const {
-		return const_iterator(m_end->left);
+		return const_iterator(_tree::end::getFirst(m_end));
 	}
 	iterator				end() {
 		return iterator(m_end);
@@ -161,10 +161,7 @@ private:
 	_tree *			_allocateNode() throw(std::bad_alloc) {
 		return m_treeAlloc.allocate(1);
 	}
-	inline
-	value_type *	_allocateValue() throw(std::bad_alloc) {
-		return m_valueAlloc.allocate(1);
-	}
+
 }; //class map
 
 } //namespace ft
