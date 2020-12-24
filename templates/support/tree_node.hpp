@@ -12,6 +12,7 @@
 
 #pragma once
 
+#pragma pack(push,1)
 template < typename value_type >
 struct TreeNode {
 	value_type *	data;
@@ -141,3 +142,4 @@ public:
 	}; // subclass end
 
 }; //class TreeNode
+#pragma pack(pop)
