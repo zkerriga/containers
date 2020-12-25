@@ -24,14 +24,14 @@ namespace ft {
 
 template < class Key,
 		   class T,
-		   class Comapare = std::less< Key >,
+		   class Compare = std::less< Key >,
 		   class Alloc = std::allocator< std::pair< const Key, T > > >
 class map {
 public:
 	typedef Key											key_type;
 	typedef T											mapped_type;
 	typedef std::pair< const Key, T >					value_type;
-	typedef Comapare									key_compare;
+	typedef Compare										key_compare;
 	/* todo */
 //	class value_compare;
 	typedef Alloc										allocator_type;
@@ -113,6 +113,7 @@ public:
 	std::pair< iterator, bool >
 					insert(const value_type & val) {
 		/* todo */
+		return std::make_pair(begin(), true);
 	}
 //	iterator		insert(iterator position, const value_type & val);
 //	template < class InputIterator >
