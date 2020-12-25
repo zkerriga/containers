@@ -15,15 +15,15 @@
 #pragma pack(push,1)
 template < typename value_type >
 struct TreeNode {
-	value_type *	data;
+	value_type *		data;
 private:
-	TreeNode *		left;
-	TreeNode *		right;
-	TreeNode *		parent;
-	bool			color;
+	TreeNode *			m_left;
+	TreeNode *			m_right;
+	TreeNode *			m_parent;
+	bool				m_color;
 
-	static const bool	black	= false;
-	static const bool	red		= true;
+	static const bool	mc_black	= false;
+	static const bool	mc_red		= true;
 
 public:
 	static
@@ -32,24 +32,26 @@ public:
 		TreeNode * const	node = allocatedNodeMemory;
 
 		node->data = &constructedValue;
-		node->left = nullptr;
-		node->right = nullptr;
-		node->parent = nullptr;
+		node->m_left = nullptr;
+		node->m_right = nullptr;
+		node->m_parent = nullptr;
 		return node;
 	}
 	inline static
 	void			rightLink(TreeNode * const parent, TreeNode * const right) {
-		parent->right = right;
-		right->parent = parent;
+		parent->m_right = right;
+		right->m_parent = parent;
 	}
 	inline static
 	void			leftLink(TreeNode * const left, TreeNode * const parent) {
-		parent->left = left;
-		left->parent = parent;
+		parent->m_left = left;
+		left->m_parent = parent;
 	}
 	inline static
 	bool			isRed(const TreeNode * const node) {
-		return node->color;
+		return (node)
+				? node->m_color == mc_red
+				: false;
 	}
 
 	struct step {
@@ -57,20 +59,20 @@ public:
 
 		inline static
 		TreeNode *	left(const TreeNode * const node) {
-			return node->left;
+			return node->m_left;
 		}
 		inline static
 		TreeNode *	right(const TreeNode * const node) {
-			return node->right;
+			return node->m_right;
 		}
 	}; // subclass step
 
 	inline static
 	bool			isStepChild(const TreeNode * const node, typename step::type step) {
-		return (node == step(node->parent));
+		return (node == step(node->m_parent));
 	}
 	static
-	TreeNode *		iterateNode(TreeNode * const node,
+	TreeNode *		iterateNode(const TreeNode * const node,
 								typename step::type step,
 								typename step::type antiStep) {
 		if (end::isEndNode(node)) {
@@ -81,11 +83,11 @@ public:
 				: getFirstStepParent(node, step);
 	}
 	static
-	TreeNode *		getFirstStepParent(TreeNode * const node,
+	TreeNode *		getFirstStepParent(const TreeNode * const node,
 									   typename step::type step) {
 		return isStepChild(node, step)
-				? getFirstStepParent(node->parent, step)
-				: node->parent;
+				? getFirstStepParent(node->m_parent, step)
+				: node->m_parent;
 	}
 	static
 	TreeNode *		getLastNodeByStep(TreeNode * const root,
@@ -108,7 +110,7 @@ public:
 			node->data = nullptr;
 			rightLink(node, node);
 			leftLink(node, node);
-			node->color = black;
+			node->m_color = mc_black;
 			return node;
 		}
 		inline static
@@ -117,29 +119,52 @@ public:
 		}
 		inline static
 		TreeNode *	getRoot(const TreeNode * const endNode) {
-			return endNode->parent;
+			return endNode->m_parent;
 		}
 		inline static
 		TreeNode *	getFirst(const TreeNode * const endNode) {
-			return endNode->left;
+			return endNode->m_left;
 		}
 		inline static
 		TreeNode *	getLast(const TreeNode * const endNode) {
-			return endNode->right;
+			return endNode->m_right;
 		}
 		inline static
 		void		setRoot(TreeNode * const endNode, TreeNode * const root) {
-			endNode->parent = root;
+			endNode->m_parent = root;
 		}
 		inline static
 		void		setFirst(TreeNode * const endNode, TreeNode * const firstNode) {
-			endNode->left = firstNode;
+			endNode->m_left = firstNode;
 		}
 		inline static
 		void		setLast(TreeNode * const endNode, TreeNode * const lastNode) {
-			endNode->right = lastNode;
+			endNode->m_right = lastNode;
 		}
 	}; // subclass end
 
+	static
+	TreeNode *		rotateLeft(TreeNode * const head) {
+		TreeNode * const	x = head->m_right;
+
+		if (end::isEndNode(head->m_parent)) {
+			end::setRoot(head->m_parent, x);
+		}/* todo */
+		head->m_right	= x->m_left;
+		x->m_left		= head;
+		x->m_color	= head->m_color;
+		head->m_color	= mc_red;
+		return x;
+	}
+	static
+	TreeNode *		rotateRight(TreeNode * const head) {
+		TreeNode * const	x = head->m_left;
+		/* todo */
+		head->m_left	= x->m_right;
+		x->m_right	= head;
+		x->m_color	= head->m_color;
+		head->m_color	= mc_red;
+		return x;
+	}
 }; //class TreeNode
 #pragma pack(pop)
