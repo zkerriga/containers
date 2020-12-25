@@ -37,15 +37,19 @@ public:
 		node->m_parent = nullptr;
 		return node;
 	}
-	inline static
+	static
 	void			rightLink(TreeNode * const parent, TreeNode * const right) {
 		parent->m_right = right;
-		right->m_parent = parent;
+		if (right) {
+			right->m_parent = parent;
+		}
 	}
-	inline static
+	static
 	void			leftLink(TreeNode * const left, TreeNode * const parent) {
 		parent->m_left = left;
-		left->m_parent = parent;
+		if (left) {
+			left->m_parent = parent;
+		}
 	}
 	inline static
 	bool			isRed(const TreeNode * const node) {
@@ -144,15 +148,28 @@ public:
 	}; // subclass end
 
 	static
+	void			linkWithNewChild(TreeNode * const parent,
+									 TreeNode * const oldChild,
+									 TreeNode * const newChild) {
+		if (end::isEndNode(parent)) {
+			end::setRoot(parent, newChild);
+			newChild->m_parent = parent;
+			return;
+		}
+		(parent->m_right == oldChild)
+			? rightLink(parent, newChild)
+			: leftLink(newChild, parent);
+	}
+
+	static
 	TreeNode *		rotateLeft(TreeNode * const head) {
 		TreeNode * const	x = head->m_right;
 
-		if (end::isEndNode(head->m_parent)) {
-			end::setRoot(head->m_parent, x);
-		}/* todo */
-		head->m_right	= x->m_left;
-		x->m_left		= head;
-		x->m_color	= head->m_color;
+		linkWithNewChild(head->m_parent, head, x);
+		rightLink(head, x->m_left);
+		leftLink(head, x);
+
+		x->m_color		= head->m_color;
 		head->m_color	= mc_red;
 		return x;
 	}
