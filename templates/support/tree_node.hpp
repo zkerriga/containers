@@ -82,7 +82,7 @@ public:
 	TreeNode *		iterateNode(const TreeNode * const node,
 								typename step::type step,
 								typename step::type antiStep) {
-		if (end::isEndNode(node)) {
+		if (end::isEnd(node)) {
 			return antiStep(node);
 		}
 		return step(node)
@@ -99,7 +99,7 @@ public:
 	static
 	TreeNode *		getLastNodeByStep(TreeNode * const root,
 									  typename step::type step) {
-		return (end::isEndNode(root) || !step(root))
+		return (end::isEnd(root) || !step(root))
 				? root
 				: getLastNodeByStep(step(root), step);
 	}
@@ -122,8 +122,10 @@ public:
 			return node;
 		}
 		inline static
-		bool		isEndNode(const TreeNode * const node) {
-			return !(node->data);
+		bool		isEnd(const TreeNode * const node) {
+			return node
+					? !(node->data)
+					: false;
 		}
 		inline static
 		TreeNode *	getRoot(const TreeNode * const endNode) {
@@ -158,7 +160,7 @@ public:
 	void			linkWithNewChild(TreeNode * const parent,
 									 TreeNode * const oldChild,
 									 TreeNode * const newChild) {
-		if (end::isEndNode(parent)) {
+		if (end::isEnd(parent)) {
 			end::setRoot(parent, newChild);
 			newChild->m_parent = parent;
 			return;
@@ -194,7 +196,7 @@ public:
 	}
 	inline static
 	void			flipColor(TreeNode * const node) {
-		if (node && !end::isEndNode(node)) {
+		if (node && !end::isEnd(node)) {
 			node->m_color = !node->m_color;
 		}
 	}
@@ -206,14 +208,53 @@ public:
 		return head;
 	}
 
-	template < class Compare, typename allocator_type >
+	template < class Compare,
+			   typename node_allocator_type,
+			   typename value_allocator_type >
 	static
-	TreeNode *		insert(TreeNode * const head,
+	std::pair< TreeNode*, bool >
+					insert(TreeNode * const head,
 						   const value_type & value,
 						   const Compare comp,
-						   allocator_type & alloc) {
-		/* todo */
+						   node_allocator_type & nodeAlloc,
+						   value_allocator_type & valAlloc) {
+		if ( !head || end::isEnd(head) ) {
+			return std::make_pair(create(nodeAlloc, valAlloc, value), true);
+		}
+		if ( comp(value, getData(head)) ) {
+			/* if newNode->data < head->data */
+			TreeNode * const	leftEnd = end::isEnd(head->m_left) ? head->m_left : nullptr;
+			leftLink(insert(head->m_left, value, comp, nodeAlloc, valAlloc), head);
+			if (leftEnd) {
+				end::setFirst(leftEnd, head->m_left);
+			}
+		}
+		else if ( comp(getData(head), value) ) {
+			/* if newNode->data > head->data */
+			TreeNode * const	rightEnd = end::isEnd(head->m_right) ? head->m_right : nullptr;
+			rightLink(head, insert(head->m_right, value, comp, nodeAlloc, valAlloc));
+			if (rightEnd) {
+				end::setLast(rightEnd, head->m_right);
+			}
+		}
+		else {
+			/* if newNode->data == head->data */
+			return std::make_pair(head, false);
+		}
+		_fixUp(head); /* Balancing the tree */
 		return head;
+	}
+	static
+	void			_fixUp(TreeNode * const head) {
+		if (isRed(head->m_right)) {
+			head = rotateLeft(head);
+		}
+		if (isRed(head->m_left) && head->m_left && isRed(head->m_left->m_left)) {
+			head = rotateRight(head);
+		}
+		if (isRed(head->m_left) && isRed(head->m_right)) {
+			flipColors(head);
+		}
 	}
 }; //class TreeNode
 #pragma pack(pop)
