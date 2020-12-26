@@ -112,6 +112,29 @@ TEST(map, types) {
 	mMap::size_type					m11;
 }
 
+/*class TreeTest : public ::testing::Test {
+public:
+	typedef TreeNode< std::pair<const char, Any> >	_tree;
+	TreeTest() :chArr() {
+		// код инициализации
+		chArr = {'a', 'b', 'c', 'd', 'e', 'f'};
+	}
+	virtual void SetUp() {
+		// код, который будет выполнен перед началом теста
+	}
+	virtual void TearDown() {
+		// код, который будет выполнен сразу по завершении теста
+		// при необходимости здесь можно вызывать исключения
+	}
+	~TreeTest() {
+		// очистка всех ресурсов, вызов исключений не допускается
+	}
+
+public:
+	std::allocator<_tree>						sAl;
+	const char	chArr[];
+};*/
+
 TEST(tree, iterator_basic) {
 	typedef TreeNode< std::pair<const char, Any> >	_tree;
 	std::allocator<_tree>						sAl;

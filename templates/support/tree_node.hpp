@@ -176,10 +176,12 @@ public:
 	static
 	TreeNode *		rotateRight(TreeNode * const head) {
 		TreeNode * const	x = head->m_left;
-		/* todo */
-		head->m_left	= x->m_right;
-		x->m_right	= head;
-		x->m_color	= head->m_color;
+
+		linkWithNewChild(head->m_parent, head, x);
+		leftLink(x->m_right, head);
+		rightLink(x, head);
+
+		x->m_color		= head->m_color;
 		head->m_color	= mc_red;
 		return x;
 	}
