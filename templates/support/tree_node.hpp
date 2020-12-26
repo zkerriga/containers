@@ -198,5 +198,11 @@ public:
 		flipColor(head->m_right);
 		return head;
 	}
+
+	static
+	TreeNode *		insert(TreeNode * const root,
+						   const value_type & value) {
+		/* todo: need compare */
+	}
 }; //class TreeNode
 #pragma pack(pop)
