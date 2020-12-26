@@ -33,7 +33,10 @@ void	treeToTab(std::vector< std::vector< char > > & tab,
 	auto lambda = [&](const tree * const node, const size_t level) {
 		if (level < lvl) {
 			if (node && !tree::end::isEndNode(node)) {
-				tab[level].push_back(tree::getData(node).first);
+				const char alpha = tree::getData(node).first;
+				tab[level].push_back(tree::isRed(node)
+										? std::toupper(alpha)
+										: alpha);
 			}
 			else {
 				tab[level].push_back('_');

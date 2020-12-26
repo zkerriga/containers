@@ -26,12 +26,15 @@ private:
 	static const bool	mc_red		= true;
 
 public:
+	template < typename node_allocator_type, typename value_allocator_type >
 	static
-	TreeNode *		create(TreeNode * const allocatedNodeMemory,
-						   value_type & constructedValue) {
-		TreeNode * const	node = allocatedNodeMemory;
+	TreeNode *		create(node_allocator_type & nodeAlloc,
+						   value_allocator_type & valAlloc,
+						   const value_type & value) {
+		TreeNode * const	node = nodeAlloc.allocate(1);
 
-		node->data = &constructedValue;
+		node->data = valAlloc.allocate(1);
+		valAlloc.construct(node->data, value);
 		node->m_left = nullptr;
 		node->m_right = nullptr;
 		node->m_parent = nullptr;
@@ -107,9 +110,10 @@ public:
 	}
 
 	struct end {
+		template < typename node_allocator_type >
 		static
-		TreeNode *	create(TreeNode * const allocatedNodeMemory) {
-			TreeNode * const	node = allocatedNodeMemory;
+		TreeNode *	create(node_allocator_type & alloc) {
+			TreeNode * const	node = alloc.allocate(1);
 
 			node->data = nullptr;
 			rightLink(node, node);
@@ -136,14 +140,17 @@ public:
 		inline static
 		void		setRoot(TreeNode * const endNode, TreeNode * const root) {
 			endNode->m_parent = root;
+			root->m_parent = endNode;
 		}
 		inline static
 		void		setFirst(TreeNode * const endNode, TreeNode * const firstNode) {
 			endNode->m_left = firstNode;
+			firstNode->m_left = endNode;
 		}
 		inline static
 		void		setLast(TreeNode * const endNode, TreeNode * const lastNode) {
 			endNode->m_right = lastNode;
+			lastNode->m_right = endNode;
 		}
 	}; // subclass end
 
@@ -199,10 +206,14 @@ public:
 		return head;
 	}
 
+	template < class Compare, typename allocator_type >
 	static
-	TreeNode *		insert(TreeNode * const root,
-						   const value_type & value) {
-		/* todo: need compare */
+	TreeNode *		insert(TreeNode * const head,
+						   const value_type & value,
+						   const Compare comp,
+						   allocator_type & alloc) {
+		/* todo */
+		return head;
 	}
 }; //class TreeNode
 #pragma pack(pop)

@@ -55,7 +55,7 @@ public:
 				 const allocator_type & alloc = allocator_type())
 		: m_end(nullptr), m_size(0), mc_compare(comp), m_valueAlloc(alloc)
 	{
-		m_end = _tree::end::create(_allocateNode());
+		m_end = _tree::end::create(m_treeAlloc);
 	}
 //	template < class InputIterator >
 //	map(InputIterator first, InputIterator last,
@@ -158,11 +158,6 @@ private:
 	const key_compare	mc_compare;
 	allocator_type		m_valueAlloc;
 	allocator_rebind	m_treeAlloc;
-
-	inline
-	_tree *			_allocateNode() {
-		return m_treeAlloc.allocate(1);
-	}
 
 }; //class map
 

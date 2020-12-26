@@ -22,6 +22,8 @@
 
 using sMap		= std::map<char, Any>;
 using mMap		=  ft::map<char, Any>;
+using sPair		= std::pair<const char, Any>;
+using mTree		= TreeNode<sPair>;
 //using sAlloc	= std::allocator<Any>;
 
 char getRandAlpha() {
@@ -112,15 +114,22 @@ TEST(map, types) {
 	mMap::size_type					m11;
 }
 
-/*class TreeTest : public ::testing::Test {
+class TreeTest : public ::testing::Test {
 public:
 	typedef TreeNode< std::pair<const char, Any> >	_tree;
-	TreeTest() :chArr() {
+	TreeTest() {
 		// код инициализации
-		chArr = {'a', 'b', 'c', 'd', 'e', 'f'};
+		for (size_t i = 0; i < size; ++i) {
+			chArr[i] = static_cast<char>(i + 'a');
+		}
+		pairs = sPairAlloc.allocate(size);
+		for (size_t i = 0; i < size; ++i) {
+			sPairAlloc.construct(pairs + i, std::make_pair(chArr[i], Any(chArr[i])));
+		}
 	}
 	virtual void SetUp() {
 		// код, который будет выполнен перед началом теста
+		end = mTree::end::create(sTreeAlloc);
 	}
 	virtual void TearDown() {
 		// код, который будет выполнен сразу по завершении теста
@@ -131,43 +140,33 @@ public:
 	}
 
 public:
-	std::allocator<_tree>						sAl;
-	const char	chArr[];
-};*/
+	static const size_t			size = 6;
 
-TEST(tree, iterator_basic) {
-	typedef TreeNode< std::pair<const char, Any> >	_tree;
-	std::allocator<_tree>						sAl;
-	const char	chArr[]		= {'a', 'b', 'c', 'd', 'e', 'f'};
-	Any		anyArr[]	= {Any(chArr[0]), Any(chArr[1]), Any(chArr[2]),
-						   Any(chArr[3]), Any(chArr[4]), Any(chArr[5])};
+	std::allocator< mTree >		sTreeAlloc;
+	std::allocator< sPair >		sPairAlloc;
+	char						chArr[size];
+	sPair						*pairs;
 
-	std::pair< const char, Any >	pairs[] = {
-			std::make_pair(chArr[0], anyArr[0]),
-			std::make_pair(chArr[1], anyArr[1]),
-			std::make_pair(chArr[2], anyArr[2]),
-			std::make_pair(chArr[3], anyArr[3]),
-			std::make_pair(chArr[4], anyArr[4]),
-			std::make_pair(chArr[5], anyArr[5])
-	};
+	mTree						*end;
+};
 
-	_tree *		end = _tree::end::create(sAl.allocate(1));
-	_tree *		node20 = _tree::create(sAl.allocate(1), pairs[2]);
-	_tree *		node10 = _tree::create(sAl.allocate(1), pairs[0]);
-	_tree *		node15 = _tree::create(sAl.allocate(1), pairs[1]);
-	_tree *		node40 = _tree::create(sAl.allocate(1), pairs[4]);
-	_tree *		node30 = _tree::create(sAl.allocate(1), pairs[3]);
-	_tree *		node50 = _tree::create(sAl.allocate(1), pairs[5]);
-	_tree::leftLink(end, node10);
-	_tree::rightLink(node10, node15);
-	_tree::leftLink(node10, node20);
-	_tree::rightLink(node20, node40);
-	_tree::leftLink(node30, node40);
-	_tree::rightLink(node40, node50);
-	_tree::rightLink(node50, end);
-	_tree::end::setRoot(end, node20);
-	_tree::end::setFirst(end, node10);
-	_tree::end::setLast(end, node50);
+TEST_F(TreeTest, iterator_basic) {
+	mTree *		node20 = mTree::create(sTreeAlloc, sPairAlloc, pairs[2]);
+	mTree *		node10 = mTree::create(sTreeAlloc, sPairAlloc, pairs[0]);
+	mTree *		node15 = mTree::create(sTreeAlloc, sPairAlloc, pairs[1]);
+	mTree *		node40 = mTree::create(sTreeAlloc, sPairAlloc, pairs[4]);
+	mTree *		node30 = mTree::create(sTreeAlloc, sPairAlloc, pairs[3]);
+	mTree *		node50 = mTree::create(sTreeAlloc, sPairAlloc, pairs[5]);
+	mTree::leftLink(end, node10);
+	mTree::rightLink(node10, node15);
+	mTree::leftLink(node10, node20);
+	mTree::rightLink(node20, node40);
+	mTree::leftLink(node30, node40);
+	mTree::rightLink(node40, node50);
+	mTree::rightLink(node50, end);
+	mTree::end::setRoot(end, node20);
+	mTree::end::setFirst(end, node10);
+	mTree::end::setLast(end, node50);
 
 	printTree::print(end, 5);
 	mMap::iterator		it(node10);
@@ -186,6 +185,38 @@ TEST(tree, iterator_basic) {
 	std::cout << "ITE" << std::endl;
 	--ite;
 	std::cout << ite->first << '-' << ite->second << std::endl;
+}
+
+TEST_F(TreeTest, rotateRight1) {
+	mTree *	nodeB = mTree::create(sTreeAlloc, sPairAlloc, pairs[1]);
+	mTree *	nodeD = mTree::create(sTreeAlloc, sPairAlloc, pairs[3]);
+
+	mTree::leftLink(nodeB, nodeD);
+
+	mTree::end::setRoot(end, nodeD);
+	mTree::end::setFirst(end, nodeB);
+	mTree::end::setLast(end, nodeD);
+
+	printTree::print(end, 3);
+	mTree::rotateRight(mTree::end::getRoot(end));
+	printTree::print(end, 3);
+}
+
+TEST_F(TreeTest, rotateRight2) {
+	mTree *	nodeB = mTree::create(sTreeAlloc, sPairAlloc, pairs[1]);
+	mTree *	nodeD = mTree::create(sTreeAlloc, sPairAlloc, pairs[3]);
+	mTree *	nodeA = mTree::create(sTreeAlloc, sPairAlloc, pairs[0]);
+
+	mTree::leftLink(nodeB, nodeD);
+	mTree::leftLink(nodeA, nodeB);
+
+	mTree::end::setRoot(end, nodeD);
+	mTree::end::setFirst(end, nodeA);
+	mTree::end::setLast(end, nodeD);
+
+	printTree::print(end, 4);
+	mTree::rotateRight(mTree::end::getRoot(end));
+	printTree::print(end, 4);
 }
 
 TEST_F(MapTest, basic_iterators) {
