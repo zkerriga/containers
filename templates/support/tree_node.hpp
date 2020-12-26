@@ -185,5 +185,18 @@ public:
 		head->m_color	= mc_red;
 		return x;
 	}
+	inline static
+	void			flipColor(TreeNode * const node) {
+		if (node && !end::isEndNode(node)) {
+			node->m_color = !node->m_color;
+		}
+	}
+	static
+	TreeNode *		flipColors(TreeNode * const head) {
+		flipColor(head);
+		flipColor(head->m_left);
+		flipColor(head->m_right);
+		return head;
+	}
 }; //class TreeNode
 #pragma pack(pop)
