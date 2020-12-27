@@ -228,7 +228,6 @@ public:
 		if ( comp(value, getData(head)) ) {
 			/* if newNode->data < head->data */
 			ret = _insertStepBlock(
-				head,
 				head->m_left,
 				insert(head->m_left, value, comp, nodeAlloc, valAlloc),
 				link_type(leftLink, head),
@@ -238,11 +237,10 @@ public:
 		else if ( comp(getData(head), value) ) {
 			/* if newNode->data > head->data */
 			ret = _insertStepBlock(
-					head,
-					head->m_right,
-					insert(head->m_right, value, comp, nodeAlloc, valAlloc),
-					link_type(rightLink, head),
-					end::setLast
+				head->m_right,
+				insert(head->m_right, value, comp, nodeAlloc, valAlloc),
+				link_type(rightLink, head),
+				end::setLast
 			);
 		}
 		else {
@@ -280,8 +278,7 @@ public:
 	};
 	static
 	const std::pair< TreeNode*, bool >
-					_insertStepBlock(TreeNode * const head,
-									 TreeNode * const headNext,
+					_insertStepBlock(TreeNode * const headNext,
 									 const std::pair< TreeNode*, bool > ret,
 									 const link_type link,
 									 void (*endSet)(TreeNode * const, TreeNode * const)) {
