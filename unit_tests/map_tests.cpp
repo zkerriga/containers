@@ -272,7 +272,37 @@ TEST_F(TreeTest, insert) {
 	);
 	ASSERT_TRUE(pair4.second);
 	ASSERT_EQ(mTree::getData(pair4.first), pairs[1]);
-	mTree::flipColor(pair4.first);
+	mTree::flipColor(mTree::end::getRoot(end));
+	printTree::print(end, 4);
+	const treePair	pair5 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[5],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair5.second);
+	ASSERT_EQ(mTree::getData(pair5.first), pairs[5]);
+	printTree::print(end, 4);
+	const treePair	pair6 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[4],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair6.second);
+	ASSERT_EQ(mTree::getData(pair6.first), pairs[4]);
+	printTree::print(end, 4);
+	const treePair	pair7 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[3],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair7.second);
+	ASSERT_EQ(mTree::getData(pair7.first), pairs[3]);
 	printTree::print(end, 4);
 }
 
