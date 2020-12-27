@@ -234,22 +234,6 @@ public:
 				link_type(leftLink, head),
 				end::setFirst
 			);
-			if (!ret.second) {
-				return ret;
-			}
-			/*
-			TreeNode * const	leftEnd = end::isEnd(head->m_left) ? head->m_left : nullptr;
-			ret = insert(head->m_left, value, comp, nodeAlloc, valAlloc);
-
-			if (!ret.second)
-				return ret;
-			if (!head->m_left || leftEnd) {
-				leftLink(ret.first, head);
-			}
-			if (leftEnd) {
-				end::setFirst(leftEnd, ret.first);
-			}
-			*/
 		}
 		else if ( comp(getData(head), value) ) {
 			/* if newNode->data > head->data */
@@ -260,27 +244,14 @@ public:
 					link_type(rightLink, head),
 					end::setLast
 			);
-			if (!ret.second) {
-				return ret;
-			}
-			/*
-			TreeNode * const	rightEnd = end::isEnd(head->m_right) ? head->m_right : nullptr;
-			ret = insert(head->m_right, value, comp, nodeAlloc, valAlloc);
-
-			if (!ret.second)
-				return ret;
-			if (!head->m_right || rightEnd) {
-				rightLink(head, ret.first);
-			}
-			if (rightEnd) {
-				end::setLast(rightEnd, head->m_right);
-			}*/
 		}
 		else {
 			/* if newNode->data == head->data */
 			return std::make_pair(head, false);
 		}
-		_fixUp(head); /* Balancing the tree */
+		if (ret.second) {
+			_fixUp(head); /* Balancing the tree */
+		}
 		return ret;
 	}
 	class link_type {
@@ -317,11 +288,8 @@ public:
 		if (ret.second) {
 			TreeNode * const	end = end::isEnd(headNext) ? headNext : nullptr;
 
-			if (!ret.second)
-				return ret;
 			if (!headNext || end) {
-				link.operator()(ret.first);
-//				link(ret.first);
+				link(ret.first);
 			}
 			if (end) {
 				endSet(end, ret.first);
