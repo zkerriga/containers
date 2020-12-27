@@ -38,6 +38,7 @@ public:
 		node->m_left = nullptr;
 		node->m_right = nullptr;
 		node->m_parent = nullptr;
+		node->m_color = mc_red;
 		return node;
 	}
 	static

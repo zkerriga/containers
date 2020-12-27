@@ -231,7 +231,49 @@ public:
 
 TEST_F(TreeTest, insert) {
 	const treePair	pair = mTree::insert(mTree::end::getRoot(end), pairs[2], comp(), sTreeAlloc, sPairAlloc);
-	printTree::print(end, 3);
+	ASSERT_TRUE(pair.second);
+	ASSERT_EQ(mTree::getData(pair.first), pairs[2]);
+
+	if (true) {
+		mTree::end::setRoot(end, pair.first);
+		mTree::end::setFirst(end, pair.first);
+		mTree::end::setLast(end, pair.first);
+		mTree::flipColor(pair.first);
+	}
+	printTree::print(end, 4);
+
+	const treePair	pair2 = mTree::insert(
+		mTree::end::getRoot(end),
+		pairs[2],
+		comp(),
+		sTreeAlloc,
+		sPairAlloc
+	);
+	ASSERT_FALSE(pair2.second);
+	ASSERT_EQ(mTree::getData(pair2.first), pairs[2]);
+	printTree::print(end, 4);
+
+	const treePair	pair3 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[0],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair3.second);
+	ASSERT_EQ(mTree::getData(pair3.first), pairs[0]);
+	printTree::print(end, 4);
+	const treePair	pair4 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[1],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair4.second);
+	ASSERT_EQ(mTree::getData(pair4.first), pairs[1]);
+	mTree::flipColor(pair4.first);
+	printTree::print(end, 4);
 }
 
 TEST_F(MapTest, basic_iterators) {

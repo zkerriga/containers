@@ -39,7 +39,7 @@ void	treeToTab(std::vector< std::vector< char > > & tab,
 										: alpha);
 			}
 			else {
-				tab[level].push_back('_');
+				tab[level].push_back(tree::end::isEnd(node) ? '!' : '_');
 				for (size_t iLvl = level + 1; iLvl < lvl; ++iLvl) {
 					for (size_t j = 0; j < std::pow(2, (iLvl - level)); ++j) {
 						tab[iLvl].push_back('.');
