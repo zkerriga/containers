@@ -276,6 +276,71 @@ TEST_F(TreeTest, insert) {
 	printTree::print(end, 4);
 }
 
+TEST_F(TreeTest, insert2) {
+	const treePair	pair0 = mTree::insert(mTree::end::getRoot(end), pairs[0], comp(), sTreeAlloc, sPairAlloc);
+	ASSERT_TRUE(pair0.second);
+	ASSERT_EQ(mTree::getData(pair0.first), pairs[0]);
+
+	if (true) {
+		mTree::end::setRoot(end, pair0.first);
+		mTree::end::setFirst(end, pair0.first);
+		mTree::end::setLast(end, pair0.first);
+		mTree::flipColor(pair0.first);
+	}
+	printTree::print(end, 5);
+
+	const treePair	pair1 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[1],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair1.second);
+	ASSERT_EQ(mTree::getData(pair1.first), pairs[1]);
+	printTree::print(end, 5);
+	const treePair	pair2 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[2],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair2.second);
+	ASSERT_EQ(mTree::getData(pair2.first), pairs[2]);
+	mTree::flipColor(mTree::end::getRoot(end));
+	printTree::print(end, 5);
+	const treePair	pair3 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[3],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair3.second);
+	ASSERT_EQ(mTree::getData(pair3.first), pairs[3]);
+	printTree::print(end, 5);
+	const treePair	pair4 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[4],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair4.second);
+	ASSERT_EQ(mTree::getData(pair4.first), pairs[4]);
+	printTree::print(end, 5);
+	const treePair	pair5 = mTree::insert(
+			mTree::end::getRoot(end),
+			pairs[5],
+			comp(),
+			sTreeAlloc,
+			sPairAlloc
+	);
+	ASSERT_TRUE(pair5.second);
+	ASSERT_EQ(mTree::getData(pair5.first), pairs[5]);
+	printTree::print(end, 5);}
+
 TEST_F(MapTest, basic_iterators) {
 	sMap::iterator					s1 = sAlpha.begin();
 	sMap::const_iterator			s2 = s1;
