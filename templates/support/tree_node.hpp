@@ -174,7 +174,7 @@ public:
 	TreeNode *		rotateLeft(TreeNode * const head) {
 		TreeNode * const	x = head->m_right;
 
-		linkWithNewChild(head->m_parent, head, x);
+		linkWithNewChild(head->m_parent, head, x); /* todo: возможно, это не нужно */
 		rightLink(head, x->m_left);
 		leftLink(head, x);
 
@@ -212,27 +212,42 @@ public:
 			   typename node_allocator_type,
 			   typename value_allocator_type >
 	static
-	std::pair< TreeNode*, bool >
+	const std::pair< TreeNode*, bool >
 					insert(TreeNode * const head,
 						   const value_type & value,
 						   const Compare comp,
 						   node_allocator_type & nodeAlloc,
 						   value_allocator_type & valAlloc) {
+		typedef std::pair< TreeNode*, bool >	pair_type;
+		pair_type		ret;
+
 		if ( !head || end::isEnd(head) ) {
 			return std::make_pair(create(nodeAlloc, valAlloc, value), true);
 		}
 		if ( comp(value, getData(head)) ) {
 			/* if newNode->data < head->data */
 			TreeNode * const	leftEnd = end::isEnd(head->m_left) ? head->m_left : nullptr;
-			leftLink(insert(head->m_left, value, comp, nodeAlloc, valAlloc), head);
+			ret = insert(head->m_left, value, comp, nodeAlloc, valAlloc);
+
+			if (!ret.second)
+				return ret;
+			if (!head->m_left || leftEnd) {
+				leftLink(ret.first, head);
+			}
 			if (leftEnd) {
-				end::setFirst(leftEnd, head->m_left);
+				end::setFirst(leftEnd, ret.first);
 			}
 		}
 		else if ( comp(getData(head), value) ) {
 			/* if newNode->data > head->data */
 			TreeNode * const	rightEnd = end::isEnd(head->m_right) ? head->m_right : nullptr;
-			rightLink(head, insert(head->m_right, value, comp, nodeAlloc, valAlloc));
+			ret = insert(head->m_right, value, comp, nodeAlloc, valAlloc);
+
+			if (!ret.second)
+				return ret;
+			if (!head->m_right || rightEnd) {
+				rightLink(head, ret.first);
+			}
 			if (rightEnd) {
 				end::setLast(rightEnd, head->m_right);
 			}
@@ -242,10 +257,10 @@ public:
 			return std::make_pair(head, false);
 		}
 		_fixUp(head); /* Balancing the tree */
-		return head;
+		return ret;
 	}
 	static
-	void			_fixUp(TreeNode * const head) {
+	void			_fixUp(TreeNode * head) {
 		if (isRed(head->m_right)) {
 			head = rotateLeft(head);
 		}

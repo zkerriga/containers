@@ -24,6 +24,7 @@ using sMap		= std::map<char, Any>;
 using mMap		=  ft::map<char, Any>;
 using sPair		= std::pair<const char, Any>;
 using mTree		= TreeNode<sPair>;
+using treePair	= std::pair<mTree*, bool>;
 //using sAlloc	= std::allocator<Any>;
 
 char getRandAlpha() {
@@ -217,6 +218,20 @@ TEST_F(TreeTest, rotateRight2) {
 	printTree::print(end, 4);
 	mTree::rotateRight(mTree::end::getRoot(end));
 	printTree::print(end, 4);
+}
+
+class comp : public mMap::value_compare {
+public:
+	comp() : value_compare(std::less<mMap::key_type>()) {}
+	~comp() {}
+};
+
+//'const pair<TreeNode<std::__1::pair<const char, Any>> *, [...]>' to
+//'const pair<mTree, [...]>'
+
+TEST_F(TreeTest, insert) {
+	const treePair	pair = mTree::insert(mTree::end::getRoot(end), pairs[2], comp(), sTreeAlloc, sPairAlloc);
+	printTree::print(end, 3);
 }
 
 TEST_F(MapTest, basic_iterators) {

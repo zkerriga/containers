@@ -169,12 +169,11 @@ public:
 	typedef value_type	first_argument_type;
 	typedef value_type	second_argument_type;
 
-	value_compare(Compare c) : comp(c) {}
-
 	bool operator()(const value_type & x, const value_type & y) const {
 		return comp(x.first, y.first);
 	}
 protected:
+	value_compare(Compare c) : comp(c) {}
 	Compare	comp;
 };
 
