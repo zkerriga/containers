@@ -98,15 +98,15 @@ public:
 				: node->m_parent;
 	}
 	static
-	TreeNode *		getLastNodeByStep(TreeNode * const root,
+	TreeNode *		getLastNodeByStep(const TreeNode * const root,
 									  typename step::type step) {
 		return (end::isEnd(root) || !step(root))
-				? root
+				? const_cast<TreeNode *>(root)
 				: getLastNodeByStep(step(root), step);
 	}
 
 	inline static
-	const value_type &	getData(const TreeNode * const node) {
+	value_type &	getData(const TreeNode * const node) {
 		return *(node->data);
 	}
 
@@ -219,14 +219,12 @@ public:
 						   const Compare comp,
 						   node_allocator_type & nodeAlloc,
 						   value_allocator_type & valAlloc) {
-		typedef std::pair< TreeNode*, bool >	pair_type;
-		pair_type		ret;
+		std::pair< TreeNode*, bool >	ret;
 
 		if ( !head || end::isEnd(head) ) {
 			return std::make_pair(create(nodeAlloc, valAlloc, value), true);
 		}
 		if ( comp(value, getData(head)) ) {
-			/* if newNode->data < head->data */
 			ret = _insertStepBlock(
 				head->m_left,
 				insert(head->m_left, value, comp, nodeAlloc, valAlloc),
@@ -235,7 +233,6 @@ public:
 			);
 		}
 		else if ( comp(getData(head), value) ) {
-			/* if newNode->data > head->data */
 			ret = _insertStepBlock(
 				head->m_right,
 				insert(head->m_right, value, comp, nodeAlloc, valAlloc),
@@ -244,7 +241,6 @@ public:
 			);
 		}
 		else {
-			/* if newNode->data == head->data */
 			return std::make_pair(head, false);
 		}
 		if (ret.second) {

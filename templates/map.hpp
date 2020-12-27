@@ -53,7 +53,8 @@ public:
 	/* Initialize */
 	explicit map(const key_compare & comp = key_compare(),
 				 const allocator_type & alloc = allocator_type())
-		: m_end(nullptr), m_size(0), mc_compare(comp), m_valueAlloc(alloc)
+		: m_end(nullptr), m_size(0),
+		  mc_valueCompare(value_compare(comp)), m_valueAlloc(alloc)
 	{
 		m_end = _tree::end::create(m_treeAlloc);
 	}
@@ -111,9 +112,26 @@ public:
 	/* Modifiers */
 	std::pair< iterator, bool >
 					insert(const value_type & val) {
-		/* todo: добавить очернение корня */
-		/* todo */
-		return std::make_pair(begin(), true);
+		const std::pair< _tree*, bool >	ret = _tree::insert(
+				_tree::end::getRoot(m_end),
+				val,
+				mc_valueCompare,
+				m_treeAlloc,
+				m_valueAlloc
+		);
+		if (m_size == 0) {
+			_tree::end::setRoot(m_end, ret.first);
+			_tree::end::setFirst(m_end, ret.first);
+			_tree::end::setLast(m_end, ret.first);
+		}
+		if (ret.second) {
+			++m_size;
+		}
+		else {
+			_updateValue(_tree::getData(ret.first), val);
+		}
+		_rootToBlack();
+		return std::make_pair(iterator(ret.first), ret.second);
 	}
 //	iterator		insert(iterator position, const value_type & val);
 //	template < class InputIterator >
@@ -156,10 +174,22 @@ private:
 	 */
 	_tree *				m_end;
 	size_type			m_size;
-	const key_compare	mc_compare;
+//	const key_compare	mc_keyCompare;
+	const value_compare	mc_valueCompare;
 	allocator_type		m_valueAlloc;
 	allocator_rebind	m_treeAlloc;
 
+	void	_rootToBlack() const {
+		_tree * const	root = _tree::end::getRoot(m_end);
+
+		if (_tree::isRed(root)) {
+			_tree::flipColor(root);
+		}
+	}
+	inline static
+	void	_updateValue(value_type & prevPair, const value_type & newPair) {
+		prevPair.second = newPair.second;
+	}
 }; //class map
 
 template <class Key, class T, class Compare, class Alloc>

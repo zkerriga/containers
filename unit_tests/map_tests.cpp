@@ -37,7 +37,7 @@ public:
 		// код инициализации
 		for (char ch = 'a'; ch < 'm'; ++ch) {
 			sAlpha[ch] = Any(ch);
-//			mAlpha[ch] = Any(ch);
+			mAlpha[ch] = Any(ch);
 		}
 	}
 	virtual void SetUp() {
@@ -50,7 +50,7 @@ public:
 		for (int i = 0; i < size; ++i) {
 			randChar = getRandAlpha();
 			sRando[randChar] = Any(randChar);
-//			mRando[randChar] = Any(randChar);
+			mRando[randChar] = Any(randChar);
 		}
 	}
 	virtual void TearDown() {
@@ -226,9 +226,6 @@ public:
 	~comp() {}
 };
 
-//'const pair<TreeNode<std::__1::pair<const char, Any>> *, [...]>' to
-//'const pair<mTree, [...]>'
-
 TEST_F(TreeTest, insert) {
 	const treePair	pair = mTree::insert(mTree::end::getRoot(end), pairs[2], comp(), sTreeAlloc, sPairAlloc);
 	ASSERT_TRUE(pair.second);
@@ -391,9 +388,12 @@ TEST_F(MapTest, basic_iterators) {
 TEST_F(MapTest, test_for_tests) {
 	ASSERT_TRUE(true);
 	assertMapEQ(sEmpty, mEmpty);
-//	assertMapEQ(sAlpha, mAlpha);
-//	assertMapEQ(sRando, mRando);
+	assertMapEQ(sAlpha, mAlpha);
+	assertMapEQ(sRando, mRando);
 }
+
+//'const pair<TreeNode<std::__1::pair<const char, Any> > *, [...]>'
+//'const pair<ft::map<char, Any, std::__1::less<char>, std::__1::allocator<std::__1::pair<const char, Any> > >::_tree, [...]>'
 
 /* todo */
 
