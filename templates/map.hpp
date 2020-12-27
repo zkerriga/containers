@@ -111,6 +111,7 @@ public:
 	/* Modifiers */
 	std::pair< iterator, bool >
 					insert(const value_type & val) {
+		/* todo: добавить очернение корня */
 		/* todo */
 		return std::make_pair(begin(), true);
 	}

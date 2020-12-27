@@ -227,6 +227,17 @@ public:
 		}
 		if ( comp(value, getData(head)) ) {
 			/* if newNode->data < head->data */
+			ret = _insertStepBlock(
+				head,
+				head->m_left,
+				insert(head->m_left, value, comp, nodeAlloc, valAlloc),
+				link_type(leftLink, head),
+				end::setFirst
+			);
+			if (!ret.second) {
+				return ret;
+			}
+			/*
 			TreeNode * const	leftEnd = end::isEnd(head->m_left) ? head->m_left : nullptr;
 			ret = insert(head->m_left, value, comp, nodeAlloc, valAlloc);
 
@@ -238,9 +249,21 @@ public:
 			if (leftEnd) {
 				end::setFirst(leftEnd, ret.first);
 			}
+			*/
 		}
 		else if ( comp(getData(head), value) ) {
 			/* if newNode->data > head->data */
+			ret = _insertStepBlock(
+					head,
+					head->m_right,
+					insert(head->m_right, value, comp, nodeAlloc, valAlloc),
+					link_type(rightLink, head),
+					end::setLast
+			);
+			if (!ret.second) {
+				return ret;
+			}
+			/*
 			TreeNode * const	rightEnd = end::isEnd(head->m_right) ? head->m_right : nullptr;
 			ret = insert(head->m_right, value, comp, nodeAlloc, valAlloc);
 
@@ -251,13 +274,59 @@ public:
 			}
 			if (rightEnd) {
 				end::setLast(rightEnd, head->m_right);
-			}
+			}*/
 		}
 		else {
 			/* if newNode->data == head->data */
 			return std::make_pair(head, false);
 		}
 		_fixUp(head); /* Balancing the tree */
+		return ret;
+	}
+	class link_type {
+	public:
+		typedef void (*_link_type)(TreeNode * const, TreeNode * const);
+		link_type(_link_type link, TreeNode * const head)
+			: mc_link(link), m_head(head) {}
+		link_type(const link_type & other)
+			: mc_link(other.mc_link), m_head(other.m_head) {}
+
+		~link_type() {}
+		void operator()(TreeNode * const forLink) const {
+			if (mc_link == rightLink) {
+				mc_link(m_head, forLink);
+			}
+			else {
+				mc_link(forLink, m_head);
+			}
+		}
+	private:
+		link_type() {}
+		link_type & operator= (const link_type & other) { return *this; }
+
+		const _link_type	mc_link;
+		TreeNode * const	m_head;
+	};
+	static
+	const std::pair< TreeNode*, bool >
+					_insertStepBlock(TreeNode * const head,
+									 TreeNode * const headNext,
+									 const std::pair< TreeNode*, bool > ret,
+									 const link_type link,
+									 void (*endSet)(TreeNode * const, TreeNode * const)) {
+		if (ret.second) {
+			TreeNode * const	end = end::isEnd(headNext) ? headNext : nullptr;
+
+			if (!ret.second)
+				return ret;
+			if (!headNext || end) {
+				link.operator()(ret.first);
+//				link(ret.first);
+			}
+			if (end) {
+				endSet(end, ret.first);
+			}
+		}
 		return ret;
 	}
 	static
