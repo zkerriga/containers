@@ -392,9 +392,6 @@ TEST_F(MapTest, test_for_tests) {
 	assertMapEQ(sRando, mRando);
 }
 
-//'const pair<TreeNode<std::__1::pair<const char, Any> > *, [...]>'
-//'const pair<ft::map<char, Any, std::__1::less<char>, std::__1::allocator<std::__1::pair<const char, Any> > >::_tree, [...]>'
-
 /* todo */
 
 TEST_F(MapTest, empty) {

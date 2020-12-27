@@ -53,8 +53,8 @@ public:
 	/* Initialize */
 	explicit map(const key_compare & comp = key_compare(),
 				 const allocator_type & alloc = allocator_type())
-		: m_end(nullptr), m_size(0),
-		  mc_valueCompare(value_compare(comp)), m_valueAlloc(alloc)
+		: m_end(nullptr), m_size(0), mc_keyCompare(comp),
+		  mc_valueCompare(comp), m_valueAlloc(alloc)
 	{
 		m_end = _tree::end::create(m_treeAlloc);
 	}
@@ -143,8 +143,12 @@ public:
 //	void			clear();
 
 	/* Observers */
-//	key_compare		key_comp() const;
-//	value_compare	value_comp() const;
+	key_compare		key_comp() const {
+		return mc_keyCompare;
+	}
+	value_compare	value_comp() const {
+		return mc_valueCompare;
+	}
 
 	/* Operations */
 //	iterator		find(const key_type & k);
@@ -174,7 +178,7 @@ private:
 	 */
 	_tree *				m_end;
 	size_type			m_size;
-//	const key_compare	mc_keyCompare;
+	const key_compare	mc_keyCompare;
 	const value_compare	mc_valueCompare;
 	allocator_type		m_valueAlloc;
 	allocator_rebind	m_treeAlloc;
@@ -200,11 +204,12 @@ public:
 	typedef value_type	first_argument_type;
 	typedef value_type	second_argument_type;
 
+	value_compare(Compare c) : comp(c) {}
+
 	bool operator()(const value_type & x, const value_type & y) const {
 		return comp(x.first, y.first);
 	}
 protected:
-	value_compare(Compare c) : comp(c) {}
 	Compare	comp;
 };
 
