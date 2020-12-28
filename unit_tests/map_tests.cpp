@@ -392,6 +392,40 @@ TEST_F(MapTest, test_for_tests) {
 	assertMapEQ(sRando, mRando);
 }
 
+inline
+sPair	createRandPair() {
+	return std::make_pair(getRandAlpha(), Any(getRandAlpha()));
+}
+
+void	insert(sMap & sM, mMap & mM) {
+	const sPair randPair = createRandPair();
+
+	std::pair< sMap::iterator, bool >	sRet = sM.insert(randPair);
+	std::pair< mMap::iterator, bool >	mRet = mM.insert(randPair);
+	ASSERT_EQ((*sRet.first).first, (*mRet.first).first);
+	ASSERT_EQ((*sRet.first).second, (*mRet.first).second);
+	ASSERT_EQ(sRet.second, mRet.second);
+}
+
+void	createTestsMapsAndStartInserts() {
+	sMap		sM;
+	mMap		mM;
+
+	const auto	seed = static_cast<unsigned int>(time(nullptr));
+	std::cout << "INSERT SEED: " << seed << std::endl;
+	srand(seed);
+	for (int i = 0; i < 10; ++i) {
+		insert(sM, mM);
+		assertMapEQ(sM, mM);
+	}
+}
+
+TEST_F(MapTest, crush) {
+	for (int i = 0; i < 1000; ++i) {
+		createTestsMapsAndStartInserts();
+	}
+}
+
 /* todo */
 
 TEST_F(MapTest, empty) {

@@ -193,6 +193,7 @@ private:
 	inline static
 	void	_updateValue(value_type & prevPair, const value_type & newPair) {
 		prevPair.second = newPair.second;
+		/* todo destroy */
 	}
 }; //class map
 
@@ -204,7 +205,7 @@ public:
 	typedef value_type	first_argument_type;
 	typedef value_type	second_argument_type;
 
-	value_compare(Compare c) : comp(c) {}
+	value_compare(Compare c) : comp(c) {} /* todo: move to protected */
 
 	bool operator()(const value_type & x, const value_type & y) const {
 		return comp(x.first, y.first);
