@@ -46,7 +46,7 @@ public:
 		std::srand(seed);
 		const int	size = std::rand() % 50 + 1;
 		char		randChar;
-		std::cout << "Seed = " << seed << std::endl;
+		D(std::cout << "Seed = " << seed << std::endl;);
 		for (int i = 0; i < size; ++i) {
 			randChar = getRandAlpha();
 			sRando[randChar] = Any(randChar);
@@ -412,7 +412,7 @@ void	createTestsMapsAndStartInserts() {
 	mMap		mM;
 
 	const auto	seed = static_cast<unsigned int>(time(nullptr));
-	std::cout << "INSERT SEED: " << seed << std::endl;
+	D(std::cout << "INSERT SEED: " << seed << std::endl;);
 	srand(seed);
 	for (int i = 0; i < 10; ++i) {
 		insert(sM, mM);

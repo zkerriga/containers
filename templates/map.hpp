@@ -126,11 +126,8 @@ public:
 		}
 		if (ret.second) {
 			++m_size;
+			_rootToBlack();
 		}
-		else {
-			_updateValue(_tree::getData(ret.first), val);
-		}
-		_rootToBlack();
 		return std::make_pair(iterator(ret.first), ret.second);
 	}
 //	iterator		insert(iterator position, const value_type & val);
@@ -189,11 +186,6 @@ private:
 		if (_tree::isRed(root)) {
 			_tree::flipColor(root);
 		}
-	}
-	inline static
-	void	_updateValue(value_type & prevPair, const value_type & newPair) {
-		prevPair.second = newPair.second;
-		/* todo destroy */
 	}
 }; //class map
 
