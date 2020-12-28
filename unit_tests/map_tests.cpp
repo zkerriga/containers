@@ -414,7 +414,7 @@ void	createTestsMapsAndStartInserts() {
 	const auto	seed = static_cast<unsigned int>(time(nullptr));
 	D(std::cout << "INSERT SEED: " << seed << std::endl;);
 	srand(seed);
-	for (int i = 0; i < 10; ++i) {
+	for (int i = 0; i < 500; ++i) {
 		insert(sM, mM);
 		assertMapEQ(sM, mM);
 	}
