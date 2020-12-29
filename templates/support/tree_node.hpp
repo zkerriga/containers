@@ -41,6 +41,40 @@ public:
 		node->m_color = mc_red;
 		return node;
 	}
+	template < typename node_allocator_type, typename value_allocator_type >
+	static
+	void			destroy(TreeNode * const node,
+							node_allocator_type & nodeAlloc,
+							value_allocator_type & valAlloc) {
+		valAlloc.destroy(node->data);
+		valAlloc.deallocate(node->data, 1);
+		nodeAlloc.deallocate(node, 1);
+	}
+	template < typename node_allocator_type, typename value_allocator_type >
+	static
+	void			clearTree(TreeNode * const endNode,
+							  node_allocator_type & nodeAlloc,
+							  value_allocator_type & valAlloc) {
+		_clearTree(
+			end::getRoot(endNode),
+			nodeAlloc,
+			valAlloc
+		);
+		end::roundOff(endNode);
+	}
+	template < typename node_allocator_type, typename value_allocator_type >
+	static
+	void			_clearTree(TreeNode * const head,
+							   node_allocator_type & nodeAlloc,
+							   value_allocator_type & valAlloc) {
+		if (!head || end::isEnd(head)) {
+			return;
+		}
+		_clearTree(head->m_right, nodeAlloc, valAlloc);
+		_clearTree(head->m_left, nodeAlloc, valAlloc);
+		destroy(head, nodeAlloc, valAlloc);
+	}
+
 	static
 	void			rightLink(TreeNode * const parent, TreeNode * const right) {
 		parent->m_right = right;
@@ -114,13 +148,12 @@ public:
 		template < typename node_allocator_type >
 		static
 		TreeNode *	create(node_allocator_type & alloc) {
-			TreeNode * const	node = alloc.allocate(1);
+			TreeNode * const	end = alloc.allocate(1);
 
-			node->data = nullptr;
-			rightLink(node, node);
-			leftLink(node, node);
-			node->m_color = mc_black;
-			return node;
+			end->data = nullptr;
+			roundOff(end);
+			end->m_color = mc_black;
+			return end;
 		}
 		inline static
 		bool		isEnd(const TreeNode * const node) {
@@ -154,6 +187,11 @@ public:
 		void		setLast(TreeNode * const endNode, TreeNode * const lastNode) {
 			endNode->m_right = lastNode;
 			lastNode->m_right = endNode;
+		}
+		inline static
+		void		roundOff(TreeNode * const endNode) {
+			rightLink(endNode, endNode);
+			leftLink(endNode, endNode);
 		}
 	}; // subclass end
 

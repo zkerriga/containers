@@ -459,3 +459,17 @@ TEST_F(MapTest, construct) {
 	mMap	m5(m2);
 	assertMapEQ(s5, m5);
 }
+
+TEST_F(MapTest, clear) {
+	sEmpty.clear();
+	mEmpty.clear();
+	assertMapEQ(sEmpty, mEmpty);
+
+	sRando.clear();
+	mRando.clear();
+	assertMapEQ(sRando, mRando);
+
+	sRando.insert(sAlpha.begin(), sAlpha.end());
+	mRando.insert(sAlpha.begin(), sAlpha.end());
+	assertMapEQ(sRando, mRando);
+}

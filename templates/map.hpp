@@ -81,7 +81,9 @@ public:
 		m_end = _tree::end::create(m_treeAlloc);
 		insert(x.begin(), x.end());
 	}
-//	~map();
+	~map() {
+		/* todo */
+	}
 //	map & operator= (const map & x);
 
 	/* Iterators */
@@ -159,7 +161,10 @@ public:
 //	size_type		erase(const key_type& k);
 //	void			erase(iterator first, iterator last);
 //	void			swap(map& x);
-//	void			clear();
+	void			clear() {
+		_tree::clearTree(m_end, m_treeAlloc, m_valueAlloc);
+		m_size = 0;
+	}
 
 	/* Observers */
 	key_compare		key_comp() const {
