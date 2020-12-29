@@ -82,7 +82,8 @@ public:
 		insert(x.begin(), x.end());
 	}
 	~map() {
-		/* todo */
+		clear();
+		_tree::end::destroy(m_end, m_treeAlloc);
 	}
 //	map & operator= (const map & x);
 

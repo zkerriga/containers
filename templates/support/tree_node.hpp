@@ -155,6 +155,12 @@ public:
 			end->m_color = mc_black;
 			return end;
 		}
+		template < typename node_allocator_type >
+		inline static
+		void		destroy(TreeNode * const end,
+							node_allocator_type & alloc) {
+			alloc.deallocate(end, 1);
+		}
 		inline static
 		bool		isEnd(const TreeNode * const node) {
 			return node
