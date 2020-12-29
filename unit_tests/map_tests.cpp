@@ -473,3 +473,19 @@ TEST_F(MapTest, clear) {
 	mRando.insert(sAlpha.begin(), sAlpha.end());
 	assertMapEQ(sRando, mRando);
 }
+
+TEST_F(MapTest, assigment) {
+	sMap	s1;
+	mMap	m1;
+
+	s1 = sRando;
+	m1 = mRando;
+	assertMapEQ(s1, m1);
+
+	sMap	s2;
+	mMap	m2;
+
+	s2 = sAlpha;
+	m2 = mAlpha;
+	assertMapEQ(s2, m2);
+}

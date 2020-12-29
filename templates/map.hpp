@@ -85,7 +85,14 @@ public:
 		clear();
 		_tree::end::destroy(m_end, m_treeAlloc);
 	}
-//	map & operator= (const map & x);
+	map & operator= (const map & x) {
+		if (this != &x) {
+			clear();
+			m_size = 0;
+			insert(x.begin(), x.end());
+		}
+		return *this;
+	}
 
 	/* Iterators */
 	iterator				begin() {
