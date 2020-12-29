@@ -127,7 +127,9 @@ public:
 	size_type	size() const {
 		return m_size;
 	}
-//	size_type	max_size() const;
+	size_type	max_size() const {
+		return (static_cast<size_type>(-1) / sizeof(*m_end));
+	}
 
 	/* Element access */
 	mapped_type & operator[](const key_type & k) {
@@ -196,7 +198,9 @@ public:
 //					equal_range(const key_type & k);
 
 	/* Allocator */
-//	allocator_type	get_allocator() const;
+	allocator_type	get_allocator() const {
+		return m_valueAlloc;
+	}
 
 private:
 	typedef

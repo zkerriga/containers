@@ -489,3 +489,20 @@ TEST_F(MapTest, assigment) {
 	m2 = mAlpha;
 	assertMapEQ(s2, m2);
 }
+
+TEST_F(MapTest, max_size) {
+	size_t	maxBytes = static_cast<size_t>(-1);
+	ASSERT_GE(maxBytes / sEmpty.max_size(), maxBytes / mEmpty.max_size());
+	ASSERT_GE(maxBytes / sAlpha.max_size(), maxBytes / mAlpha.max_size());
+}
+
+TEST_F(MapTest, get_allocator) {
+	sPair	*sPairs;
+	sPairs = sEmpty.get_allocator().allocate(12);
+	sEmpty.get_allocator().deallocate(sPairs, 12);
+
+	sPair	*mPairs;
+	mPairs = mEmpty.get_allocator().allocate(12);
+	mEmpty.get_allocator().deallocate(mPairs, 12);
+
+}
