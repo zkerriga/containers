@@ -22,6 +22,11 @@
 
 namespace ft {
 
+/* todo: edd NOEXCEPT */
+
+#define _ENABLE_INPUT_ITERATOR_TYPE(type_name) \
+		typename std::enable_if< std::__is_input_iterator< type_name >::value,type_name >::type
+
 template < class Key,
 		   class T,
 		   class Compare = std::less< Key >,
@@ -58,11 +63,24 @@ public:
 	{
 		m_end = _tree::end::create(m_treeAlloc);
 	}
-//	template < class InputIterator >
-//	map(InputIterator first, InputIterator last,
-//		const key_compare & comp = key_compare(),
-//		const allocator_type & alloc = allocator_type());
-//	map(const map & x);
+	template < class InputIterator >
+	map(InputIterator first,
+		_ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last,
+		const key_compare & comp = key_compare(),
+		const allocator_type & alloc = allocator_type())
+		: m_end(nullptr), m_size(0), mc_keyCompare(comp),
+		  mc_valueCompare(comp), m_valueAlloc(alloc)
+	{
+		m_end = _tree::end::create(m_treeAlloc);
+		insert(first, last);
+	}
+	map(const map & x)
+		: m_end(nullptr), m_size(0), mc_keyCompare(x.mc_keyCompare),
+		  mc_valueCompare(x.mc_valueCompare), m_valueAlloc(x.m_valueAlloc)
+	{
+		m_end = _tree::end::create(m_treeAlloc);
+		insert(x.begin(), x.end());
+	}
 //	~map();
 //	map & operator= (const map & x);
 
@@ -103,7 +121,6 @@ public:
 
 	/* Element access */
 	mapped_type & operator[](const key_type & k) {
-		/* todo: Are you sure? */
 		return insert(
 			std::make_pair(k, mapped_type())
 		).first->second;
@@ -131,8 +148,13 @@ public:
 		return std::make_pair(iterator(ret.first), ret.second);
 	}
 //	iterator		insert(iterator position, const value_type & val);
-//	template < class InputIterator >
-//	void			insert(InputIterator first, InputIterator last);
+	template < class InputIterator >
+	void			insert(InputIterator first,
+						   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last) {
+		while (first != last) {
+			insert(*first++);
+		}
+	}
 //	void			erase(iterator position);
 //	size_type		erase(const key_type& k);
 //	void			erase(iterator first, iterator last);
@@ -188,6 +210,8 @@ private:
 		}
 	}
 }; //class map
+
+#undef _ENABLE_INPUT_ITERATOR_TYPE
 
 template <class Key, class T, class Compare, class Alloc>
 class map< Key, T, Compare, Alloc >::value_compare

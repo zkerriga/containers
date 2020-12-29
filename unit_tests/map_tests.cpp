@@ -426,8 +426,6 @@ TEST_F(MapTest, crush) {
 	}
 }
 
-/* todo */
-
 TEST_F(MapTest, empty) {
 	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
 	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
@@ -438,4 +436,26 @@ TEST_F(MapTest, size) {
 	ASSERT_EQ(sEmpty.size(), mEmpty.size());
 	ASSERT_EQ(sAlpha.size(), mAlpha.size());
 	ASSERT_EQ(sRando.size(), mRando.size());
+}
+
+TEST_F(MapTest, construct) {
+	sMap	s1(sAlpha.begin(), sAlpha.end());
+	mMap	m1(sAlpha.begin(), sAlpha.end());
+	assertMapEQ(s1, m1);
+
+	sMap	s2(sRando.begin(), sRando.end());
+	mMap	m2(sRando.begin(), sRando.end());
+	assertMapEQ(s2, m2);
+
+	sMap	s3(sRando.begin(), sRando.begin());
+	mMap	m3(sRando.begin(), sRando.begin());
+	assertMapEQ(s3, m3);
+
+	sMap	s4(s1);
+	mMap	m4(m1);
+	assertMapEQ(s4, m4);
+
+	sMap	s5(s2);
+	mMap	m5(m2);
+	assertMapEQ(s5, m5);
 }

@@ -57,12 +57,12 @@ public:
 		return *this;
 	}
 	_MapIterator		operator++(int) noexcept {
-		_pointer		tmp = m_p;
+		_tree *	tmp = m_p;
 		operator++();
 		return _MapIterator(tmp);
 	}
 	_MapIterator		operator--(int) noexcept {
-		_pointer		tmp = m_p;
+		_tree *	tmp = m_p;
 		operator--();
 		return _MapIterator(tmp);
 	}
@@ -122,12 +122,12 @@ public:
 		return *this;
 	}
 	_MapConstIterator	operator++(int) noexcept {
-		_pointer		tmp = m_p;
+		_tree *	tmp = m_p;
 		operator++();
 		return _MapConstIterator(tmp);
 	}
 	_MapConstIterator	operator--(int) noexcept {
-		_pointer		tmp = m_p;
+		_tree *	tmp = m_p;
 		operator--();
 		return _MapConstIterator(tmp);
 	}
