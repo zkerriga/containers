@@ -381,25 +381,39 @@ public:
 		if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
 			head = moveRedLeft(head);
 		}
-		TreeNode * const ret = deleteMin(head->m_left);
-		(end::isEnd(ret))
-			? end::setFirst(ret, head)
-			: head->m_left = ret;
+		TreeNode * const ret = deleteMin(head->m_left, treeAlloc, valAlloc);
+		head->m_left = ret;
+		if (end::isEnd(ret)) {
+			end::setFirst(ret, head);
+		}
 		return _fixUp(head);
 	}
+	static
+	TreeNode *		getMinNode(TreeNode * const head) {
+		if (!head) {
+			return nullptr; /* It's an error */
+		}
+		TreeNode * const	right	= head->m_right;
+		TreeNode * const	left	= head->m_left;
+		if (!left && !right) {
+			return head;
+		}
+		return getMinNode( left ? left : right );
+	}
+
 	template < class Compare,
 			   typename node_allocator_type,
 			   typename value_allocator_type >
 	static
 	std::pair<TreeNode *, bool>
-					deleteFromTree(TreeNode * const head,
+					deleteFromTree(TreeNode * head,
 								   const value_type & value,
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
 								   value_allocator_type & valAlloc) {
-		const bool	less	= comp(value, getData(head));
-		const bool	equal	= !(less || comp(getData(head), value));
-		std::pair<TreeNode *, bool>		ret;
+		const bool	less				= comp(value, getData(head));
+		const bool	equal				= !(less || comp(getData(head), value));
+		std::pair<TreeNode *, bool>	ret	= std::make_pair(nullptr, false);
 
 		if (less) {
 			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
@@ -407,28 +421,35 @@ public:
 			}
 			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc);
 			head->m_left = ret.first;
+			if (end::isEnd(ret.first)) {
+				end::setFirst(ret.first, head);
+			}
 		}
 		else {
 			if (isRed(head->m_left)) {
 				head = rotateRight(head);
 			}
-			if (equal && !head->m_right) {
-				return nullptr; /* todo: destroy? */
+			if ( equal && (!head->m_right || end::isEnd(head->m_right)) ) {
+				destroy(head, nodeAlloc, valAlloc); /* todo: destroy? */
+				return std::make_pair(head->m_right, true);
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
 				head = moveRedRight(head);
 			}
 			if (equal) {
-				/* todo: swap nodes with minimum head->right */
+				TreeNode * const minNode = getMinNode(head->m_right);
+				ft::swap(head->data, minNode->data);
 				head->m_right = deleteMin(head->m_right, nodeAlloc, valAlloc);
 			}
 			else {
 				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
 				head->m_right = ret.first;
+				if (end::isEnd(ret.first)) {
+					end::setLast(ret.first, head);
+				}
 			}
 		}
-		_fixUp(head);
-		return std::make_pair(head, false);
+		return std::make_pair(_fixUp(head), ret.second);
 	}
 }; //class TreeNode
 #pragma pack(pop)

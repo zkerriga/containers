@@ -169,7 +169,22 @@ public:
 		}
 	}
 //	void			erase(iterator position);
-//	size_type		erase(const key_type& k);
+	size_type		erase(const key_type& k) {
+		std::pair<_tree *, bool>	ret = _tree::deleteFromTree(
+			_tree::end::getRoot(m_end),
+			std::make_pair(k, mapped_type()),
+			mc_valueCompare,
+			m_treeAlloc,
+			m_valueAlloc
+		);
+		if (ret.second) {
+			--m_size;
+		}
+		if (m_size == 0) {
+			_tree::end::roundOff(m_end);
+		}
+		return (ret.second) ? 1 : 0;
+	}
 //	void			erase(iterator first, iterator last);
 	void			swap(map & x) {
 		ft::swap(m_end, x.m_end);
