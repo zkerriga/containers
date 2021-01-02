@@ -504,5 +504,27 @@ TEST_F(MapTest, get_allocator) {
 	sPair	*mPairs;
 	mPairs = mEmpty.get_allocator().allocate(12);
 	mEmpty.get_allocator().deallocate(mPairs, 12);
+}
 
+TEST_F(MapTest, insert_position) {
+	sMap		s1;
+	mMap		m1;
+
+	s1.insert(std::make_pair('c', Any(1)));
+	s1.insert(std::make_pair('m', Any(1)));
+	s1.insert(std::make_pair('p', Any(1)));
+	m1.insert(std::make_pair('c', Any(1)));
+	m1.insert(std::make_pair('m', Any(1)));
+	m1.insert(std::make_pair('p', Any(1)));
+
+	ASSERT_EQ(
+		*s1.insert(s1.begin(), std::make_pair('a', Any())),
+		*m1.insert(m1.begin(), std::make_pair('a', Any()))
+	);
+	assertMapEQ(s1, m1);
+	ASSERT_EQ(
+		*s1.insert(s1.begin(), std::make_pair('z', Any(3))),
+		*m1.insert(m1.begin(), std::make_pair('z', Any(3)))
+	);
+	assertMapEQ(s1, m1);
 }

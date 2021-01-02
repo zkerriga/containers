@@ -88,7 +88,6 @@ public:
 	map & operator= (const map & x) {
 		if (this != &x) {
 			clear();
-			m_size = 0;
 			insert(x.begin(), x.end());
 		}
 		return *this;
@@ -159,7 +158,9 @@ public:
 		}
 		return std::make_pair(iterator(ret.first), ret.second);
 	}
-//	iterator		insert(iterator position, const value_type & val);
+	iterator		insert(iterator position, const value_type & val) {
+		return insert(val).first;
+	}
 	template < class InputIterator >
 	void			insert(InputIterator first,
 						   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last) {
