@@ -358,6 +358,15 @@ public:
 		}
 		return head;
 	}
+	static
+	TreeNode *		moveRedRight(TreeNode * head) {
+		flipColors(head);
+		if ( isRed(head->m_left->m_left) ) {
+			head = rotateRight(head);
+			flipColors(head);
+		}
+		return head;
+	}
 	template < typename node_allocator_type, typename value_allocator_type >
 	static
 	TreeNode *		deleteMin(TreeNode * head,
@@ -382,39 +391,44 @@ public:
 			   typename node_allocator_type,
 			   typename value_allocator_type >
 	static
-	TreeNode *		deleteFromTree(TreeNode * const head,
+	std::pair<TreeNode *, bool>
+					deleteFromTree(TreeNode * const head,
 								   const value_type & value,
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
 								   value_allocator_type & valAlloc) {
 		const bool	less	= comp(value, getData(head));
 		const bool	equal	= !(less || comp(getData(head), value));
+		std::pair<TreeNode *, bool>		ret;
 
 		if (less) {
 			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
 				head = moveRedLeft(head);
 			}
-			head->m_left = deleteFromTree(head, value, comp, nodeAlloc, valAlloc);
+			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc);
+			head->m_left = ret.first;
 		}
 		else {
 			if (isRed(head->m_left)) {
-				head = nullptr; /* todo: leanRight(head) */
+				head = rotateRight(head);
 			}
 			if (equal && !head->m_right) {
 				return nullptr; /* todo: destroy? */
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
-				head = moveRedRight(head); /* todo: moveRedRight */
+				head = moveRedRight(head);
 			}
 			if (equal) {
 				/* todo: swap nodes with minimum head->right */
 				head->m_right = deleteMin(head->m_right, nodeAlloc, valAlloc);
 			}
 			else {
-				head->m_right = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
+				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
+				head->m_right = ret.first;
 			}
 		}
-		return _fixUp(head);
+		_fixUp(head);
+		return std::make_pair(head, false);
 	}
 }; //class TreeNode
 #pragma pack(pop)
