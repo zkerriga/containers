@@ -158,7 +158,7 @@ public:
 		}
 		return std::make_pair(iterator(ret.first), ret.second);
 	}
-	iterator		insert(iterator position, const value_type & val) {
+	iterator		insert(iterator, const value_type & val) {
 		return insert(val).first;
 	}
 	template < class InputIterator >
@@ -171,7 +171,10 @@ public:
 //	void			erase(iterator position);
 //	size_type		erase(const key_type& k);
 //	void			erase(iterator first, iterator last);
-//	void			swap(map& x);
+	void			swap(map & x) {
+		ft::swap(m_end, x.m_end);
+		ft::swap(m_size, x.m_size);
+	}
 	void			clear() {
 		_tree::clearTree(m_end, m_treeAlloc, m_valueAlloc);
 		m_size = 0;

@@ -528,3 +528,24 @@ TEST_F(MapTest, insert_position) {
 	);
 	assertMapEQ(s1, m1);
 }
+
+TEST_F(MapTest, swap) {
+	sMap	s1(sAlpha);
+	mMap	m1(mAlpha);
+	sMap	s2(sRando);
+	mMap	m2(mRando);
+
+	s1.swap(s2);
+	m1.swap(m2);
+	assertMapEQ(s1, m1);
+	assertMapEQ(s2, m2);
+
+	s2.swap(s2);
+	m2.swap(m2);
+	s1.swap(s2);
+	m1.swap(m2);
+	s1.swap(s2);
+	m1.swap(m2);
+	assertMapEQ(s1, m1);
+	assertMapEQ(s2, m2);
+}
