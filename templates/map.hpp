@@ -179,6 +179,7 @@ public:
 		);
 		if (ret.second) {
 			--m_size;
+			_rootToBlack();
 		}
 		if (m_size == 0) {
 			_tree::end::roundOff(m_end);

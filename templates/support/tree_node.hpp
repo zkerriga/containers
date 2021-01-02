@@ -361,7 +361,7 @@ public:
 	static
 	TreeNode *		moveRedRight(TreeNode * head) {
 		flipColors(head);
-		if ( isRed(head->m_left->m_left) ) {
+		if ( head->m_left && isRed(head->m_left->m_left) ) {
 			head = rotateRight(head);
 			flipColors(head);
 		}

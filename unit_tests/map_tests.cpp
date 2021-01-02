@@ -564,4 +564,19 @@ TEST_F(MapTest, errase_basic) {
 		m1.erase('h')
 	);
 	assertMapEQ(s1, m1);
+	EXPECT_EQ(
+		s1.erase('z'),
+		m1.erase('z')
+	);
+	assertMapEQ(s1, m1);
+	EXPECT_EQ(
+		s1.erase('c'),
+		m1.erase('c')
+	);
+	assertMapEQ(s1, m1);
+	EXPECT_EQ(
+		s1.erase('p'),
+		m1.erase('p')
+	);
+	assertMapEQ(s1, m1);
 }
