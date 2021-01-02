@@ -550,13 +550,18 @@ TEST_F(MapTest, swap) {
 	assertMapEQ(s2, m2);
 }
 
-TEST_F(MapTest, errase) {
+TEST_F(MapTest, errase_basic) {
 	sMap	s1(sAlpha);
 	mMap	m1(mAlpha);
 
-	ASSERT_EQ(
+	EXPECT_EQ(
 		s1.erase('b'),
 		m1.erase('b')
+	);
+	assertMapEQ(s1, m1);
+	EXPECT_EQ(
+		s1.erase('h'),
+		m1.erase('h')
 	);
 	assertMapEQ(s1, m1);
 }
