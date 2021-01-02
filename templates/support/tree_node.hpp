@@ -335,7 +335,7 @@ public:
 		return ret;
 	}
 	static
-	void			_fixUp(TreeNode * head) {
+	TreeNode *		_fixUp(TreeNode * head) {
 		if (isRed(head->m_right)) {
 			head = rotateLeft(head);
 		}
@@ -345,6 +345,42 @@ public:
 		if (isRed(head->m_left) && isRed(head->m_right)) {
 			flipColors(head);
 		}
+		return head;
 	}
+
+	static
+	TreeNode *		moveRedLeft(TreeNode * head) {
+		flipColors(head);
+		if ( isRed(head->m_right->m_left) ) {
+			head->m_right = rotateRight(head->m_right);
+			head = rotateLeft(head);
+			flipColors(head);
+		}
+		return head;
+	}
+	template < typename node_allocator_type, typename value_allocator_type >
+	static
+	TreeNode *		deleteMin(TreeNode * head,
+							  node_allocator_type & treeAlloc,
+							  value_allocator_type & valAlloc) {
+		TreeNode * const left = head->m_left;
+
+		if (!left || end::isEnd(left)) {
+			destroy(head, treeAlloc, valAlloc);
+			return left;
+		}
+		if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
+			head = moveRedLeft(head);
+		}
+		TreeNode * const ret = deleteMin(head->m_left);
+		(end::isEnd(ret))
+			? end::setFirst(ret, head)
+			: head->m_left = ret;
+		return _fixUp(head);
+	}
+//	static
+//	TreeNode *		deleteFromTree() {
+//
+//	}
 }; //class TreeNode
 #pragma pack(pop)
