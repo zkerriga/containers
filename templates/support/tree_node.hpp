@@ -411,6 +411,9 @@ public:
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
 								   value_allocator_type & valAlloc) {
+		if (end::isEnd(head)) {
+			return std::make_pair(head, false);
+		}
 		const bool					less	= comp(value, getData(head));
 		std::pair<TreeNode *, bool>	ret		= std::make_pair(nullptr, false);
 
