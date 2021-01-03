@@ -20,6 +20,10 @@
 #include "map_iterators.hpp"
 #include "tree_node.hpp"
 
+/* todo: delete this */
+#include "../unit_tests/utils.hpp"
+/* todo: delete this */
+
 namespace ft {
 
 /* todo: edd NOEXCEPT */
@@ -170,12 +174,14 @@ public:
 	}
 //	void			erase(iterator position);
 	size_type		erase(const key_type& k) {
+		const print_type	printTree(m_end, static_cast<int>(log2(m_size)) + 3);
 		std::pair<_tree *, bool>	ret = _tree::deleteFromTree(
 			_tree::end::getRoot(m_end),
 			std::make_pair(k, mapped_type()),
 			mc_valueCompare,
 			m_treeAlloc,
-			m_valueAlloc
+			m_valueAlloc,
+			printTree
 		);
 		if (ret.second) {
 			--m_size;
@@ -184,6 +190,7 @@ public:
 		if (m_size == 0) {
 			_tree::end::roundOff(m_end);
 		}
+		printTree(); /* todo debug */
 		return (ret.second) ? 1 : 0;
 	}
 //	void			erase(iterator first, iterator last);
@@ -246,6 +253,25 @@ private:
 			_tree::flipColor(root);
 		}
 	}
+	/* todo: delete this */
+	class print_type {
+	public:
+		print_type(_tree * end, size_t lvl) : mc_end(end), mc_lvl(lvl) {}
+		print_type(const print_type & other) : mc_end(other.mc_end), mc_lvl(other.mc_lvl) {}
+
+		~print_type() {}
+		void operator()(int lvlDelta = 0) const {
+			printTree::print(mc_end, mc_lvl + lvlDelta);
+		}
+	private:
+		print_type() {}
+		print_type & operator= (const print_type & other) { return *this; }
+
+		const _tree * const		mc_end;
+		const size_t			mc_lvl;
+	};
+	/* todo: delete this */
+
 }; //class map
 
 #undef _ENABLE_INPUT_ITERATOR_TYPE

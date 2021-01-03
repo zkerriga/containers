@@ -403,14 +403,17 @@ public:
 
 	template < class Compare,
 			   typename node_allocator_type,
-			   typename value_allocator_type >
+			   typename value_allocator_type,
+			   class print_type >
 	static
 	std::pair<TreeNode *, bool>
 					deleteFromTree(TreeNode * head,
 								   const value_type & value,
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
-								   value_allocator_type & valAlloc) {
+								   value_allocator_type & valAlloc,
+								   const print_type printTree) {
+//		printTree(); /* todo debug */
 		if (end::isEnd(head)) {
 			return std::make_pair(head, false);
 		}
@@ -421,8 +424,9 @@ public:
 			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
 				head = moveRedLeft(head);
 			}
-			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc);
+			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc, printTree);
 			head->m_left = ret.first;
+//			printTree(); /* todo debug */
 			if (end::isEnd(ret.first)) {
 				end::setFirst(ret.first, head);
 			}
@@ -432,13 +436,19 @@ public:
 
 			if (isRed(head->m_left)) {
 				head = rotateRight(head);
+				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
+				head->m_right = ret.first;
+//				printTree(); /* todo debug */
+				return std::make_pair(_fixUp(head), ret.second);
 			}
 			if ( equal && (!head->m_right || end::isEnd(head->m_right)) ) {
+				TreeNode * const headRight = head->m_right;
 				destroy(head, nodeAlloc, valAlloc);
-				return std::make_pair(head->m_right, true);
+				return std::make_pair(headRight, true);
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
 				head = moveRedRight(head);
+//				printTree(); /* todo debug */
 			}
 			if (equal) {
 				TreeNode * const	minNode = getMinNode(head->m_right);
@@ -449,13 +459,15 @@ public:
 				);
 				head = minNode;
 				ret.second = true;
+//				printTree(); /* todo debug */
 			}
 			else {
-				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
+				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
 				head->m_right = ret.first;
 				if (end::isEnd(ret.first)) {
 					end::setLast(ret.first, head);
 				}
+//				printTree(); /* todo debug */
 			}
 		}
 		return std::make_pair(_fixUp(head), ret.second);
