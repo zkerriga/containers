@@ -76,14 +76,14 @@ public:
 	}
 
 	static
-	void			rightLink(TreeNode * const parent, TreeNode * const right) {
+	void			linkRight(TreeNode * const parent, TreeNode * const right) {
 		parent->m_right = right;
 		if (right) {
 			right->m_parent = parent;
 		}
 	}
 	static
-	void			leftLink(TreeNode * const left, TreeNode * const parent) {
+	void			linkLeft(TreeNode * const parent, TreeNode * const left) {
 		parent->m_left = left;
 		if (left) {
 			left->m_parent = parent;
@@ -196,8 +196,8 @@ public:
 		}
 		inline static
 		void		roundOff(TreeNode * const endNode) {
-			rightLink(endNode, endNode);
-			leftLink(endNode, endNode);
+			linkRight(endNode, endNode);
+			linkLeft(endNode, endNode);
 		}
 	}; // subclass end
 
@@ -211,8 +211,8 @@ public:
 			return;
 		}
 		(parent->m_right == oldChild)
-			? rightLink(parent, newChild)
-			: leftLink(newChild, parent);
+			? linkRight(parent, newChild)
+			: linkLeft(parent, newChild);
 	}
 
 	static
@@ -220,8 +220,8 @@ public:
 		TreeNode * const	x = head->m_right;
 
 		linkWithNewChild(head->m_parent, head, x); /* todo: возможно, это не нужно */
-		rightLink(head, x->m_left);
-		leftLink(head, x);
+		linkRight(head, x->m_left);
+		linkLeft(x, head);
 
 		x->m_color		= head->m_color;
 		head->m_color	= mc_red;
@@ -232,8 +232,8 @@ public:
 		TreeNode * const	x = head->m_left;
 
 		linkWithNewChild(head->m_parent, head, x);
-		leftLink(x->m_right, head);
-		rightLink(x, head);
+		linkLeft(head, x->m_right);
+		linkRight(x, head);
 
 		x->m_color		= head->m_color;
 		head->m_color	= mc_red;
@@ -272,7 +272,7 @@ public:
 			ret = _insertStepBlock(
 				head->m_left,
 				insert(head->m_left, value, comp, nodeAlloc, valAlloc),
-				link_type(leftLink, head),
+				link_type(linkLeft, head),
 				end::setFirst
 			);
 		}
@@ -280,7 +280,7 @@ public:
 			ret = _insertStepBlock(
 				head->m_right,
 				insert(head->m_right, value, comp, nodeAlloc, valAlloc),
-				link_type(rightLink, head),
+				link_type(linkRight, head),
 				end::setLast
 			);
 		}
@@ -295,19 +295,14 @@ public:
 	class link_type {
 	public:
 		typedef void (*_link_type)(TreeNode * const, TreeNode * const);
-		link_type(_link_type link, TreeNode * const head)
+		link_type(const _link_type link, TreeNode * const head)
 			: mc_link(link), m_head(head) {}
 		link_type(const link_type & other)
 			: mc_link(other.mc_link), m_head(other.m_head) {}
 
 		~link_type() {}
 		void operator()(TreeNode * const forLink) const {
-			if (mc_link == rightLink) {
-				mc_link(m_head, forLink);
-			}
-			else {
-				mc_link(forLink, m_head);
-			}
+			mc_link(m_head, forLink);
 		}
 	private:
 		link_type() {}
@@ -427,9 +422,6 @@ public:
 			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc, printTree);
 			head->m_left = ret.first;
 //			printTree(); /* todo debug */
-			if (end::isEnd(ret.first)) {
-				end::setFirst(ret.first, head);
-			}
 		}
 		else {
 			const bool		equal = !comp(getData(head), value);
@@ -437,7 +429,7 @@ public:
 			if (isRed(head->m_left)) {
 				head = rotateRight(head);
 				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
-				head->m_right = ret.first;
+				head->m_right = ret.first; /* todo: is end-node? */
 //				printTree(); /* todo debug */
 				return std::make_pair(_fixUp(head), ret.second);
 			}
@@ -484,14 +476,14 @@ public:
 			end::setFirst(headLeft, minNode);
 		}
 		else {
-			leftLink(headLeft, minNode);
+			linkLeft(minNode, headLeft);
 		}
 		if (minNode->m_parent != head) {
-			rightLink(minNode, headRight);
-			leftLink(nullptr, minNode->m_parent);
+			linkRight(minNode, headRight);
+			linkLeft(minNode->m_parent, nullptr);
 		}
 		else {
-			rightLink(minNode, nullptr);
+			linkRight(minNode, nullptr);
 		}
 		linkWithNewChild(head->m_parent, head, minNode);
 		return head;
