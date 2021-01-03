@@ -89,6 +89,24 @@ public:
 			left->m_parent = parent;
 		}
 	}
+	static
+	void			linkLeftEndSafe(TreeNode * const parent, TreeNode * const left) {
+		if ( end::isEnd(left) ) {
+			end::setFirst(left, parent);
+		}
+		else {
+			linkLeft(parent, left);
+		}
+	}
+	static
+	void			linkRightEndSafe(TreeNode * const parent, TreeNode * const right) {
+		if ( end::isEnd(right) ) {
+			end::setLast(right, parent);
+		}
+		else {
+			linkRight(parent, right);
+		}
+	}
 	inline static
 	bool			isRed(const TreeNode * const node) {
 		return (node)
@@ -420,7 +438,7 @@ public:
 				head = moveRedLeft(head);
 			}
 			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc, printTree);
-			head->m_left = ret.first;
+			linkLeftEndSafe(head, ret.first);
 //			printTree(); /* todo debug */
 		}
 		else {
@@ -429,7 +447,7 @@ public:
 			if (isRed(head->m_left)) {
 				head = rotateRight(head);
 				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
-				head->m_right = ret.first; /* todo: is end-node? */
+				linkRightEndSafe(head, ret.first);
 //				printTree(); /* todo debug */
 				return std::make_pair(_fixUp(head), ret.second);
 			}
@@ -455,10 +473,7 @@ public:
 			}
 			else {
 				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
-				head->m_right = ret.first;
-				if (end::isEnd(ret.first)) {
-					end::setLast(ret.first, head);
-				}
+				linkRightEndSafe(head, ret.first);
 //				printTree(); /* todo debug */
 			}
 		}
