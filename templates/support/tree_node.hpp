@@ -441,6 +441,11 @@ public:
 				head = moveRedRight(head);
 			}
 			if (equal) {
+				/*destroy(
+					moveWholeNodeAndGetHead(head, getMinNode(head->m_right)),
+					nodeAlloc,
+					valAlloc
+				);*/
 				TreeNode * const minNode = getMinNode(head->m_right);
 				ft::swap(head->data, minNode->data);
 				head->m_right = deleteMin(head->m_right, nodeAlloc, valAlloc);
@@ -458,6 +463,30 @@ public:
 			}
 		}
 		return std::make_pair(_fixUp(head), ret.second);
+	}
+	static
+	TreeNode *		moveWholeNodeAndGetHead(TreeNode * const head,
+											TreeNode * const minNode) {
+		TreeNode * const headLeft	= head->m_left;
+		TreeNode * const headRight	= head->m_right;
+
+		minNode->m_color = head->m_color;
+
+		if (end::isEnd(headLeft)) {
+			end::setFirst(headLeft, minNode);
+		}
+		else {
+			leftLink(headLeft, minNode);
+		}
+		if (minNode->m_parent != head) {
+			rightLink(minNode, headRight);
+			leftLink(nullptr, minNode->m_parent);
+		}
+		else {
+			rightLink(minNode, nullptr);
+		}
+		linkWithNewChild(head->m_parent, head, minNode);
+		return head;
 	}
 }; //class TreeNode
 #pragma pack(pop)
