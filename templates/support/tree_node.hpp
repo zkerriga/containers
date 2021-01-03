@@ -441,17 +441,13 @@ public:
 				head = moveRedRight(head);
 			}
 			if (equal) {
-				/*destroy(
-					moveWholeNodeAndGetHead(head, getMinNode(head->m_right)),
+				TreeNode * const	minNode = getMinNode(head->m_right);
+				destroy(
+					moveWholeNodeAndGetHead(head, minNode),
 					nodeAlloc,
 					valAlloc
-				);*/
-				TreeNode * const minNode = getMinNode(head->m_right);
-				ft::swap(head->data, minNode->data);
-				head->m_right = deleteMin(head->m_right, nodeAlloc, valAlloc);
-				if (end::isEnd(head->m_right)) {
-					end::setLast(head->m_right, head);
-				}
+				);
+				head = minNode;
 				ret.second = true;
 			}
 			else {
