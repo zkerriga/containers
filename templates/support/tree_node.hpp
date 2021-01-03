@@ -225,12 +225,9 @@ public:
 									 TreeNode * const newChild) {
 		if (end::isEnd(parent)) {
 			end::setRoot(parent, newChild);
-			newChild->m_parent = parent;
 			return;
 		}
-		(parent->m_right == oldChild)
-			? linkRight(parent, newChild)
-			: linkLeft(parent, newChild);
+		(parent->m_right == oldChild ? linkRight : linkLeft)(parent, newChild);
 	}
 
 	static
@@ -365,7 +362,7 @@ public:
 	TreeNode *		moveRedLeft(TreeNode * head) {
 		flipColors(head);
 		if ( isRed(head->m_right->m_left) ) {
-			head->m_right = rotateRight(head->m_right);
+			head->m_right = rotateRight(head->m_right); /* todo: заменить замену парента вот тут на линк */
 			head = rotateLeft(head);
 			flipColors(head);
 		}
@@ -395,10 +392,7 @@ public:
 			head = moveRedLeft(head);
 		}
 		TreeNode * const ret = deleteMin(head->m_left, treeAlloc, valAlloc);
-		head->m_left = ret;
-		if (end::isEnd(ret)) {
-			end::setFirst(ret, head);
-		}
+		linkLeftEndSafe(head, ret);
 		return _fixUp(head);
 	}
 	static
@@ -487,12 +481,7 @@ public:
 
 		minNode->m_color = head->m_color;
 
-		if (end::isEnd(headLeft)) {
-			end::setFirst(headLeft, minNode);
-		}
-		else {
-			linkLeft(minNode, headLeft);
-		}
+		linkLeftEndSafe(minNode, headLeft);
 		if (minNode->m_parent != head) {
 			linkRight(minNode, headRight);
 			linkLeft(minNode->m_parent, nullptr);
