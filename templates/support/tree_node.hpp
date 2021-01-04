@@ -472,19 +472,13 @@ public:
 	static
 	TreeNode *		moveWholeNodeAndGetHead(TreeNode * const head,
 											TreeNode * const minNode) {
-		TreeNode * const headLeft	= head->m_left;
-		TreeNode * const headRight	= head->m_right;
-
 		minNode->m_color = head->m_color;
 
-		linkLeftEndSafe(minNode, headLeft);
 		if (minNode->m_parent != head) {
-			linkRight(minNode, headRight);
-			linkLeft(minNode->m_parent, nullptr);
+			linkLeft(minNode->m_parent, minNode->m_right);
+			linkRight(minNode, head->m_right);
 		}
-//		else {
-//			linkRight(minNode,  nullptr);
-//		}
+		linkLeftEndSafe(minNode, head->m_left);
 		linkWithNewChild(head->m_parent, head, minNode);
 		return head;
 	}
