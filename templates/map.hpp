@@ -216,8 +216,22 @@ public:
 	}
 
 	/* Operations */
-//	iterator		find(const key_type & k);
-//	const_iterator	find(const key_type & k) const;
+	iterator		find(const key_type & k) {
+		_tree * const	found = _tree::findOrGetNull(
+			_tree::end::getRoot(m_end),
+			std::make_pair(k, mapped_type()),
+			mc_valueCompare
+		);
+		return iterator(found ? found : m_end);
+	}
+	const_iterator	find(const key_type & k) const {
+		_tree * const	found = _tree::findOrGetNull(
+				_tree::end::getRoot(m_end),
+				std::make_pair(k, mapped_type()),
+				mc_valueCompare
+		);
+		return const_iterator(found ? found : m_end);
+	}
 //	size_type		count(const key_type & k) const;
 //	iterator		lower_bound(const key_type & k);
 //	const_iterator	lower_bound(const key_type & k) const;

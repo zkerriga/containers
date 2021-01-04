@@ -488,5 +488,26 @@ public:
 		linkWithNewChild(head->m_parent, head, minNode);
 		return head;
 	}
+
+	template < class Compare >
+	static
+	TreeNode *		findOrGetNull(const TreeNode * const head,
+								  const value_type & value,
+								  const Compare comp) {
+		if ( isEndOrNull(head) ) {
+			return nullptr;
+		}
+		TreeNode *	next = nullptr;
+		if ( comp(value, getData(head)) ) {
+			next = head->m_left;
+		}
+		else if ( comp(getData(head), value) ){
+			next = head->m_right;
+		}
+		else {
+			return const_cast<TreeNode *>(head);
+		}
+		return findOrGetNull(next, value, comp);
+	}
 }; //class TreeNode
 #pragma pack(pop)

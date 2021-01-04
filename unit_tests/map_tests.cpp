@@ -611,3 +611,21 @@ TEST(map, erase_crush) {
 //		createAndEraseMaps();
 	}
 }
+
+void	foundAssert(sMap & sM, mMap & mM, sMap::const_iterator sIt, mMap::const_iterator mIt) {
+	ASSERT_EQ(sM.end() == sIt, mM.end() == mIt);
+	if (sM.end() != sIt) {
+		ASSERT_EQ(*sIt, *mIt);
+	}
+}
+
+TEST_F(MapTest, find) {
+	foundAssert(sEmpty, mEmpty, sEmpty.find('a'), mEmpty.find('a'));
+
+	for (char i = 0; i < 127; ++i) {
+		foundAssert(sAlpha, mAlpha, sAlpha.find(i), mAlpha.find(i));
+	}
+	for (char i = 0; i < 127; ++i) {
+		foundAssert(sRando, mRando, sRando.find(i), mRando.find(i));
+	}
+}
