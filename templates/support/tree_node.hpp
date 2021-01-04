@@ -224,7 +224,7 @@ public:
 
 	static
 	void			linkWithNewChild(TreeNode * const parent,
-									 TreeNode * const oldChild,
+									 const TreeNode * const oldChild,
 									 TreeNode * const newChild) {
 		if (end::isEnd(parent)) {
 			end::setRoot(parent, newChild);
@@ -365,7 +365,7 @@ public:
 	TreeNode *		moveRedLeft(TreeNode * head) {
 		flipColors(head);
 		if ( head->m_right && isRed(head->m_right->m_left) ) {
-			head->m_right = rotateRight(head->m_right); /* todo: заменить замену парента вот тут на линк */
+			linkRight(head, rotateRight(head->m_right));
 			head = rotateLeft(head);
 			flipColors(head);
 		}
