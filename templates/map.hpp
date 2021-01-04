@@ -176,7 +176,7 @@ public:
 	size_type		erase(const key_type& k) {
 		const print_type	printTree(m_end, static_cast<int>(log2(m_size)) + 3);
 		printTree();
-		if (m_size == 0) {
+		if ( m_size == 0 || (find(k) == end()) ) {
 			return 0;
 		}
 		std::pair<_tree *, bool>	ret = _tree::deleteFromTree(

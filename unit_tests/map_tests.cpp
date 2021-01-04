@@ -595,21 +595,24 @@ void	createAndEraseMaps() {
 	mMap		mM;
 
 	const auto	seed = static_cast<unsigned int>(time(nullptr));
-	D(std::cout << "ERRASE SEED: " << 1609756643u << std::endl;);
-	srand(1609756643u);
+	D(std::cout << "ERRASE SEED: " << seed << std::endl;);
+	srand(seed);
 	for (int i = 0; i < 200; ++i) {
 		insert(sM, mM);
 	}
 	for (int i = 0; i < 200; ++i) {
 		erase(sM, mM);
 		assertMapEQ(sM, mM);
+		if (sM.empty() && mM.empty())
+			break;
 	}
 }
 
 TEST(map, erase_crush) {
 	for (int i = 0; i < 2000; ++i) {
-//		createAndEraseMaps();
+		createAndEraseMaps();
 	}
+	SUCCEED();
 }
 
 void	foundAssert(sMap & sM, mMap & mM, sMap::const_iterator sIt, mMap::const_iterator mIt) {
