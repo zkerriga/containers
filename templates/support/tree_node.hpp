@@ -427,7 +427,7 @@ public:
 		const bool					less	= comp(value, getData(head));
 		std::pair<TreeNode *, bool>	ret		= std::make_pair(nullptr, false);
 
-		if (less) {
+		if ( less ) {
 			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
 				head = moveRedLeft(head);
 			}
@@ -438,7 +438,7 @@ public:
 		else {
 			const bool		equal = !comp(getData(head), value);
 
-			if (isRed(head->m_left)) {
+			if ( isRed(head->m_left) ) {
 				head = rotateRight(head);
 				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
 				linkRightEndSafe(head, ret.first);
@@ -454,7 +454,7 @@ public:
 				head = moveRedRight(head);
 //				printTree(); /* todo debug */
 			}
-			if (equal) {
+			if ( !comp(getData(head), value) ) {
 				TreeNode * const	minNode = getMinNode(head->m_right);
 				destroy(
 					moveWholeNodeAndGetHead(head, minNode),
