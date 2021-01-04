@@ -62,51 +62,6 @@ public:
 		);
 		end::roundOff(endNode);
 	}
-	template < typename node_allocator_type, typename value_allocator_type >
-	static
-	void			_clearTree(TreeNode * const head,
-							   node_allocator_type & nodeAlloc,
-							   value_allocator_type & valAlloc) {
-		if (isEndOrNull(head)) {
-			return;
-		}
-		_clearTree(head->m_right, nodeAlloc, valAlloc);
-		_clearTree(head->m_left, nodeAlloc, valAlloc);
-		destroy(head, nodeAlloc, valAlloc);
-	}
-
-	static
-	void			linkRight(TreeNode * const parent, TreeNode * const right) {
-		parent->m_right = right;
-		if (right) {
-			right->m_parent = parent;
-		}
-	}
-	static
-	void			linkLeft(TreeNode * const parent, TreeNode * const left) {
-		parent->m_left = left;
-		if (left) {
-			left->m_parent = parent;
-		}
-	}
-	static
-	void			linkLeftEndSafe(TreeNode * const parent, TreeNode * const left) {
-		if ( end::isEnd(left) ) {
-			end::setFirst(left, parent);
-		}
-		else {
-			linkLeft(parent, left);
-		}
-	}
-	static
-	void			linkRightEndSafe(TreeNode * const parent, TreeNode * const right) {
-		if ( end::isEnd(right) ) {
-			end::setLast(right, parent);
-		}
-		else {
-			linkRight(parent, right);
-		}
-	}
 	inline static
 	bool			isRed(const TreeNode * const node) {
 		return (node)
@@ -126,45 +81,6 @@ public:
 			return node->m_right;
 		}
 	}; // subclass step
-
-	inline static
-	bool			isStepChild(const TreeNode * const node, typename step::type step) {
-		return (node == step(node->m_parent));
-	}
-	static
-	TreeNode *		iterateNode(const TreeNode * const node,
-								typename step::type step,
-								typename step::type antiStep) {
-		if (end::isEnd(node)) {
-			return antiStep(node);
-		}
-		return step(node)
-				? getLastNodeByStep(step(node), antiStep)
-				: getFirstStepParent(node, step);
-	}
-	static
-	TreeNode *		getFirstStepParent(const TreeNode * const node,
-									   typename step::type step) {
-		return isStepChild(node, step)
-				? getFirstStepParent(node->m_parent, step)
-				: node->m_parent;
-	}
-	static
-	TreeNode *		getLastNodeByStep(const TreeNode * const root,
-									  typename step::type step) {
-		return (end::isEnd(root) || !step(root))
-				? const_cast<TreeNode *>(root)
-				: getLastNodeByStep(step(root), step);
-	}
-
-	inline static
-	value_type &	getData(const TreeNode * const node) {
-		return *(node->data);
-	}
-	inline static
-	bool			isEndOrNull(const TreeNode * const node) {
-		return (!node || end::isEnd(node));
-	}
 	struct end {
 		template < typename node_allocator_type >
 		static
@@ -185,8 +101,8 @@ public:
 		inline static
 		bool		isEnd(const TreeNode * const node) {
 			return node
-					? !(node->data)
-					: false;
+				   ? !(node->data)
+				   : false;
 		}
 		inline static
 		TreeNode *	getRoot(const TreeNode * const endNode) {
@@ -223,39 +139,37 @@ public:
 	}; // subclass end
 
 	static
-	void			linkWithNewChild(TreeNode * const parent,
-									 const TreeNode * const oldChild,
-									 TreeNode * const newChild) {
-		if (end::isEnd(parent)) {
-			end::setRoot(parent, newChild);
-			return;
+	void			linkRight(TreeNode * const parent, TreeNode * const right) {
+		parent->m_right = right;
+		if (right) {
+			right->m_parent = parent;
 		}
-		(parent->m_right == oldChild ? linkRight : linkLeft)(parent, newChild);
-	}
-
-	static
-	TreeNode *		rotateLeft(TreeNode * const head) {
-		TreeNode * const	x = head->m_right;
-
-		linkWithNewChild(head->m_parent, head, x); /* todo: возможно, это не нужно */
-		linkRight(head, x->m_left);
-		linkLeft(x, head);
-
-		x->m_color		= head->m_color;
-		head->m_color	= mc_red;
-		return x;
 	}
 	static
-	TreeNode *		rotateRight(TreeNode * const head) {
-		TreeNode * const	x = head->m_left;
-
-		linkWithNewChild(head->m_parent, head, x);
-		linkLeft(head, x->m_right);
-		linkRight(x, head);
-
-		x->m_color		= head->m_color;
-		head->m_color	= mc_red;
-		return x;
+	void			linkLeft(TreeNode * const parent, TreeNode * const left) {
+		parent->m_left = left;
+		if (left) {
+			left->m_parent = parent;
+		}
+	}
+	static
+	TreeNode *		iterateNode(const TreeNode * const node,
+								typename step::type step,
+								typename step::type antiStep) {
+		if (end::isEnd(node)) {
+			return antiStep(node);
+		}
+		return step(node)
+				? _getLastNodeByStep(step(node), antiStep)
+				: _getFirstStepParent(node, step);
+	}
+	inline static
+	value_type &	getData(const TreeNode * const node) {
+		return *(node->data);
+	}
+	inline static
+	bool			isEndOrNull(const TreeNode * const node) {
+		return (!node || end::isEnd(node));
 	}
 	inline static
 	void			flipColor(TreeNode * const node) {
@@ -263,14 +177,6 @@ public:
 			node->m_color = !node->m_color;
 		}
 	}
-	static
-	TreeNode *		flipColors(TreeNode * const head) {
-		flipColor(head);
-		flipColor(head->m_left);
-		flipColor(head->m_right);
-		return head;
-	}
-
 	template < class Compare,
 			   typename node_allocator_type,
 			   typename value_allocator_type >
@@ -288,18 +194,18 @@ public:
 		}
 		if ( comp(value, getData(head)) ) {
 			ret = _insertStepBlock(
-				head->m_left,
-				insert(head->m_left, value, comp, nodeAlloc, valAlloc),
-				link_type(linkLeft, head),
-				end::setFirst
+					head->m_left,
+					insert(head->m_left, value, comp, nodeAlloc, valAlloc),
+					_link_type(linkLeft, head),
+					end::setFirst
 			);
 		}
 		else if ( comp(getData(head), value) ) {
 			ret = _insertStepBlock(
-				head->m_right,
-				insert(head->m_right, value, comp, nodeAlloc, valAlloc),
-				link_type(linkRight, head),
-				end::setLast
+					head->m_right,
+					insert(head->m_right, value, comp, nodeAlloc, valAlloc),
+					_link_type(linkRight, head),
+					end::setLast
 			);
 		}
 		else {
@@ -309,100 +215,6 @@ public:
 			_fixUp(head); /* Balancing the tree */
 		}
 		return ret;
-	}
-	class link_type {
-	public:
-		typedef void (*_link_type)(TreeNode * const, TreeNode * const);
-		link_type(const _link_type link, TreeNode * const head)
-			: mc_link(link), m_head(head) {}
-		link_type(const link_type & other)
-			: mc_link(other.mc_link), m_head(other.m_head) {}
-
-		~link_type() {}
-		void operator()(TreeNode * const forLink) const {
-			mc_link(m_head, forLink);
-		}
-	private:
-		link_type() {}
-		link_type & operator= (const link_type & other) { return *this; }
-
-		const _link_type	mc_link;
-		TreeNode * const	m_head;
-	};
-	static
-	const std::pair< TreeNode*, bool >
-					_insertStepBlock(TreeNode * const headNext,
-									 const std::pair< TreeNode*, bool > ret,
-									 const link_type link,
-									 void (*endSet)(TreeNode * const, TreeNode * const)) {
-		if (ret.second) {
-			TreeNode * const	end = end::isEnd(headNext) ? headNext : nullptr;
-
-			if (!headNext || end) {
-				link(ret.first);
-			}
-			if (end) {
-				endSet(end, ret.first);
-			}
-		}
-		return ret;
-	}
-	static
-	TreeNode *		_fixUp(TreeNode * head) {
-		if (isRed(head->m_right)) {
-			head = rotateLeft(head);
-		}
-		if (isRed(head->m_left) && head->m_left && isRed(head->m_left->m_left)) {
-			head = rotateRight(head);
-		}
-		if (isRed(head->m_left) && isRed(head->m_right)) {
-			flipColors(head);
-		}
-		return head;
-	}
-
-	static
-	TreeNode *		moveRedLeft(TreeNode * head) {
-		flipColors(head);
-		if ( head->m_right && isRed(head->m_right->m_left) ) {
-			linkRight(head, rotateRight(head->m_right));
-			head = rotateLeft(head);
-			flipColors(head);
-		}
-		return head;
-	}
-	static
-	TreeNode *		moveRedRight(TreeNode * head) {
-		flipColors(head);
-		if ( head->m_left && isRed(head->m_left->m_left) ) {
-			head = rotateRight(head);
-			flipColors(head);
-		}
-		return head;
-	}
-	template < typename node_allocator_type, typename value_allocator_type >
-	static
-	TreeNode *		deleteMin(TreeNode * head,
-							  node_allocator_type & treeAlloc,
-							  value_allocator_type & valAlloc) {
-		TreeNode * const left = head->m_left;
-
-		if ( isEndOrNull(left) ) {
-			destroy(head, treeAlloc, valAlloc);
-			return left;
-		}
-		if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
-			head = moveRedLeft(head);
-		}
-		TreeNode * const ret = deleteMin(head->m_left, treeAlloc, valAlloc);
-		linkLeftEndSafe(head, ret);
-		return _fixUp(head);
-	}
-	static
-	TreeNode *		getMinNode(TreeNode * const head) {
-		return (!head->m_left)
-			? head
-			: getMinNode(head->m_left);
 	}
 	template < class Compare,
 			   typename node_allocator_type,
@@ -418,19 +230,21 @@ public:
 		}
 		if ( comp(value, getData(head)) ) {
 			if ( !isRed(head->m_left) && !isRed(head->m_left->m_left) ) {
-				head = moveRedLeft(head);
+				head = _moveRedLeft(head);
 			}
-			linkLeftEndSafe(
-				head,
-				deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc)
+			_linkLeftEndSafe(
+					head,
+					deleteFromTree(head->m_left, value, comp, nodeAlloc,
+								   valAlloc)
 			);
 		}
 		else {
 			if ( isRed(head->m_left) ) {
-				head = rotateRight(head);
-				linkRightEndSafe(
-					head,
-					deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc)
+				head = _rotateRight(head);
+				_linkRightEndSafe(
+						head,
+						deleteFromTree(head->m_right, value, comp, nodeAlloc,
+									   valAlloc)
 				);
 				return _fixUp(head);
 			}
@@ -442,42 +256,30 @@ public:
 				return headChild;
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
-				head = moveRedRight(head);
+				head = _moveRedRight(head);
 			}
 			if ( !comp(getData(head), value) ) {
-				TreeNode * const	minNode = getMinNode(head->m_right);
+				TreeNode * const	minNode = _getMinNode(head->m_right);
 				destroy(
-					moveWholeNodeAndGetHead(head, minNode),
-					nodeAlloc,
-					valAlloc
+						_moveWholeNodeAndGetHead(head, minNode),
+						nodeAlloc,
+						valAlloc
 				);
 				head = minNode;
 			}
 			else {
-				linkRightEndSafe(
-					head,
-					deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc)
+				_linkRightEndSafe(
+						head,
+						deleteFromTree(head->m_right, value, comp, nodeAlloc,
+									   valAlloc)
 				);
 			}
 		}
 		return _fixUp(head);
 	}
-	static
-	TreeNode *		moveWholeNodeAndGetHead(TreeNode * const head,
-											TreeNode * const minNode) {
-		minNode->m_color = head->m_color;
-
-		if (minNode->m_parent != head) {
-			linkLeft(minNode->m_parent, minNode->m_right);
-			linkRight(minNode, head->m_right);
-		}
-		linkLeftEndSafe(minNode, head->m_left);
-		linkWithNewChild(head->m_parent, head, minNode);
-		return head;
-	}
 	template < class Compare >
 	static
-	TreeNode *		findOrGetNull(const TreeNode * const head,
+	TreeNode *		findOrGetNull(TreeNode * const head,
 								  const value_type & value,
 								  const Compare comp) {
 		if ( isEndOrNull(head) ) {
@@ -491,9 +293,197 @@ public:
 			next = head->m_right;
 		}
 		else {
-			return const_cast<TreeNode *>(head);
+			return head;
 		}
 		return findOrGetNull(next, value, comp);
+	}
+
+private:
+	template < typename node_allocator_type, typename value_allocator_type >
+	static
+	void			_clearTree(TreeNode * const head,
+							   node_allocator_type & nodeAlloc,
+							   value_allocator_type & valAlloc) {
+		if (isEndOrNull(head)) {
+			return;
+		}
+		_clearTree(head->m_right, nodeAlloc, valAlloc);
+		_clearTree(head->m_left, nodeAlloc, valAlloc);
+		destroy(head, nodeAlloc, valAlloc);
+	}
+
+	class _link_type {
+	public:
+		typedef void (*_type)(TreeNode * const, TreeNode * const);
+		_link_type(const _type link, TreeNode * const head)
+				: mc_link(link), m_head(head) {}
+		_link_type(const _link_type & other)
+				: mc_link(other.mc_link), m_head(other.m_head) {}
+
+		~_link_type() {}
+		void operator()(TreeNode * const forLink) const {
+			mc_link(m_head, forLink);
+		}
+	private:
+		_link_type() {}
+		_link_type & operator= (const _link_type & other) { return *this; }
+
+		const _type	mc_link;
+		TreeNode * const	m_head;
+	};
+	static
+	void			_linkRightEndSafe(TreeNode * const parent,
+									  TreeNode * const right) {
+		if ( end::isEnd(right) ) {
+			end::setLast(right, parent);
+		}
+		else {
+			linkRight(parent, right);
+		}
+	}
+	static
+	void			_linkLeftEndSafe(TreeNode * const parent,
+									 TreeNode * const left) {
+		if ( end::isEnd(left) ) {
+			end::setFirst(left, parent);
+		}
+		else {
+			linkLeft(parent, left);
+		}
+	}
+	static
+	void			_linkWithNewChild(TreeNode * const parent,
+									  const TreeNode * const oldChild,
+									  TreeNode * const newChild) {
+		if (end::isEnd(parent)) {
+			end::setRoot(parent, newChild);
+			return;
+		}
+		(parent->m_right == oldChild ? linkRight : linkLeft)(parent, newChild);
+	}
+
+	inline static
+	bool			_isStepChild(const TreeNode * const node,
+								 const typename step::type step) {
+		return (node == step(node->m_parent));
+	}
+	static
+	TreeNode *		_getFirstStepParent(const TreeNode * const node,
+										const typename step::type step) {
+		return _isStepChild(node, step)
+			   ? _getFirstStepParent(node->m_parent, step)
+			   : node->m_parent;
+	}
+	static
+	TreeNode *		_getLastNodeByStep(const TreeNode * const root,
+									   const typename step::type step) {
+		return (end::isEnd(root) || !step(root))
+			   ? const_cast<TreeNode *>(root)
+			   : _getLastNodeByStep(step(root), step);
+	}
+
+	static
+	TreeNode *		_rotateLeft(TreeNode * const head) {
+		TreeNode * const	x = head->m_right;
+
+		_linkWithNewChild(head->m_parent, head, x);
+		linkRight(head, x->m_left);
+		linkLeft(x, head);
+
+		x->m_color		= head->m_color;
+		head->m_color	= mc_red;
+		return x;
+	}
+	static
+	TreeNode *		_rotateRight(TreeNode * const head) {
+		TreeNode * const	x = head->m_left;
+
+		_linkWithNewChild(head->m_parent, head, x);
+		linkLeft(head, x->m_right);
+		linkRight(x, head);
+
+		x->m_color		= head->m_color;
+		head->m_color	= mc_red;
+		return x;
+	}
+
+	static
+	const std::pair< TreeNode*, bool >
+					_insertStepBlock(TreeNode * const headNext,
+					 const std::pair< TreeNode*, bool > ret,
+					 const _link_type link,
+					 void (*endSet)(TreeNode * const, TreeNode * const)) {
+		if (ret.second) {
+			TreeNode * const	end = end::isEnd(headNext) ? headNext : nullptr;
+
+			if (!headNext || end) {
+				link(ret.first);
+			}
+			if (end) {
+				endSet(end, ret.first);
+			}
+		}
+		return ret;
+	}
+	static
+	TreeNode *		_fixUp(TreeNode * head) {
+		if (isRed(head->m_right)) {
+			head = _rotateLeft(head);
+		}
+		if (isRed(head->m_left) && head->m_left && isRed(head->m_left->m_left)) {
+			head = _rotateRight(head);
+		}
+		if (isRed(head->m_left) && isRed(head->m_right)) {
+			_flipColors(head);
+		}
+		return head;
+	}
+
+	static
+	TreeNode *		_moveRedLeft(TreeNode * head) {
+		_flipColors(head);
+		if ( head->m_right && isRed(head->m_right->m_left) ) {
+			linkRight(head, _rotateRight(head->m_right));
+			head = _rotateLeft(head);
+			_flipColors(head);
+		}
+		return head;
+	}
+	static
+	TreeNode *		_moveRedRight(TreeNode * head) {
+		_flipColors(head);
+		if ( head->m_left && isRed(head->m_left->m_left) ) {
+			head = _rotateRight(head);
+			_flipColors(head);
+		}
+		return head;
+	}
+	static
+	TreeNode *		_getMinNode(TreeNode * const head) {
+		return (!head->m_left)
+			   ? head
+			   : _getMinNode(head->m_left);
+	}
+	static
+	TreeNode *		_moveWholeNodeAndGetHead(TreeNode * const head,
+											   TreeNode * const minNode) {
+		minNode->m_color = head->m_color;
+
+		if (minNode->m_parent != head) {
+			linkLeft(minNode->m_parent, minNode->m_right);
+			linkRight(minNode, head->m_right);
+		}
+		_linkLeftEndSafe(minNode, head->m_left);
+		_linkWithNewChild(head->m_parent, head, minNode);
+		return head;
+	}
+
+	static
+	TreeNode *		_flipColors(TreeNode * const head) {
+		flipColor(head);
+		flipColor(head->m_left);
+		flipColor(head->m_right);
+		return head;
 	}
 }; //class TreeNode
 #pragma pack(pop)
