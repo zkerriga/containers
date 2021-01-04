@@ -567,7 +567,7 @@ void	createAndEraseMaps() {
 	const auto	seed = static_cast<unsigned int>(time(nullptr));
 	D(std::cout << "ERRASE SEED: " << seed << std::endl;);
 	srand(seed);
-	const auto	insertN = rand() % 200 + 4;
+	const auto	insertN = rand() % 400 + 4;
 	for (int i = 0; i < insertN; ++i) {
 		insert(sM, mM);
 	}
@@ -583,7 +583,7 @@ void	createAndEraseMaps() {
 }
 
 TEST(map, erase_crush) {
-	for (int i = 0; i < 4000; ++i) {
+	for (int i = 0; i < 8000; ++i) {
 		createAndEraseMaps();
 	}
 	SUCCEED();
