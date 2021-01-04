@@ -188,38 +188,6 @@ TEST_F(TreeTest, iterator_basic) {
 	D(std::cout << ite->first << '-' << ite->second << std::endl);
 }
 
-TEST_F(TreeTest, rotateRight1) {
-	mTree *	nodeB = mTree::create(sTreeAlloc, sPairAlloc, pairs[1]);
-	mTree *	nodeD = mTree::create(sTreeAlloc, sPairAlloc, pairs[3]);
-
-	mTree::linkLeft(nodeD, nodeB);
-
-	mTree::end::setRoot(end, nodeD);
-	mTree::end::setFirst(end, nodeB);
-	mTree::end::setLast(end, nodeD);
-
-	D(printTree::print(end, 3));
-	mTree::rotateRight(mTree::end::getRoot(end));
-	D(printTree::print(end, 3));
-}
-
-TEST_F(TreeTest, rotateRight2) {
-	mTree *	nodeB = mTree::create(sTreeAlloc, sPairAlloc, pairs[1]);
-	mTree *	nodeD = mTree::create(sTreeAlloc, sPairAlloc, pairs[3]);
-	mTree *	nodeA = mTree::create(sTreeAlloc, sPairAlloc, pairs[0]);
-
-	mTree::linkLeft(nodeD, nodeB);
-	mTree::linkLeft(nodeB, nodeA);
-
-	mTree::end::setRoot(end, nodeD);
-	mTree::end::setFirst(end, nodeA);
-	mTree::end::setLast(end, nodeD);
-
-	D(printTree::print(end, 4));
-	mTree::rotateRight(mTree::end::getRoot(end));
-	D(printTree::print(end, 4));
-}
-
 class comp : public mMap::value_compare {
 public:
 	comp() : value_compare(std::less<mMap::key_type>()) {}
