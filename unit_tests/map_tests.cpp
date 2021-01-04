@@ -608,6 +608,6 @@ void	createAndEraseMaps() {
 
 TEST(map, erase_crush) {
 	for (int i = 0; i < 2000; ++i) {
-//		createAndEraseMaps();
+		createAndEraseMaps();
 	}
 }

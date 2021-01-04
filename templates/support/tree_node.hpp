@@ -364,7 +364,7 @@ public:
 	static
 	TreeNode *		moveRedLeft(TreeNode * head) {
 		flipColors(head);
-		if ( isRed(head->m_right->m_left) ) {
+		if ( head->m_right && isRed(head->m_right->m_left) ) {
 			head->m_right = rotateRight(head->m_right); /* todo: заменить замену парента вот тут на линк */
 			head = rotateLeft(head);
 			flipColors(head);
@@ -400,17 +400,10 @@ public:
 	}
 	static
 	TreeNode *		getMinNode(TreeNode * const head) {
-		if (!head) {
-			return nullptr; /* It's an error */
-		}
-		TreeNode * const	right	= head->m_right;
-		TreeNode * const	left	= head->m_left;
-		if (!left && !right) {
-			return head;
-		}
-		return getMinNode( left ? left : right );
+		return (!head->m_left)
+			? head
+			: getMinNode(head->m_left);
 	}
-
 	template < class Compare,
 			   typename node_allocator_type,
 			   typename value_allocator_type,
@@ -424,7 +417,7 @@ public:
 								   value_allocator_type & valAlloc,
 								   const print_type & printTree) {
 //		printTree(); /* todo debug */
-		if (end::isEnd(head)) {
+		if ( isEndOrNull(head) ) {
 			return std::make_pair(head, false);
 		}
 		const bool					less	= comp(value, getData(head));
@@ -449,9 +442,9 @@ public:
 				return std::make_pair(_fixUp(head), ret.second);
 			}
 			if ( equal && isEndOrNull(head->m_right) ) {
-				TreeNode * const headRight = head->m_right;
+				TreeNode * const headChild = (!head->m_left && end::isEnd(head->m_right)) ? head->m_right : head->m_left;
 				destroy(head, nodeAlloc, valAlloc);
-				return std::make_pair(headRight, true);
+				return std::make_pair(headChild, true);
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
 				head = moveRedRight(head);
@@ -489,9 +482,9 @@ public:
 			linkRight(minNode, headRight);
 			linkLeft(minNode->m_parent, nullptr);
 		}
-		else {
-			linkRight(minNode, nullptr);
-		}
+//		else {
+//			linkRight(minNode,  nullptr);
+//		}
 		linkWithNewChild(head->m_parent, head, minNode);
 		return head;
 	}
