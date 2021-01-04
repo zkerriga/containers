@@ -174,8 +174,6 @@ public:
 	}
 //	void			erase(iterator position);
 	size_type		erase(const key_type& k) {
-		const print_type	printTree(m_end, static_cast<int>(log2(m_size)) + 3);
-		printTree();
 		if ( m_size == 0 || (find(k) == end()) ) {
 			return 0;
 		}
@@ -184,8 +182,7 @@ public:
 			std::make_pair(k, mapped_type()),
 			mc_valueCompare,
 			m_treeAlloc,
-			m_valueAlloc,
-			printTree
+			m_valueAlloc
 		);
 		if (ret.second) {
 			--m_size;
@@ -194,7 +191,6 @@ public:
 		if (m_size == 0) {
 			_tree::end::roundOff(m_end);
 		}
-		printTree(); /* todo debug */
 		return (ret.second) ? 1 : 0;
 	}
 //	void			erase(iterator first, iterator last);

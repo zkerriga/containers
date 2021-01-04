@@ -424,6 +424,7 @@ TEST_F(MapTest, insert_crush) {
 	for (int i = 0; i < 1000; ++i) {
 		createTestsMapsAndStartInserts();
 	}
+	SUCCEED();
 }
 
 TEST_F(MapTest, empty) {
@@ -583,7 +584,7 @@ TEST_F(MapTest, erase_basic) {
 
 void	erase(sMap & sM, mMap & mM) {
 	const char		randKey	= getRandAlpha();
-	std::cout << "To delete: " << randKey << std::endl;
+	D(std::cout << "To delete: " << randKey << std::endl);
 	const size_t	sRet	= sM.erase(randKey);
 	const size_t	mRet	= mM.erase(randKey);
 
@@ -597,19 +598,23 @@ void	createAndEraseMaps() {
 	const auto	seed = static_cast<unsigned int>(time(nullptr));
 	D(std::cout << "ERRASE SEED: " << seed << std::endl;);
 	srand(seed);
-	for (int i = 0; i < 200; ++i) {
+	const auto	insertN = rand() % 200 + 4;
+	for (int i = 0; i < insertN; ++i) {
 		insert(sM, mM);
 	}
 	for (int i = 0; i < 200; ++i) {
 		erase(sM, mM);
 		assertMapEQ(sM, mM);
-		if (sM.empty() && mM.empty())
+		if (sM.empty() && mM.empty()) {
+			erase(sM, mM);
+			assertMapEQ(sM, mM);
 			break;
+		}
 	}
 }
 
 TEST(map, erase_crush) {
-	for (int i = 0; i < 2000; ++i) {
+	for (int i = 0; i < 4000; ++i) {
 		createAndEraseMaps();
 	}
 	SUCCEED();

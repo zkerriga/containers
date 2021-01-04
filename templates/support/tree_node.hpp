@@ -406,17 +406,14 @@ public:
 	}
 	template < class Compare,
 			   typename node_allocator_type,
-			   typename value_allocator_type,
-			   class print_type >
+			   typename value_allocator_type >
 	static
 	std::pair<TreeNode *, bool>
 					deleteFromTree(TreeNode * head,
 								   const value_type & value,
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
-								   value_allocator_type & valAlloc,
-								   const print_type & printTree) {
-//		printTree(); /* todo debug */
+								   value_allocator_type & valAlloc) {
 		if ( isEndOrNull(head) ) {
 			return std::make_pair(head, false);
 		}
@@ -427,18 +424,16 @@ public:
 			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
 				head = moveRedLeft(head);
 			}
-			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc, printTree);
+			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc);
 			linkLeftEndSafe(head, ret.first);
-//			printTree(); /* todo debug */
 		}
 		else {
 			const bool		equal = !comp(getData(head), value);
 
 			if ( isRed(head->m_left) ) {
 				head = rotateRight(head);
-				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
+				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
 				linkRightEndSafe(head, ret.first);
-//				printTree(); /* todo debug */
 				return std::make_pair(_fixUp(head), ret.second);
 			}
 			if ( equal && isEndOrNull(head->m_right) ) {
@@ -448,7 +443,6 @@ public:
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
 				head = moveRedRight(head);
-//				printTree(); /* todo debug */
 			}
 			if ( !comp(getData(head), value) ) {
 				TreeNode * const	minNode = getMinNode(head->m_right);
@@ -459,12 +453,10 @@ public:
 				);
 				head = minNode;
 				ret.second = true;
-//				printTree(); /* todo debug */
 			}
 			else {
-				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc, printTree);
+				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
 				linkRightEndSafe(head, ret.first);
-//				printTree(); /* todo debug */
 			}
 		}
 		return std::make_pair(_fixUp(head), ret.second);
@@ -482,7 +474,6 @@ public:
 		linkWithNewChild(head->m_parent, head, minNode);
 		return head;
 	}
-
 	template < class Compare >
 	static
 	TreeNode *		findOrGetNull(const TreeNode * const head,
