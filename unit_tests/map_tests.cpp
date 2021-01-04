@@ -12,7 +12,7 @@
 #define SIZE_LITTLE 5
 #define SIZE_LONG 34
 
-#define DEBUG
+//#define DEBUG
 
 #ifdef DEBUG
 #define D(x) { x }
@@ -608,6 +608,6 @@ void	createAndEraseMaps() {
 
 TEST(map, erase_crush) {
 	for (int i = 0; i < 2000; ++i) {
-		createAndEraseMaps();
+//		createAndEraseMaps();
 	}
 }
