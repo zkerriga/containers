@@ -12,7 +12,7 @@
 #define SIZE_LITTLE 5
 #define SIZE_LONG 34
 
-//#define DEBUG
+#define DEBUG
 
 #ifdef DEBUG
 #define D(x) { x }
@@ -420,7 +420,7 @@ void	createTestsMapsAndStartInserts() {
 	}
 }
 
-TEST_F(MapTest, crush) {
+TEST_F(MapTest, insert_crush) {
 	for (int i = 0; i < 1000; ++i) {
 		createTestsMapsAndStartInserts();
 	}
@@ -550,7 +550,7 @@ TEST_F(MapTest, swap) {
 	assertMapEQ(s2, m2);
 }
 
-TEST_F(MapTest, errase_basic) {
+TEST_F(MapTest, erase_basic) {
 	sMap	s1(sAlpha);
 	mMap	m1(mAlpha);
 
@@ -579,4 +579,35 @@ TEST_F(MapTest, errase_basic) {
 		m1.erase('p')
 	);
 	assertMapEQ(s1, m1);
+}
+
+void	erase(sMap & sM, mMap & mM) {
+	const char		randKey	= getRandAlpha();
+	std::cout << "To delete: " << randKey << std::endl;
+	const size_t	sRet	= sM.erase(randKey);
+	const size_t	mRet	= mM.erase(randKey);
+
+	ASSERT_EQ(sRet, mRet);
+}
+
+void	createAndEraseMaps() {
+	sMap		sM;
+	mMap		mM;
+
+	const auto	seed = static_cast<unsigned int>(time(nullptr));
+	D(std::cout << "ERRASE SEED: " << 1609756643u << std::endl;);
+	srand(1609756643u);
+	for (int i = 0; i < 200; ++i) {
+		insert(sM, mM);
+	}
+	for (int i = 0; i < 200; ++i) {
+		erase(sM, mM);
+		assertMapEQ(sM, mM);
+	}
+}
+
+TEST(map, erase_crush) {
+	for (int i = 0; i < 2000; ++i) {
+//		createAndEraseMaps();
+	}
 }

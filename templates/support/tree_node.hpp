@@ -67,7 +67,7 @@ public:
 	void			_clearTree(TreeNode * const head,
 							   node_allocator_type & nodeAlloc,
 							   value_allocator_type & valAlloc) {
-		if (!head || end::isEnd(head)) {
+		if (isEndOrNull(head)) {
 			return;
 		}
 		_clearTree(head->m_right, nodeAlloc, valAlloc);
@@ -161,7 +161,10 @@ public:
 	value_type &	getData(const TreeNode * const node) {
 		return *(node->data);
 	}
-
+	inline static
+	bool			isEndOrNull(const TreeNode * const node) {
+		return (!node || end::isEnd(node));
+	}
 	struct end {
 		template < typename node_allocator_type >
 		static
@@ -256,7 +259,7 @@ public:
 	}
 	inline static
 	void			flipColor(TreeNode * const node) {
-		if (node && !end::isEnd(node)) {
+		if (!isEndOrNull(node)) {
 			node->m_color = !node->m_color;
 		}
 	}
@@ -280,7 +283,7 @@ public:
 						   value_allocator_type & valAlloc) {
 		std::pair< TreeNode*, bool >	ret;
 
-		if ( !head || end::isEnd(head) ) {
+		if ( isEndOrNull(head) ) {
 			return std::make_pair(create(nodeAlloc, valAlloc, value), true);
 		}
 		if ( comp(value, getData(head)) ) {
@@ -384,7 +387,7 @@ public:
 							  value_allocator_type & valAlloc) {
 		TreeNode * const left = head->m_left;
 
-		if (!left || end::isEnd(left)) {
+		if ( isEndOrNull(left) ) {
 			destroy(head, treeAlloc, valAlloc);
 			return left;
 		}
@@ -419,7 +422,7 @@ public:
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
 								   value_allocator_type & valAlloc,
-								   const print_type printTree) {
+								   const print_type & printTree) {
 //		printTree(); /* todo debug */
 		if (end::isEnd(head)) {
 			return std::make_pair(head, false);
@@ -445,7 +448,7 @@ public:
 //				printTree(); /* todo debug */
 				return std::make_pair(_fixUp(head), ret.second);
 			}
-			if ( equal && (!head->m_right || end::isEnd(head->m_right)) ) {
+			if ( equal && isEndOrNull(head->m_right) ) {
 				TreeNode * const headRight = head->m_right;
 				destroy(head, nodeAlloc, valAlloc);
 				return std::make_pair(headRight, true);

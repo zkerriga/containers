@@ -175,6 +175,10 @@ public:
 //	void			erase(iterator position);
 	size_type		erase(const key_type& k) {
 		const print_type	printTree(m_end, static_cast<int>(log2(m_size)) + 3);
+		printTree();
+		if (m_size == 0) {
+			return 0;
+		}
 		std::pair<_tree *, bool>	ret = _tree::deleteFromTree(
 			_tree::end::getRoot(m_end),
 			std::make_pair(k, mapped_type()),
@@ -190,7 +194,7 @@ public:
 		if (m_size == 0) {
 			_tree::end::roundOff(m_end);
 		}
-//		printTree(); /* todo debug */
+		printTree(); /* todo debug */
 		return (ret.second) ? 1 : 0;
 	}
 //	void			erase(iterator first, iterator last);
