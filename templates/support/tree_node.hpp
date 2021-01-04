@@ -408,38 +408,38 @@ public:
 			   typename node_allocator_type,
 			   typename value_allocator_type >
 	static
-	std::pair<TreeNode *, bool>
-					deleteFromTree(TreeNode * head,
+	TreeNode *		deleteFromTree(TreeNode * head,
 								   const value_type & value,
 								   const Compare comp,
 								   node_allocator_type & nodeAlloc,
 								   value_allocator_type & valAlloc) {
 		if ( isEndOrNull(head) ) {
-			return std::make_pair(head, false);
+			return head;
 		}
-		const bool					less	= comp(value, getData(head));
-		std::pair<TreeNode *, bool>	ret		= std::make_pair(nullptr, false);
-
-		if ( less ) {
-			if ( !isRed(head->m_left) && head->m_left && !isRed(head->m_left->m_left) ) {
+		if ( comp(value, getData(head)) ) {
+			if ( !isRed(head->m_left) && !isRed(head->m_left->m_left) ) {
 				head = moveRedLeft(head);
 			}
-			ret = deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc);
-			linkLeftEndSafe(head, ret.first);
+			linkLeftEndSafe(
+				head,
+				deleteFromTree(head->m_left, value, comp, nodeAlloc, valAlloc)
+			);
 		}
 		else {
-			const bool		equal = !comp(getData(head), value);
-
 			if ( isRed(head->m_left) ) {
 				head = rotateRight(head);
-				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
-				linkRightEndSafe(head, ret.first);
-				return std::make_pair(_fixUp(head), ret.second);
+				linkRightEndSafe(
+					head,
+					deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc)
+				);
+				return _fixUp(head);
 			}
-			if ( equal && isEndOrNull(head->m_right) ) {
-				TreeNode * const headChild = (!head->m_left && end::isEnd(head->m_right)) ? head->m_right : head->m_left;
+			if ( !comp(getData(head), value) && isEndOrNull(head->m_right) ) {
+				TreeNode * const	headChild = (!head->m_left && end::isEnd(head->m_right))
+										? head->m_right
+										: head->m_left;
 				destroy(head, nodeAlloc, valAlloc);
-				return std::make_pair(headChild, true);
+				return headChild;
 			}
 			if ( !isRed(head->m_right) && head->m_right && !isRed(head->m_right->m_left) ) {
 				head = moveRedRight(head);
@@ -452,14 +452,15 @@ public:
 					valAlloc
 				);
 				head = minNode;
-				ret.second = true;
 			}
 			else {
-				ret = deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc);
-				linkRightEndSafe(head, ret.first);
+				linkRightEndSafe(
+					head,
+					deleteFromTree(head->m_right, value, comp, nodeAlloc, valAlloc)
+				);
 			}
 		}
-		return std::make_pair(_fixUp(head), ret.second);
+		return _fixUp(head);
 	}
 	static
 	TreeNode *		moveWholeNodeAndGetHead(TreeNode * const head,

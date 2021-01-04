@@ -177,21 +177,21 @@ public:
 		if ( m_size == 0 || (find(k) == end()) ) {
 			return 0;
 		}
-		std::pair<_tree *, bool>	ret = _tree::deleteFromTree(
+		_tree::deleteFromTree(
 			_tree::end::getRoot(m_end),
 			std::make_pair(k, mapped_type()),
 			mc_valueCompare,
 			m_treeAlloc,
 			m_valueAlloc
 		);
-		if (ret.second) {
-			--m_size;
-			_rootToBlack();
-		}
+		--m_size;
 		if (m_size == 0) {
 			_tree::end::roundOff(m_end);
 		}
-		return (ret.second) ? 1 : 0;
+		else {
+			_rootToBlack();
+		}
+		return 1;
 	}
 //	void			erase(iterator first, iterator last);
 	void			swap(map & x) {
