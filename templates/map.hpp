@@ -168,8 +168,10 @@ public:
 			insert(*first++);
 		}
 	}
-//	void			erase(iterator position);
-	size_type		erase(const key_type& k) {
+	void			erase(iterator position) {
+		erase(position->first);
+	}
+	size_type		erase(const key_type & k) {
 		if ( m_size == 0 || (find(k) == end()) ) {
 			return 0;
 		}
@@ -189,7 +191,11 @@ public:
 		}
 		return 1;
 	}
-//	void			erase(iterator first, iterator last);
+	void			erase(iterator first, iterator last) {
+		while (first != last) {
+			erase(first++);
+		}
+	}
 	void			swap(map & x) {
 		ft::swap(m_end, x.m_end);
 		ft::swap(m_size, x.m_size);

@@ -589,6 +589,39 @@ TEST(map, erase_crush) {
 	SUCCEED();
 }
 
+TEST_F(MapTest, erase) {
+	sMap	s1(sAlpha);
+	mMap	m1(mAlpha);
+
+	s1.erase(++s1.begin());
+	m1.erase(++m1.begin());
+	assertMapEQ(s1, m1);
+	s1.erase(--s1.end());
+	m1.erase(--m1.end());
+	assertMapEQ(s1, m1);
+
+	sMap	s2(sEmpty);
+	mMap	m2(mEmpty);
+
+	s2.erase(s2.begin(), s2.end());
+	m2.erase(m2.begin(), m2.end());
+	assertMapEQ(s2, m2);
+
+	sMap	s3(sAlpha);
+	mMap	m3(mAlpha);
+
+	s3.erase(++s3.begin(), --s3.end());
+	m3.erase(++m3.begin(), --m3.end());
+	assertMapEQ(s3, m3);
+
+	sMap	s4(sRando);
+	mMap	m4(mRando);
+
+	s4.erase(s4.begin(), s4.end());
+	m4.erase(m4.begin(), m4.end());
+	assertMapEQ(s4, m4);
+}
+
 void	foundAssert(sMap & sM, mMap & mM, sMap::const_iterator sIt, mMap::const_iterator mIt) {
 	ASSERT_EQ(sM.end() == sIt, mM.end() == mIt);
 	if (sM.end() != sIt) {
