@@ -639,3 +639,41 @@ TEST_F(MapTest, find) {
 		foundAssert(sRando, mRando, sRando.find(i), mRando.find(i));
 	}
 }
+
+TEST_F(MapTest, key_value_comp) {
+	sMap::key_compare	sKeyComp = sEmpty.key_comp();
+	mMap::key_compare	mKeyComp = mEmpty.key_comp();
+
+	ASSERT_EQ(
+		sKeyComp('a', 'a'),
+		mKeyComp('a', 'a')
+	);
+	ASSERT_EQ(
+		sKeyComp('m', 'a'),
+		mKeyComp('m', 'a')
+	);
+	ASSERT_EQ(
+		sKeyComp('m', 'z'),
+		mKeyComp('m', 'z')
+	);
+
+	sMap::value_compare		sValComp = sEmpty.value_comp();
+	mMap::value_compare		mValComp = mEmpty.value_comp();
+
+	ASSERT_EQ(
+		sValComp(std::make_pair('m', Any(1)), std::make_pair('m', Any(1))),
+		mValComp(std::make_pair('m', Any(1)), std::make_pair('m', Any(1)))
+	);
+	ASSERT_EQ(
+		sValComp(std::make_pair('m', Any(1)), std::make_pair('m', Any(2))),
+		mValComp(std::make_pair('m', Any(1)), std::make_pair('m', Any(2)))
+	);
+	ASSERT_EQ(
+		sValComp(std::make_pair('m', Any()), std::make_pair('a', Any())),
+		mValComp(std::make_pair('m', Any()), std::make_pair('a', Any()))
+	);
+	ASSERT_EQ(
+		sValComp(std::make_pair('m', Any()), std::make_pair('z', Any())),
+		mValComp(std::make_pair('m', Any()), std::make_pair('z', Any()))
+	);
+}
