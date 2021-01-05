@@ -677,3 +677,10 @@ TEST_F(MapTest, key_value_comp) {
 		mValComp(std::make_pair('m', Any()), std::make_pair('z', Any()))
 	);
 }
+
+TEST_F(MapTest, count) {
+	ASSERT_EQ(sEmpty.count('a'), mEmpty.count('a'));
+	for (char i = 0; i < 126; ++i) {
+		ASSERT_EQ(sAlpha.count('a'), mAlpha.count('a'));
+	}
+}

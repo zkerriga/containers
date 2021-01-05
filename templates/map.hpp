@@ -230,7 +230,9 @@ public:
 		);
 		return const_iterator(found ? found : m_end);
 	}
-//	size_type		count(const key_type & k) const;
+	size_type		count(const key_type & k) const {
+		return ( m_size == 0 || (find(k) == end()) ) ? 0 : 1;
+	}
 //	iterator		lower_bound(const key_type & k);
 //	const_iterator	lower_bound(const key_type & k) const;
 //	iterator		upper_bound(const key_type & k);
