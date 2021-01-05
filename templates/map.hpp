@@ -233,7 +233,15 @@ public:
 	size_type		count(const key_type & k) const {
 		return ( m_size == 0 || (find(k) == end()) ) ? 0 : 1;
 	}
-//	iterator		lower_bound(const key_type & k);
+	iterator		lower_bound(const key_type & k) {
+		iterator	it	= begin();
+		iterator	ite	= end();
+
+		while (it != ite && mc_keyCompare(it->first, k)) {
+			++it;
+		}
+		return it;
+	}
 //	const_iterator	lower_bound(const key_type & k) const;
 //	iterator		upper_bound(const key_type & k);
 //	const_iterator	upper_bound(const key_type & k) const;

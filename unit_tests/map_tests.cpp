@@ -35,7 +35,7 @@ class MapTest : public ::testing::Test {
 public:
 	MapTest() {
 		// код инициализации
-		for (char ch = 'a'; ch < 'm'; ++ch) {
+		for (char ch = 'a'; ch < 'z' + 1; ++ch) {
 			sAlpha[ch] = Any(ch);
 			mAlpha[ch] = Any(ch);
 		}
@@ -682,5 +682,21 @@ TEST_F(MapTest, count) {
 	ASSERT_EQ(sEmpty.count('a'), mEmpty.count('a'));
 	for (char i = 0; i < 126; ++i) {
 		ASSERT_EQ(sAlpha.count('a'), mAlpha.count('a'));
+	}
+}
+
+TEST_F(MapTest, lower_bound) {
+	sMap::iterator	s1 = sEmpty.lower_bound('a');
+	mMap::iterator	m1 = mEmpty.lower_bound('a');
+	ASSERT_EQ(s1 == sEmpty.end(), m1 == mEmpty.end());
+
+	for (char i = 0; i < 126; ++i) {
+		s1 = sAlpha.lower_bound(i);
+		m1 = mAlpha.lower_bound(i);
+
+		EXPECT_EQ(s1 == sAlpha.end(), m1 == mAlpha.end());
+		if (s1 != sAlpha.end()) {
+			ASSERT_EQ(s1->first, m1->first);
+		}
 	}
 }
