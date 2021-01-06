@@ -29,11 +29,16 @@ set(MAP_SRC
         ${SUPPORT}tree_node.hpp
         )
 
+set(DEQUE_SRC
+        ${TEMPLATE_DIR}deque.hpp
+        )
+
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
         ${LIST_SRC}
         ${VECTOR_SRC}
         ${MAP_SRC}
+        ${DEQUE_SRC}
         )
 
 add_executable(containers
