@@ -66,3 +66,7 @@ TEST(deque, construct_basic) {
 	sDec		s3(LARGE_SIZE, ANY);
 	mDec		m3(LARGE_SIZE, ANY);
 }
+
+TEST(deque, iterators_basic) {
+
+}

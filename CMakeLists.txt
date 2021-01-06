@@ -31,7 +31,7 @@ set(MAP_SRC
 
 set(DEQUE_SRC
         ${TEMPLATE_DIR}deque.hpp
-        ${SUPPORT}block_chain.hpp
+        ${SUPPORT}block_chain_iterators.hpp
         )
 
 set(SRCS
