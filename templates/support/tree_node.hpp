@@ -410,9 +410,9 @@ private:
 	static
 	const std::pair< TreeNode*, bool >
 					_insertStepBlock(TreeNode * const headNext,
-					 const std::pair< TreeNode*, bool > ret,
-					 const _link_type link,
-					 void (*endSet)(TreeNode * const, TreeNode * const)) {
+									 const std::pair< TreeNode*, bool > ret,
+									 const _link_type link,
+									 void (*endSet)(TreeNode * const, TreeNode * const)) {
 		if (ret.second) {
 			TreeNode * const	end = end::isEnd(headNext) ? headNext : nullptr;
 
@@ -426,7 +426,7 @@ private:
 		return ret;
 	}
 	static
-	TreeNode *		_fixUp(TreeNode * head) {
+	TreeNode *		_fixUp(TreeNode * head) _NOEXCEPT {
 		if (isRed(head->m_right)) {
 			head = _rotateLeft(head);
 		}
@@ -440,7 +440,7 @@ private:
 	}
 
 	static
-	TreeNode *		_moveRedLeft(TreeNode * head) {
+	TreeNode *		_moveRedLeft(TreeNode * head) _NOEXCEPT {
 		_flipColors(head);
 		if ( head->m_right && isRed(head->m_right->m_left) ) {
 			linkRight(head, _rotateRight(head->m_right));
@@ -450,7 +450,7 @@ private:
 		return head;
 	}
 	static
-	TreeNode *		_moveRedRight(TreeNode * head) {
+	TreeNode *		_moveRedRight(TreeNode * head) _NOEXCEPT {
 		_flipColors(head);
 		if ( head->m_left && isRed(head->m_left->m_left) ) {
 			head = _rotateRight(head);
@@ -466,7 +466,7 @@ private:
 	}
 	static
 	TreeNode *		_moveWholeNodeAndGetHead(TreeNode * const head,
-											   TreeNode * const minNode) {
+											 TreeNode * const minNode) {
 		minNode->m_color = head->m_color;
 
 		if (minNode->m_parent != head) {

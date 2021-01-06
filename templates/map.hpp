@@ -22,8 +22,6 @@
 
 namespace ft {
 
-/* todo: edd NOEXCEPT */
-
 #define _ENABLE_INPUT_ITERATOR_TYPE(type_name) \
 		typename std::enable_if< std::__is_input_iterator< type_name >::value,type_name >::type
 
@@ -94,39 +92,39 @@ public:
 	}
 
 	/* Iterators */
-	iterator				begin() {
+	iterator				begin() _NOEXCEPT {
 		return iterator(_tree::end::getFirst(m_end));
 	}
-	const_iterator			begin() const {
+	const_iterator			begin() const _NOEXCEPT {
 		return const_iterator(_tree::end::getFirst(m_end));
 	}
-	iterator				end() {
+	iterator				end() _NOEXCEPT {
 		return iterator(m_end);
 	}
-	const_iterator			end() const {
+	const_iterator			end() const _NOEXCEPT {
 		return const_iterator(m_end);
 	}
-	reverse_iterator		rbegin() {
+	reverse_iterator		rbegin() _NOEXCEPT {
 		return reverse_iterator(end());
 	}
-	const_reverse_iterator	rbegin() const {
+	const_reverse_iterator	rbegin() const _NOEXCEPT {
 		return const_reverse_iterator(end());
 	}
-	reverse_iterator		rend() {
+	reverse_iterator		rend() _NOEXCEPT {
 		return reverse_iterator(begin());
 	}
-	const_reverse_iterator	rend() const {
+	const_reverse_iterator	rend() const _NOEXCEPT {
 		return const_reverse_iterator(begin());
 	}
 
 	/* Capacity */
-	bool		empty() const {
+	bool		empty() const _NOEXCEPT {
 		return (m_size == 0);
 	}
-	size_type	size() const {
+	size_type	size() const _NOEXCEPT {
 		return m_size;
 	}
-	size_type	max_size() const {
+	size_type	max_size() const _NOEXCEPT {
 		return (static_cast<size_type>(-1) / sizeof(*m_end));
 	}
 
@@ -196,7 +194,7 @@ public:
 			erase(first++);
 		}
 	}
-	void			swap(map & x) {
+	void			swap(map & x) _NOEXCEPT {
 		ft::swap(m_end, x.m_end);
 		ft::swap(m_size, x.m_size);
 	}
@@ -206,15 +204,15 @@ public:
 	}
 
 	/* Observers */
-	key_compare		key_comp() const {
+	key_compare		key_comp() const _NOEXCEPT {
 		return mc_keyCompare;
 	}
-	value_compare	value_comp() const {
+	value_compare	value_comp() const _NOEXCEPT {
 		return mc_valueCompare;
 	}
 
 	/* Operations */
-	iterator		find(const key_type & k) {
+	iterator		find(const key_type & k) _NOEXCEPT {
 		_tree * const	found = _tree::findOrGetNull(
 			_tree::end::getRoot(m_end),
 			std::make_pair(k, mapped_type()),
@@ -222,7 +220,7 @@ public:
 		);
 		return iterator(found ? found : m_end);
 	}
-	const_iterator	find(const key_type & k) const {
+	const_iterator	find(const key_type & k) const _NOEXCEPT {
 		_tree * const	found = _tree::findOrGetNull(
 				_tree::end::getRoot(m_end),
 				std::make_pair(k, mapped_type()),
@@ -230,10 +228,10 @@ public:
 		);
 		return const_iterator(found ? found : m_end);
 	}
-	size_type		count(const key_type & k) const {
+	size_type		count(const key_type & k) const _NOEXCEPT {
 		return ( m_size == 0 || (find(k) == end()) ) ? 0 : 1;
 	}
-	iterator		lower_bound(const key_type & k) {
+	iterator		lower_bound(const key_type & k) _NOEXCEPT {
 		iterator	it	= begin();
 		iterator	ite	= end();
 
@@ -242,7 +240,7 @@ public:
 		}
 		return it;
 	}
-	const_iterator	lower_bound(const key_type & k) const {
+	const_iterator	lower_bound(const key_type & k) const _NOEXCEPT {
 		const_iterator	it	= begin();
 		const_iterator	ite	= end();
 
@@ -251,7 +249,7 @@ public:
 		}
 		return it;
 	}
-	iterator		upper_bound(const key_type & k) {
+	iterator		upper_bound(const key_type & k) _NOEXCEPT {
 		iterator	it = lower_bound(k);
 
 		if (it != end()
@@ -260,7 +258,7 @@ public:
 		}
 		return it;
 	}
-	const_iterator	upper_bound(const key_type & k) const {
+	const_iterator	upper_bound(const key_type & k) const _NOEXCEPT {
 		const_iterator	it = lower_bound(k);
 
 		if (it != end()
@@ -270,16 +268,16 @@ public:
 		return it;
 	}
 	std::pair< const_iterator, const_iterator >
-					equal_range(const key_type & k) const {
+					equal_range(const key_type & k) const _NOEXCEPT {
 		return std::make_pair(lower_bound(k), upper_bound(k));
 	}
 	std::pair< iterator, iterator >
-					equal_range(const key_type & k) {
+					equal_range(const key_type & k) _NOEXCEPT {
 		return std::make_pair(lower_bound(k), upper_bound(k));
 	}
 
 	/* Allocator */
-	allocator_type	get_allocator() const {
+	allocator_type	get_allocator() const _NOEXCEPT {
 		return m_valueAlloc;
 	}
 
@@ -300,7 +298,7 @@ private:
 	allocator_type		m_valueAlloc;
 	allocator_rebind	m_treeAlloc;
 
-	void	_rootToBlack() const {
+	void	_rootToBlack() const _NOEXCEPT {
 		_tree * const	root = _tree::end::getRoot(m_end);
 
 		if (_tree::isRed(root)) {
@@ -319,9 +317,10 @@ public:
 	typedef value_type	first_argument_type;
 	typedef value_type	second_argument_type;
 
-	value_compare(Compare c) : comp(c) {} /* todo: move to protected */
+	value_compare(Compare c) : comp(c) {}
 
-	bool operator()(const value_type & x, const value_type & y) const {
+	result_type operator()(const first_argument_type & x,
+						   const second_argument_type & y) const {
 		return comp(x.first, y.first);
 	}
 protected:

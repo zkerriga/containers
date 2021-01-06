@@ -7,11 +7,6 @@
 #include "map.hpp"
 #include "utils.hpp"
 
-#define INT_VALUE 1232349
-#define SIZE_T_VALUE 9000000000
-#define SIZE_LITTLE 5
-#define SIZE_LONG 34
-
 //#define DEBUG
 
 #ifdef DEBUG
@@ -25,7 +20,6 @@ using mMap		=  ft::map<char, Any>;
 using sPair		= std::pair<const char, Any>;
 using mTree		= TreeNode<sPair>;
 using treePair	= std::pair<mTree*, bool>;
-//using sAlloc	= std::allocator<Any>;
 
 char getRandAlpha() {
 	return static_cast<char>(random() % ('z' - 'a') + 'a');
