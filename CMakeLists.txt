@@ -31,8 +31,8 @@ set(MAP_SRC
 
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
-#        ${LIST_SRC}
-#        ${VECTOR_SRC}
+        ${LIST_SRC}
+        ${VECTOR_SRC}
         ${MAP_SRC}
         )
 
