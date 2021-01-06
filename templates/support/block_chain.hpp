@@ -17,7 +17,9 @@
 
 template <typename value_type, typename allocator_type>
 struct BlockChain {
-	typedef ft::list<ft::vector<value_type, allocator_type>, allocator_type> type;
+	typedef ft::vector<value_type, allocator_type>	block_type;
+	typedef ft::list<block_type, allocator_type>	chain_type;
+
 	static const size_t		blockSize = sizeof(value_type) < 256
 											? 4096 / sizeof(value_type)
 											: 16;

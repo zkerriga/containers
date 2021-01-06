@@ -17,6 +17,8 @@
 #include <stdexcept>
 
 #include "block_chain.hpp"
+#include <vector>
+#include <list>
 
 namespace ft {
 
@@ -43,8 +45,24 @@ public:
 	/* Initialize */
 	explicit deque(const allocator_type & alloc = allocator_type())
 		: m_size(0), m_capacity(0) {}
-//	explicit deque(size_type n, const value_type & val = value_type(),
-//				   const allocator_type & alloc = allocator_type());
+	explicit deque(size_type n, const value_type & val = value_type(),
+				   const allocator_type & alloc = allocator_type())
+		: m_size(n)
+	{
+		const size_type		numberOfFullBlocks = n / mc_blockSize;
+		const size_type		sizeOfNotFullBlock = n % mc_blockSize;
+		const block_type	defaultBlock(mc_blockSize, val);
+
+		m_capacity = (numberOfFullBlocks + (sizeOfNotFullBlock ? 1 : 0)) * mc_blockSize;
+		m_blockChain = chain_type(numberOfFullBlocks, defaultBlock);
+		if (sizeOfNotFullBlock) {
+			block_type	block = _getEmptyBlock();
+			for (size_type i = 0; i < sizeOfNotFullBlock; ++i) {
+				block.push_back(val);
+			}
+			m_blockChain.push_back(block);
+		}
+	}
 //	template <class InputIterator>
 //	deque(InputIterator first, InputIterator last,
 //		  const allocator_type & alloc = allocator_type());
@@ -99,11 +117,23 @@ public:
 //	allocator_type	get_allocator() const;
 
 private:
-	typedef BlockChain<value_type, allocator_type>	_bc;
+	typedef std::vector<value_type, allocator_type>	block_type; /* todo: заменить на ft */
+	typedef std::list<block_type, allocator_type>	chain_type; /* todo: заменить на ft */
+
+	static const size_type	mc_blockSize = sizeof(value_type) < 256
+											? 4096 / sizeof(value_type)
+											: 16;
 
 	size_type				m_size;
 	size_type				m_capacity;
-	typename _bc::type		m_blockChain;
+	chain_type				m_blockChain;
+
+	static
+	block_type				_getEmptyBlock() {
+		block_type	block;
+		block.resize(mc_blockSize);
+		return block;
+	}
 
 }; //class deque
 

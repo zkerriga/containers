@@ -2,6 +2,7 @@
 #include <iterator>
 #include <limits>
 #include <deque>
+#include "deque.hpp"
 
 #include "Any.hpp"
 
@@ -13,8 +14,12 @@
 #define D(x) {}
 #endif //ifdef DEBUG
 
+#define LITTLE_SIZE 5
+#define LARGE_SIZE 54
+#define ANY Any(42)
+
 using sDec		= std::deque<Any>;
-using mDec		= std::deque<Any>;
+using mDec		= ft::deque<Any>;
 
 TEST(deque, basic_types) {
 	Any	a;
@@ -27,8 +32,8 @@ TEST(deque, basic_types) {
 	mDec::const_pointer				s6;
 	mDec::iterator					s7;
 	mDec::const_iterator			s8;
-	mDec::reverse_iterator			s9;
-	mDec::const_reverse_iterator	s10;
+//	mDec::reverse_iterator			s9; /* todo: iterators */
+//	mDec::const_reverse_iterator	s10; /* todo iterators */
 	mDec::difference_type			s11;
 	mDec::size_type					s12;
 }
@@ -36,4 +41,10 @@ TEST(deque, basic_types) {
 TEST(deque, construct_basic) {
 	sDec		s1;
 	mDec		m1;
+
+	sDec		s2(LITTLE_SIZE);
+	mDec		m2(LITTLE_SIZE);
+
+	sDec		s3(LARGE_SIZE, ANY);
+	mDec		m3(LARGE_SIZE, ANY);
 }
