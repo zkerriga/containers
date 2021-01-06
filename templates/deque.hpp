@@ -16,8 +16,7 @@
 #include <type_traits>
 #include <stdexcept>
 
-#include "list.hpp"
-#include "vector.hpp"
+#include "block_chain.hpp"
 
 namespace ft {
 
@@ -42,7 +41,8 @@ public:
 	/* todo: iterators */
 
 	/* Initialize */
-//	explicit deque(const allocator_type & alloc = allocator_type());
+	explicit deque(const allocator_type & alloc = allocator_type())
+		: m_size(0), m_capacity(0) {}
 //	explicit deque(size_type n, const value_type & val = value_type(),
 //				   const allocator_type & alloc = allocator_type());
 //	template <class InputIterator>
@@ -97,6 +97,13 @@ public:
 
 	/* Allocator */
 //	allocator_type	get_allocator() const;
+
+private:
+	typedef BlockChain<value_type, allocator_type>	_bc;
+
+	size_type				m_size;
+	size_type				m_capacity;
+	typename _bc::type		m_blockChain;
 
 }; //class deque
 

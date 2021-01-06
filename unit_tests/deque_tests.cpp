@@ -16,13 +16,24 @@
 using sDec		= std::deque<Any>;
 using mDec		= std::deque<Any>;
 
-TEST(deque, test) {
-	sDec	s1;
+TEST(deque, basic_types) {
+	Any	a;
+
+	mDec::value_type				s1 = a;
+	mDec::allocator_type			s2;
+	mDec::reference					s3 = a;
+	mDec::const_reference			s4 = a;
+	mDec::pointer					s5;
+	mDec::const_pointer				s6;
+	mDec::iterator					s7;
+	mDec::const_iterator			s8;
+	mDec::reverse_iterator			s9;
+	mDec::const_reverse_iterator	s10;
+	mDec::difference_type			s11;
+	mDec::size_type					s12;
 }
 
-/*
-template <class _ValueType, class _DiffType>
-struct __deque_block_size {
-  static const _DiffType value = sizeof(_ValueType) < 256 ? 4096 / sizeof(_ValueType) : 16;
-};
-*/
+TEST(deque, construct_basic) {
+	sDec		s1;
+	mDec		m1;
+}
