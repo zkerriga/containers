@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <iterator>
-#include <limits>
 #include <deque>
+
 #include "deque.hpp"
 
 #include "Any.hpp"
@@ -15,7 +15,7 @@
 #endif //ifdef DEBUG
 
 #define LITTLE_SIZE 5
-#define LARGE_SIZE 54
+#define LARGE_SIZE 2167
 #define ANY Any(42)
 
 using sDec		= std::deque<Any>;

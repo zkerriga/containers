@@ -16,8 +16,9 @@
 #include <type_traits>
 #include <stdexcept>
 
-#include "block_chain.hpp"
-#include <vector>
+#include "vector.hpp"
+#include "list.hpp"
+#include <vector> /* todo: change types to ft */
 #include <list>
 
 namespace ft {
@@ -34,7 +35,12 @@ public:
 	typedef typename Alloc::const_pointer			const_pointer;
 	typedef std::ptrdiff_t							difference_type;
 	typedef std::size_t								size_type;
-
+private:
+	typedef std::vector<value_type, allocator_type>				block_type;
+	typedef typename allocator_type::template rebind<block_type>::other
+																allocator_rebind;
+	typedef std::list<block_type, allocator_rebind>				chain_type;
+public:
 	/* todo: iterators */
 	typedef int										iterator;
 	typedef int										const_iterator;
@@ -44,17 +50,23 @@ public:
 
 	/* Initialize */
 	explicit deque(const allocator_type & alloc = allocator_type())
-		: m_size(0), m_capacity(0) {}
+		: m_size(0), m_capacity(0),
+		  m_allocValue(alloc), m_allocBlock(alloc),
+		  m_blockChain(chain_type()) {}
 	explicit deque(size_type n, const value_type & val = value_type(),
 				   const allocator_type & alloc = allocator_type())
-		: m_size(n)
+		: m_size(n), m_capacity(0),
+		  m_allocValue(alloc), m_allocBlock(alloc),
+		  m_blockChain(chain_type(alloc))
 	{
 		const size_type		numberOfFullBlocks = n / mc_blockSize;
 		const size_type		sizeOfNotFullBlock = n % mc_blockSize;
-		const block_type	defaultBlock(mc_blockSize, val);
 
 		m_capacity = (numberOfFullBlocks + (sizeOfNotFullBlock ? 1 : 0)) * mc_blockSize;
-		m_blockChain = chain_type(numberOfFullBlocks, defaultBlock);
+		if (numberOfFullBlocks) {
+			const block_type	defaultBlock(mc_blockSize, val, m_allocValue);
+			m_blockChain = chain_type(numberOfFullBlocks, defaultBlock, m_allocBlock);
+		}
 		if (sizeOfNotFullBlock) {
 			block_type	block = _getEmptyBlock();
 			for (size_type i = 0; i < sizeOfNotFullBlock; ++i) {
@@ -117,21 +129,20 @@ public:
 //	allocator_type	get_allocator() const;
 
 private:
-	typedef std::vector<value_type, allocator_type>	block_type; /* todo: заменить на ft */
-	typedef std::list<block_type, allocator_type>	chain_type; /* todo: заменить на ft */
-
 	static const size_type	mc_blockSize = sizeof(value_type) < 256
 											? 4096 / sizeof(value_type)
 											: 16;
 
 	size_type				m_size;
 	size_type				m_capacity;
+	allocator_type			m_allocValue;
+	allocator_rebind		m_allocBlock;
 	chain_type				m_blockChain;
 
-	static
+private:
 	block_type				_getEmptyBlock() {
-		block_type	block;
-		block.resize(mc_blockSize);
+		block_type	block(m_allocValue);
+		block.reserve(mc_blockSize);
 		return block;
 	}
 
