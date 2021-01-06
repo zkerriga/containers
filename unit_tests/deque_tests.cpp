@@ -38,6 +38,24 @@ TEST(deque, basic_types) {
 	mDec::size_type					s12;
 }
 
+void	assertDeque(const sDec & sM, const mDec & mM) {
+	ASSERT_EQ(sM.size(), mM.size());
+	ASSERT_EQ(sM.empty(), mM.empty());
+
+	sDec::const_iterator	sIt		= sM.begin();
+	sDec::const_iterator	sIte	= sM.end();
+	mDec::const_iterator	mIt		= mM.begin();
+	mDec::const_iterator	mIte	= mM.end();
+
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
+
 TEST(deque, construct_basic) {
 	sDec		s1;
 	mDec		m1;

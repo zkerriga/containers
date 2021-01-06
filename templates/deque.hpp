@@ -93,10 +93,14 @@ public:
 //	const_reverse_iterator	rend() const;
 
 	/* Capacity */
-//	size_type	size() const;
+	size_type	size() const {
+		return m_size;
+	}
 //	size_type	max_size() const;
 //	void		resize(size_type n, value_type val = value_type());
-//	bool		empty() const;
+	bool		empty() const {
+		return (m_size == 0);
+	}
 
 	/* Element access */
 //	reference			operator[](size_type n);
