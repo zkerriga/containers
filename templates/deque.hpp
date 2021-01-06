@@ -21,6 +21,8 @@
 #include <vector> /* todo: change types to ft */
 #include <list>
 
+#include "block_chain_iterators.hpp"
+
 namespace ft {
 
 template < class T, class Alloc = std::allocator<T> >
@@ -41,8 +43,8 @@ private:
 																allocator_rebind;
 	typedef std::list<block_type, allocator_rebind>				chain_type;
 public:
+	typedef DequeIterator<typename chain_type::iterator,value_type>		iterator;
 	/* todo: iterators */
-	typedef int										iterator;
 	typedef int										const_iterator;
 	typedef std::reverse_iterator<iterator>			reverse_iterator;
 	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
@@ -83,9 +85,16 @@ public:
 //	deque & operator= (const deque & x);
 
 	/* Iterators */
-//	iterator				begin();
+	iterator				begin() {
+		static const size_type	firstIndex = 0;
+		return iterator(mc_blockSize, firstIndex, firstIndex, m_blockChain.begin());
+	}
 //	const_iterator			begin() const;
-//	iterator				end();
+	iterator				end() {
+		static const size_type	blockIndex = 0;
+		const size_type			lastChainIndex = m_blockChain.size() - 1;
+		return iterator(mc_blockSize, lastChainIndex, blockIndex, m_blockChain.end());
+	}
 //	const_iterator			end() const;
 //	reverse_iterator		rbegin();
 //	const_reverse_iterator	rbegin() const;

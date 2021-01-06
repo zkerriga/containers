@@ -38,14 +38,14 @@ TEST(deque, basic_types) {
 	mDec::size_type					s12;
 }
 
-void	assertDeque(const sDec & sM, const mDec & mM) {
+void	assertDequeEQ(sDec & sM, mDec & mM) {
 	ASSERT_EQ(sM.size(), mM.size());
 	ASSERT_EQ(sM.empty(), mM.empty());
 
-	sDec::const_iterator	sIt		= sM.begin();
-	sDec::const_iterator	sIte	= sM.end();
-	mDec::const_iterator	mIt		= mM.begin();
-	mDec::const_iterator	mIte	= mM.end();
+	sDec::iterator	sIt		= sM.begin();
+	sDec::iterator	sIte	= sM.end();
+	mDec::iterator	mIt		= mM.begin();
+	mDec::iterator	mIte	= mM.end();
 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 	while (sIt != sIte && mIt != mIte) {
@@ -62,11 +62,14 @@ TEST(deque, construct_basic) {
 
 	sDec		s2(LITTLE_SIZE);
 	mDec		m2(LITTLE_SIZE);
+	assertDequeEQ(s2, m2);
 
 	sDec		s3(LARGE_SIZE, ANY);
 	mDec		m3(LARGE_SIZE, ANY);
+	assertDequeEQ(s3, m3);
 }
 
 TEST(deque, iterators_basic) {
-
+	sDec::iterator		s1;
+	mDec::iterator		m1;
 }
