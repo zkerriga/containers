@@ -699,4 +699,48 @@ TEST_F(MapTest, lower_bound) {
 			ASSERT_EQ(s1->first, m1->first);
 		}
 	}
+
+	sMap::const_iterator	s2 = sEmpty.lower_bound('a');
+	mMap::const_iterator	m2 = mEmpty.lower_bound('a');
+	ASSERT_EQ(s2 == sEmpty.end(), m2 == mEmpty.end());
+
+	for (char i = 0; i < 126; ++i) {
+		s2 = sAlpha.lower_bound(i);
+		m2 = mAlpha.lower_bound(i);
+
+		EXPECT_EQ(s2 == sAlpha.end(), m2 == mAlpha.end());
+		if (s2 != sAlpha.end()) {
+			ASSERT_EQ(s2->first, m2->first);
+		}
+	}
+}
+
+TEST_F(MapTest, upper_bound) {
+	sMap::iterator	s1 = sEmpty.upper_bound('a');
+	mMap::iterator	m1 = mEmpty.upper_bound('a');
+	ASSERT_EQ(s1 == sEmpty.end(), m1 == mEmpty.end());
+
+	for (char i = 0; i < 126; ++i) {
+		s1 = sAlpha.upper_bound(i);
+		m1 = mAlpha.upper_bound(i);
+
+		EXPECT_EQ(s1 == sAlpha.end(), m1 == mAlpha.end());
+		if (s1 != sAlpha.end()) {
+			EXPECT_EQ(s1->first, m1->first);
+		}
+	}
+
+	sMap::const_iterator	s2 = sEmpty.upper_bound('a');
+	mMap::const_iterator	m2 = mEmpty.upper_bound('a');
+	ASSERT_EQ(s2 == sEmpty.end(), m2 == mEmpty.end());
+
+	for (char i = 0; i < 126; ++i) {
+		s2 = sAlpha.upper_bound(i);
+		m2 = mAlpha.upper_bound(i);
+
+		EXPECT_EQ(s2 == sAlpha.end(), m2 == mAlpha.end());
+		if (s2 != sAlpha.end()) {
+			EXPECT_EQ(s2->first, m2->first);
+		}
+	}
 }

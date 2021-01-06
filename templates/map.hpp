@@ -242,9 +242,33 @@ public:
 		}
 		return it;
 	}
-//	const_iterator	lower_bound(const key_type & k) const;
-//	iterator		upper_bound(const key_type & k);
-//	const_iterator	upper_bound(const key_type & k) const;
+	const_iterator	lower_bound(const key_type & k) const {
+		const_iterator	it	= begin();
+		const_iterator	ite	= end();
+
+		while (it != ite && mc_keyCompare(it->first, k)) {
+			++it;
+		}
+		return it;
+	}
+	iterator		upper_bound(const key_type & k) {
+		iterator	it = lower_bound(k);
+
+		if (it != end()
+			&& !mc_keyCompare(it->first, k) && !mc_keyCompare(k, it->first)) {
+			++it;
+		}
+		return it;
+	}
+	const_iterator	upper_bound(const key_type & k) const {
+		const_iterator	it = lower_bound(k);
+
+		if (it != end()
+			&& !mc_keyCompare(it->first, k) && !mc_keyCompare(k, it->first)) {
+			++it;
+		}
+		return it;
+	}
 //	std::pair< const_iterator, const_iterator >
 //					equal_range(const key_type & k) const;
 //	std::pair< iterator, iterator >
