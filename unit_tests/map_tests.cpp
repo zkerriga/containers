@@ -744,3 +744,21 @@ TEST_F(MapTest, upper_bound) {
 		}
 	}
 }
+
+TEST_F(MapTest, equal_range) {
+	auto	s1 = sEmpty.equal_range('m');
+	auto	m1 = mEmpty.equal_range('m');
+	ASSERT_EQ(s1.first == sEmpty.end(), m1.first == mEmpty.end());
+	ASSERT_EQ(s1.second == sEmpty.end(), m1.second == mEmpty.end());
+
+	for (char i = 0; i < 126; ++i) {
+		auto s2 = sAlpha.equal_range(i);
+		auto m2 = mAlpha.equal_range(i);
+		ASSERT_EQ(s2.first == sAlpha.end(), m2.first == mAlpha.end());
+		ASSERT_EQ(s2.second == sAlpha.end(), m2.second == mAlpha.end());
+		if (s2.first != sAlpha.end() && s2.second != sAlpha.end()) {
+			ASSERT_EQ(s2.first->first, m2.first->first);
+			ASSERT_EQ(s2.first->second, m2.first->second);
+		}
+	}
+}

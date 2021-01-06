@@ -269,10 +269,14 @@ public:
 		}
 		return it;
 	}
-//	std::pair< const_iterator, const_iterator >
-//					equal_range(const key_type & k) const;
-//	std::pair< iterator, iterator >
-//					equal_range(const key_type & k);
+	std::pair< const_iterator, const_iterator >
+					equal_range(const key_type & k) const {
+		return std::make_pair(lower_bound(k), upper_bound(k));
+	}
+	std::pair< iterator, iterator >
+					equal_range(const key_type & k) {
+		return std::make_pair(lower_bound(k), upper_bound(k));
+	}
 
 	/* Allocator */
 	allocator_type	get_allocator() const {
