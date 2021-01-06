@@ -26,7 +26,9 @@ public:
 	typedef chain_iterator_type		chain_iterator;
 	typedef size_t					size_type;
 public:
-	DequeIterator() {}
+	DequeIterator()
+		: mc_maxBlockSize(0), m_chainIndex(0),
+		  m_blockIndex(0), m_chainIterator() {}
 	DequeIterator(const DequeIterator & x)
 		: mc_maxBlockSize(x.mc_maxBlockSize), m_chainIndex(x.m_chainIndex),
 		  m_blockIndex(x.m_blockIndex), m_chainIterator(x.m_chainIterator) {}
@@ -52,14 +54,27 @@ public:
 		return &(*m_chainIterator)[m_blockIndex];
 	}
 
-	_reference			operator[](_difference_type n) const;
+	_reference			operator[](_difference_type n) const {
+		/* todo: [] */
+		return operator*(); /* todo: delete */
+	}
 
-	DequeIterator		operator+ (_difference_type n) const;
-	DequeIterator		operator- (_difference_type n) const;
+	DequeIterator		operator+ (_difference_type n) const {
+		DequeIterator	it(*this);
+
+		it += n;
+		return it;
+	}
+	DequeIterator		operator- (_difference_type n) const {
+		DequeIterator	it(*this);
+
+		it -= n;
+		return it;
+	}
 
 	DequeIterator &		operator++() {
 		++m_blockIndex;
-		if (m_blockIndex == mc_maxBlockSize) {
+		if (m_blockIndex == (*m_chainIterator).size()) {
 			m_blockIndex = 0;
 			++m_chainIndex;
 			++m_chainIterator;
@@ -88,8 +103,14 @@ public:
 		return save;
 	}
 
-	DequeIterator &		operator+=(_difference_type n);
-	DequeIterator &		operator-=(_difference_type n);
+	DequeIterator &		operator+=(_difference_type n) {
+		/* todo: += */
+		return *this;
+	}
+	DequeIterator &		operator-=(_difference_type n) {
+		*this += -n;
+		return *this;
+	}
 
 	bool				operator==(const DequeIterator & other) {
 		return (m_chainIndex == other.m_chainIndex && m_blockIndex == other.m_blockIndex);

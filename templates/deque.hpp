@@ -92,7 +92,7 @@ public:
 //	const_iterator			begin() const;
 	iterator				end() {
 		static const size_type	blockIndex = 0;
-		const size_type			lastChainIndex = m_blockChain.size() - 1;
+		const size_type			lastChainIndex = m_blockChain.size();
 		return iterator(mc_blockSize, lastChainIndex, blockIndex, m_blockChain.end());
 	}
 //	const_iterator			end() const;

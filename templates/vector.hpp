@@ -320,6 +320,7 @@ private:
 
 }; //class vector
 
+#undef _ENABLE_INPUT_ITERATOR_TYPE
 
 /* Non-member function overloads */
 template < class T, class Alloc >
