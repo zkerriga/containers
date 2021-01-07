@@ -208,7 +208,7 @@ public:
 		_balance();
 	}
 	iterator	insert(iterator position, const value_type & val) {
-		difference_type		diff = position - begin();
+		const difference_type		diff = position - begin();
 
 		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
 		m_reverse.clear();
@@ -217,7 +217,7 @@ public:
 		return begin() + diff;
 	}
 	void		insert(iterator position, size_type n, const value_type & val) {
-		difference_type		diff = position - begin();
+		const difference_type		diff = position - begin();
 
 		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
 		m_reverse.clear();
@@ -227,15 +227,35 @@ public:
 	template <class InputIterator>
 	void		insert(iterator position,
 					   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) first, InputIterator last) {
-		difference_type		diff = position - begin();
+		const difference_type		diff = position - begin();
 
 		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
 		m_reverse.clear();
 		m_direct.insert(m_direct.begin() + diff, first, last);
 		_balance();
 	}
-//	iterator	erase(iterator position);
-//	iterator	erase(iterator first, iterator last);
+	iterator	erase(iterator position) {
+		const difference_type		diff = position - begin();
+
+		if (diff > m_reverse.size()) {
+			m_direct.erase(m_direct.begin() + (diff - m_reverse.size()));
+		}
+		else {
+			m_reverse.erase(m_reverse.begin() + (m_reverse.size() - diff - 1));
+		}
+		_balance();
+		return begin() + diff;
+	}
+	iterator	erase(iterator first, iterator last) {
+		const difference_type		diff1 = first - begin();
+		const difference_type		diff2 = last - begin();
+
+		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
+		m_reverse.clear();
+		m_direct.erase(m_direct.begin() + diff1, m_direct.begin() + diff2);
+		_balance();
+		return begin() + diff2;
+	}
 //	void		swap(deque & x);
 	void		clear() {
 		m_reverse.clear();

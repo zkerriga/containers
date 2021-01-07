@@ -193,7 +193,7 @@ public:
 			return (x.m_isReverse ? (x.m_rIt - y.m_rIt) : (x.m_dIt - y.m_dIt));
 		}
 		if (x.m_isReverse) {
-			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_direct->end() - y.m_dIt));
+			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_dIt - y.m_direct->begin()));
 		}
 		return (x.m_dIt - x.m_direct->begin()) + (y.m_reverse->rend() - y.m_rIt);
 	}

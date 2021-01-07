@@ -732,3 +732,26 @@ TEST_F(DeqTest, insert) {
 	m1.insert(--m1.end(), sRando.begin(), sRando.end());
 	assertDequeEQ(s1, m1);
 }
+
+TEST_F(DeqTest, erase) {
+	sDeq		s1(sAlpha);
+	mDeq		m1(mAlpha);
+
+	ASSERT_EQ(
+		s1.erase(++s1.begin())->getInt(),
+		m1.erase(++m1.begin())->getInt()
+	);
+	assertDequeEQ(s1, m1);
+
+	ASSERT_EQ(
+			s1.erase(--(--s1.end()))->getInt(),
+			m1.erase(--(--m1.end()))->getInt()
+	);
+	assertDequeEQ(s1, m1);
+
+	ASSERT_EQ(
+		s1.erase(++s1.begin(), --s1.end())->getInt(),
+		m1.erase(++m1.begin(), --m1.end())->getInt()
+	);
+	assertDequeEQ(s1, m1);
+}
