@@ -591,3 +591,51 @@ TEST_F(DeqTest, resize) {
 	m1.resize(1);
 	assertDequeEQ(s1, m1);
 }
+
+TEST_F(DeqTest, operator_at) {
+	ASSERT_EQ(sAlpha[10].getInt(), mAlpha[10].getInt());
+	ASSERT_EQ(sAlpha[1].getInt(), mAlpha[1].getInt());
+	ASSERT_EQ(sAlpha[0].getInt(), mAlpha[0].getInt());
+	ASSERT_EQ(sAlpha[sAlpha.size() - 1].getInt(), mAlpha[mAlpha.size() - 1].getInt());
+	for (size_t i = 0; i < sRando.size(); ++i) {
+		ASSERT_EQ(sRando[i], mRando[i]);
+	}
+}
+
+TEST_F(DeqTest, at) {
+	try {
+		mAlpha.at(100);
+		FAIL();
+	}
+	catch (std::out_of_range &) {
+		SUCCEED();
+	}
+	catch (...) {
+		FAIL();
+	}
+	try {
+		mAlpha.at(27);
+		FAIL();
+	}
+	catch (std::out_of_range &) {
+		SUCCEED();
+	}
+	catch (...) {
+		FAIL();
+	}
+	for (size_t i = 0; i < sRando.size(); ++i) {
+		ASSERT_EQ(sRando.at(i), mRando.at(i));
+	}
+}
+
+TEST_F(DeqTest, front_and_back) {
+	ASSERT_EQ(sAlpha.front(), mAlpha.front());
+	ASSERT_EQ(sRando.front(), mRando.front());
+	ASSERT_EQ(sRando.back(), mRando.back());
+	ASSERT_EQ(sAlpha.back(), mAlpha.back());
+
+	sAlpha.resize(LARGE_SIZE, ANY);
+	mAlpha.resize(LARGE_SIZE, ANY);
+	ASSERT_EQ(sAlpha.front(), mAlpha.front());
+	ASSERT_EQ(sAlpha.back(), mAlpha.back());
+}

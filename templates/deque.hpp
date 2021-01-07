@@ -119,10 +119,10 @@ public:
 	}
 
 	/* Capacity */
-	size_type	size() const {
+	size_type	size() const _NOEXCEPT {
 		return (m_direct.size() + m_reverse.size());
 	}
-	size_type	max_size() const {
+	size_type	max_size() const _NOEXCEPT {
 		return (static_cast<size_type>(-1) / sizeof(value_type));
 	}
 	void		resize(size_type n, value_type val = value_type()) {
@@ -131,19 +131,47 @@ public:
 		m_direct.resize(n, val);
 		_balance();
 	}
-	bool		empty() const {
+	bool		empty() const _NOEXCEPT {
 		return (size() == 0);
 	}
 
 	/* Element access */
-//	reference			operator[](size_type n);
-//	const_reference		operator[](size_type n) const;
-//	reference			at(size_type n);
-//	const_reference		at(size_type n) const;
-//	reference			front();
-//	const_reference		front() const;
-//	reference			back();
-//	const_reference		back() const;
+	reference			operator[](size_type n) _NOEXCEPT {
+		if (n < m_reverse.size()) {
+			return m_reverse[m_reverse.size() - n - 1];
+		}
+		return m_direct[n - m_reverse.size()];
+	}
+	const_reference		operator[](size_type n) const _NOEXCEPT {
+		if (n < m_reverse.size()) {
+			return m_reverse[m_reverse.size() - n - 1];
+		}
+		return m_direct[n - m_reverse.size()];
+	}
+	reference			at(size_type n) {
+		if (n >= size()) {
+			throw std::out_of_range("Incorrect index!");
+		}
+		return operator[](n);
+	}
+	const_reference		at(size_type n) const {
+		if (n >= size()) {
+			throw std::out_of_range("Incorrect index!");
+		}
+		return operator[](n);
+	}
+	reference			front() {
+		return (m_reverse.empty() ? m_direct.front() : m_reverse.back());
+	}
+	const_reference		front() const {
+		return (m_reverse.empty() ? m_direct.front() : m_reverse.back());
+	}
+	reference			back() {
+		return m_direct.back();
+	}
+	const_reference		back() const {
+		return m_direct.back();
+	}
 
 	/* Modifiers */
 //	template <class InputIterator>
