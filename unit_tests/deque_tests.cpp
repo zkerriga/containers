@@ -661,3 +661,57 @@ TEST_F(DeqTest, clear) {
 	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
 	ASSERT_EQ(sRando.empty(), mRando.empty());
 }
+
+TEST_F(DeqTest, push) {
+	sDeq		s1(sEmpty);
+	mDeq		m1(mEmpty);
+
+	s1.push_back(ANY);			m1.push_back(ANY);
+	assertDequeEQ(s1, m1);
+	s1.push_back(Any());		m1.push_back(Any());
+	assertDequeEQ(s1, m1);
+	s1.push_front(Any(1));		m1.push_front(Any(1));
+	assertDequeEQ(s1, m1);
+	s1.push_front(Any(2));		m1.push_front(Any(2));
+	assertDequeEQ(s1, m1);
+	s1.push_back(Any(3));		m1.push_back(Any(3));
+	assertDequeEQ(s1, m1);
+	s1.push_front(Any(4));		m1.push_front(Any(4));
+	assertDequeEQ(s1, m1);
+	s1.push_back(Any(5));		m1.push_back(Any(5));
+	assertDequeEQ(s1, m1);
+}
+
+TEST_F(DeqTest, pop) {
+	sDeq		s1(sAlpha);
+	mDeq		m1(mAlpha);
+
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+	s1.pop_front();		m1.pop_front();
+	assertDequeEQ(s1, m1);
+	s1.pop_front();		m1.pop_front();
+	assertDequeEQ(s1, m1);
+	s1.pop_front();		m1.pop_front();
+	assertDequeEQ(s1, m1);
+	s1.pop_front();		m1.pop_front();
+	assertDequeEQ(s1, m1);
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+	s1.pop_front();		m1.pop_front();
+	assertDequeEQ(s1, m1);
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+	s1.pop_back();		m1.pop_back();
+	assertDequeEQ(s1, m1);
+
+	s1.clear();				m1.clear();
+	s1.push_back(ANY);		m1.push_back(ANY);
+	s1.push_back(Any());	m1.push_back(Any());
+	s1.pop_front();			m1.pop_front();
+	assertDequeEQ(s1, m1);
+}

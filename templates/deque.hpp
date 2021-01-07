@@ -194,8 +194,19 @@ public:
 		m_reverse.push_back(val);
 		_balance();
 	}
-//	void		pop_back();
-//	void		pop_front();
+	void		pop_back() {
+		m_direct.pop_back();
+		_balance();
+	}
+	void		pop_front() {
+		if (m_reverse.empty()) {
+			m_direct.erase(m_direct.begin());
+		}
+		else {
+			m_reverse.pop_back();
+		}
+		_balance();
+	}
 //	iterator	insert(iterator position, const value_type & val);
 //	void		insert(iterator position, size_type n, const value_type & val);
 //	template <class InputIterator>
