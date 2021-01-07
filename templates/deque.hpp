@@ -38,13 +38,10 @@ public:
 	typedef std::ptrdiff_t							difference_type;
 	typedef std::size_t								size_type;
 private:
-	typedef std::vector<value_type, allocator_type>				block_type;
-	typedef typename allocator_type::template rebind<block_type>::other
-																allocator_rebind;
-	typedef std::list<block_type, allocator_rebind>				chain_type;
+	typedef std::vector<value_type>					vector_type;
 public:
-	typedef DequeIterator<typename chain_type::iterator,value_type>		iterator;
 	/* todo: iterators */
+	typedef int										iterator;
 	typedef int										const_iterator;
 	typedef std::reverse_iterator<iterator>			reverse_iterator;
 	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
@@ -52,31 +49,10 @@ public:
 
 	/* Initialize */
 	explicit deque(const allocator_type & alloc = allocator_type())
-		: m_size(0), m_capacity(0),
-		  m_allocValue(alloc), m_allocBlock(alloc),
-		  m_blockChain(chain_type()) {}
+		: m_direct(alloc), m_reverse(alloc) {}
 	explicit deque(size_type n, const value_type & val = value_type(),
 				   const allocator_type & alloc = allocator_type())
-		: m_size(n), m_capacity(0),
-		  m_allocValue(alloc), m_allocBlock(alloc),
-		  m_blockChain(chain_type(alloc))
-	{
-		const size_type		numberOfFullBlocks = n / mc_blockSize;
-		const size_type		sizeOfNotFullBlock = n % mc_blockSize;
-
-		m_capacity = (numberOfFullBlocks + (sizeOfNotFullBlock ? 1 : 0)) * mc_blockSize;
-		if (numberOfFullBlocks) {
-			const block_type	defaultBlock(mc_blockSize, val, m_allocValue);
-			m_blockChain = chain_type(numberOfFullBlocks, defaultBlock, m_allocBlock);
-		}
-		if (sizeOfNotFullBlock) {
-			block_type	block = _getEmptyBlock();
-			for (size_type i = 0; i < sizeOfNotFullBlock; ++i) {
-				block.push_back(val);
-			}
-			m_blockChain.push_back(block);
-		}
-	}
+		: m_direct(n / 2, val, alloc), m_reverse(n - n / 2, val, alloc) {}
 //	template <class InputIterator>
 //	deque(InputIterator first, InputIterator last,
 //		  const allocator_type & alloc = allocator_type());
@@ -85,16 +61,9 @@ public:
 //	deque & operator= (const deque & x);
 
 	/* Iterators */
-	iterator				begin() {
-		static const size_type	firstIndex = 0; /* todo: не ноль, можно добавить неполную ноду */
-		return iterator(mc_blockSize, firstIndex, firstIndex, m_blockChain.begin());
-	}
+//	iterator				begin();
 //	const_iterator			begin() const;
-	iterator				end() {
-		static const size_type	blockIndex = 0;
-		const size_type			lastChainIndex = m_blockChain.size();
-		return iterator(mc_blockSize, lastChainIndex, blockIndex, m_blockChain.end());
-	}
+//	iterator				end();
 //	const_iterator			end() const;
 //	reverse_iterator		rbegin();
 //	const_reverse_iterator	rbegin() const;
@@ -103,12 +72,12 @@ public:
 
 	/* Capacity */
 	size_type	size() const {
-		return m_size;
+		return m_direct.size() + m_direct.size();
 	}
 //	size_type	max_size() const;
 //	void		resize(size_type n, value_type val = value_type());
 	bool		empty() const {
-		return (m_size == 0);
+		return (size() == 0);
 	}
 
 	/* Element access */
@@ -142,23 +111,8 @@ public:
 //	allocator_type	get_allocator() const;
 
 private:
-	static const size_type	mc_blockSize = sizeof(value_type) < 256
-											? 4096 / sizeof(value_type)
-											: 16;
-
-	size_type				m_size;
-	size_type				m_capacity;
-	allocator_type			m_allocValue;
-	allocator_rebind		m_allocBlock;
-	chain_type				m_blockChain;
-
-private:
-	block_type				_getEmptyBlock() {
-		block_type	block(m_allocValue);
-		block.reserve(mc_blockSize);
-		return block;
-	}
-
+	vector_type				m_direct;	/* The end of the vector is the end   of the deque */
+	vector_type				m_reverse;	/* The end of the vector is the begin of the deque */
 }; //class deque
 
 /* todo: operators */
