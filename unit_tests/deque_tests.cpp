@@ -51,7 +51,7 @@ void	assertDequeEQ(sDeq & sM, mDeq & mM) {
 	++sIt; --sIt;
 	++mIt; --mIt;
 	while (sIt != sIte && mIt != mIte) {
-		EXPECT_EQ(*sIt, *mIt);
+		EXPECT_EQ(sIt->getInt(), mIt->getInt());
 		++sIt;
 		++mIt;
 	}
@@ -328,6 +328,7 @@ TEST_F(DeqTest, iterator_random_access) {
 	ASSERT_EQ(s1[0], m1[0]);
 	ASSERT_EQ(s1[1], m1[1]);
 	ASSERT_EQ(s1[3], m1[3]);
+	ASSERT_EQ(s1[10].getInt(), m1[10].getInt());
 	ASSERT_EQ(s1[-1], m1[-1]);
 	ASSERT_EQ(s1->getInt(), m1->getInt());
 
@@ -487,6 +488,7 @@ TEST_F(DeqTest, reverse_iterator_random_access) {
 	ASSERT_EQ(s1[0], m1[0]);
 	ASSERT_EQ(s1[1], m1[1]);
 	ASSERT_EQ(s1[3], m1[3]);
+	ASSERT_EQ(s1[10], m1[10]);
 	ASSERT_EQ(s1[-1], m1[-1]);
 	ASSERT_EQ(s1->getInt(), m1->getInt());
 
@@ -571,4 +573,21 @@ TEST_F(DeqTest, empty) {
 	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
 	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
 	ASSERT_EQ(sRando.empty(), mRando.empty());
+}
+
+TEST_F(DeqTest, resize) {
+	sDeq		s1(sAlpha);
+	mDeq		m1(mAlpha);
+
+	s1.resize(LARGE_SIZE);
+	m1.resize(LARGE_SIZE);
+	assertDequeEQ(s1, m1);
+
+	s1.resize(2 * LARGE_SIZE, ANY);
+	m1.resize(2 * LARGE_SIZE, ANY);
+	assertDequeEQ(s1, m1);
+
+	s1.resize(1);
+	m1.resize(1);
+	assertDequeEQ(s1, m1);
 }

@@ -78,11 +78,19 @@ public:
 
 	/* Iterators */
 	iterator				begin() _NOEXCEPT {
+		if (m_reverse.empty()) {
+			return iterator(false, &m_direct, &m_reverse,
+							m_direct.begin(), m_reverse.rend());
+		}
 		vector_reverse_iterator		rIt = m_reverse.rbegin();
 		return iterator(true, &m_direct, &m_reverse,
 						m_direct.end(), rIt);
 	}
 	const_iterator			begin() const _NOEXCEPT {
+		if (m_reverse.empty()) {
+			return iterator(false, &m_direct, &m_reverse,
+							m_direct.begin(), m_reverse.rend());
+		}
 		typename vector_type::const_reverse_iterator	rIt = m_reverse.rbegin();
 		return const_iterator(true, &m_direct, &m_reverse,
 						m_direct.end(), rIt);
@@ -117,7 +125,12 @@ public:
 	size_type	max_size() const {
 		return (static_cast<size_type>(-1) / sizeof(value_type));
 	}
-//	void		resize(size_type n, value_type val = value_type());
+	void		resize(size_type n, value_type val = value_type()) {
+		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
+		m_reverse.clear();
+		m_direct.resize(n, val);
+		_balance();
+	}
 	bool		empty() const {
 		return (size() == 0);
 	}
