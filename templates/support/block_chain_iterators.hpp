@@ -64,7 +64,7 @@ public:
 		}
 		return getMove(false, it, -n, m_blockIndex);
 	}
-	static
+/*	static
 	_reference		getMove(bool isInc,
 							chain_iterator_type & it,
 							const size_type n,
@@ -79,10 +79,10 @@ public:
 		if (currentBlockIndex + n >= size) {
 			return getMove(isInc, isInc ? ++it : --it, 0, currentBlockIndex + n - (isInc ? size : 1));
 		}
-		if (currentBlockIndex + n < size) { /* todo: decrease */
+		if (currentBlockIndex + n < size) { *//* todo: decrease *//*
 			return getMove(isInc, isInc ? ++it : --it, 0, currentBlockIndex + (isInc ? n : -n));
 		}
-	}
+	}*/
 /*	_reference			_operatorHelperMinus(_difference_type n) const {
 		_difference_type	deltaChainSteps	= (mc_maxBlockSize - m_blockIndex - n) / mc_maxBlockSize;
 		_difference_type	resultIndex		= mc_maxBlockSize + (m_blockIndex - (n % mc_maxBlockSize));
