@@ -45,12 +45,10 @@ private:
 	typedef typename vector_type::iterator			vector_iterator;
 	typedef typename vector_type::reverse_iterator	vector_reverse_iterator;
 public:
-	typedef DequeIterator<vector_type,value_type>	iterator;
-	/* todo: iterators */
-	typedef int										const_iterator;
+	typedef DequeIterator<value_type>				iterator;
+	typedef DequeConstIterator<value_type>			const_iterator;
 	typedef std::reverse_iterator<iterator>			reverse_iterator;
 	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
-	/* todo: iterators */
 
 	/* Initialize */
 	explicit deque(const allocator_type & alloc = allocator_type())
@@ -79,20 +77,38 @@ public:
 	}
 
 	/* Iterators */
-	iterator				begin() {
+	iterator				begin() _NOEXCEPT {
+		vector_reverse_iterator		rIt = m_reverse.rbegin();
 		return iterator(true, &m_direct, &m_reverse,
-						m_direct.end(), m_reverse.rbegin());
+						m_direct.end(), rIt);
 	}
-//	const_iterator			begin() const;
-	iterator				end() {
+	const_iterator			begin() const _NOEXCEPT {
+		typename vector_type::const_reverse_iterator	rIt = m_reverse.rbegin();
+		return const_iterator(true, &m_direct, &m_reverse,
+						m_direct.end(), rIt);
+	}
+	iterator				end() _NOEXCEPT {
+		vector_iterator				it = m_direct.end();
 		return iterator(false, &m_direct, &m_reverse,
-						m_direct.end(), m_reverse.rend());
+						it, m_reverse.rend());
 	}
-//	const_iterator			end() const;
-//	reverse_iterator		rbegin();
-//	const_reverse_iterator	rbegin() const;
-//	reverse_iterator		rend();
-//	const_reverse_iterator	rend() const;
+	const_iterator			end() const _NOEXCEPT {
+		typename vector_type::const_iterator	it = m_direct.end();
+		return iterator(false, &m_direct, &m_reverse,
+						it, m_reverse.rend());
+	}
+	reverse_iterator		rbegin() _NOEXCEPT {
+		return reverse_iterator(end());
+	}
+	const_reverse_iterator	rbegin() const _NOEXCEPT {
+		return const_reverse_iterator(end());
+	}
+	reverse_iterator		rend() _NOEXCEPT {
+		return reverse_iterator(begin());
+	}
+	const_reverse_iterator	rend() const _NOEXCEPT {
+		return const_reverse_iterator(begin());
+	}
 
 	/* Capacity */
 	size_type	size() const {
@@ -120,9 +136,11 @@ public:
 //	void		assign(size_type n, const value_type & val);
 	void		push_back(const value_type & val) {
 		m_direct.push_back(val);
+		_balance();
 	}
 	void		push_front(const value_type & val) {
 		m_reverse.push_back(val);
+		_balance();
 	}
 //	void		pop_back();
 //	void		pop_front();
