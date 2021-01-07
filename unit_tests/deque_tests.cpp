@@ -69,4 +69,18 @@ TEST(deque, construct_basic) {
 	sDec		s3(LARGE_SIZE, ANY);
 	mDec		m3(LARGE_SIZE, ANY);
 	assertDequeEQ(s3, m3);
+
+	Any		ar[] = {Any(1), Any(2), Any(3), Any(4)};
+
+	sDec		s4(ar, ar + 4);
+	mDec		m4(ar, ar + 4);
+	assertDequeEQ(s4, m4);
+
+	sDec		s5(s4);
+	mDec		m5(m4);
+	assertDequeEQ(s5, m5);
+
+	s5 = s3;
+	m5 = m3;
+	assertDequeEQ(s5, m5);
 }

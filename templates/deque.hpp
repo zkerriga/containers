@@ -25,6 +25,9 @@
 
 namespace ft {
 
+#define _ENABLE_INPUT_ITERATOR_TYPE(type_name) \
+			typename std::enable_if< std::__is_input_iterator< type_name >::value,type_name >::type
+
 template < class T, class Alloc = std::allocator<T> >
 class deque {
 
@@ -39,6 +42,8 @@ public:
 	typedef std::size_t								size_type;
 private:
 	typedef std::vector<value_type>					vector_type;
+	typedef typename vector_type::iterator			vector_iterator;
+	typedef typename vector_type::reverse_iterator	vector_reverse_iterator;
 public:
 	typedef DequeIterator<vector_type,value_type>	iterator;
 	/* todo: iterators */
@@ -53,12 +58,25 @@ public:
 	explicit deque(size_type n, const value_type & val = value_type(),
 				   const allocator_type & alloc = allocator_type())
 		: m_direct(n / 2, val, alloc), m_reverse(n - n / 2, val, alloc) {}
-//	template <class InputIterator>
-//	deque(InputIterator first, InputIterator last,
-//		  const allocator_type & alloc = allocator_type());
-//	deque(const deque & x);
-//	~deque();
-//	deque & operator= (const deque & x);
+	template <class InputIterator>
+	deque(InputIterator first, _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last,
+		  const allocator_type & alloc = allocator_type())
+		: m_direct(alloc), m_reverse(alloc)
+	{
+		while (first != last) {
+			push_back(*first++);
+		}
+		_balance();
+	}
+	deque(const deque & x) : m_direct(x.m_direct), m_reverse(x.m_reverse) {}
+	~deque() {}
+	deque & operator= (const deque & x) {
+		if (this != &x) {
+			m_direct	= x.m_direct;
+			m_reverse	= x.m_reverse;
+		}
+		return *this;
+	}
 
 	/* Iterators */
 	iterator				begin() {
@@ -100,8 +118,12 @@ public:
 //	template <class InputIterator>
 //	void		assign(InputIterator first, InputIterator last);
 //	void		assign(size_type n, const value_type & val);
-//	void		push_back(const value_type & val);
-//	void		push_front(const value_type & val);
+	void		push_back(const value_type & val) {
+		m_direct.push_back(val);
+	}
+	void		push_front(const value_type & val) {
+		m_reverse.push_back(val);
+	}
 //	void		pop_back();
 //	void		pop_front();
 //	iterator	insert(iterator position, const value_type & val);
@@ -119,6 +141,18 @@ public:
 private:
 	vector_type				m_direct;	/* The end of the vector is the end   of the deque */
 	vector_type				m_reverse;	/* The end of the vector is the begin of the deque */
+
+	void		_balance() {
+		static const size_type		fillCoefficient = 3;
+		if (m_direct.size() > fillCoefficient * m_reverse.size()) {
+			vector_reverse_iterator		rEnd	= m_direct.rend();
+			const size_type				offset	= (m_direct.size() / fillCoefficient);
+			vector_reverse_iterator		rBegin	= rEnd - offset;
+
+			m_reverse.insert(m_reverse.begin(), rBegin, rEnd);
+			m_direct.erase(m_direct.begin(), m_direct.begin() + offset);
+		}
+	}
 }; //class deque
 
 /* todo: operators */
@@ -140,5 +174,7 @@ bool operator>=(const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
 template <class T, class Alloc>
 void swap(deque<T,Alloc> & x, deque<T,Alloc> & y);
 /* todo: swap */
+
+#undef _ENABLE_INPUT_ITERATOR_TYPE
 
 } //namespace ft
