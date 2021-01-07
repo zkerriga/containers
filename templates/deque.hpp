@@ -207,10 +207,33 @@ public:
 		}
 		_balance();
 	}
-//	iterator	insert(iterator position, const value_type & val);
-//	void		insert(iterator position, size_type n, const value_type & val);
-//	template <class InputIterator>
-//	void		insert(iterator position, InputIterator first, InputIterator last);
+	iterator	insert(iterator position, const value_type & val) {
+		difference_type		diff = position - begin();
+
+		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
+		m_reverse.clear();
+		m_direct.insert(m_direct.begin() + diff, val);
+		_balance();
+		return begin() + diff;
+	}
+	void		insert(iterator position, size_type n, const value_type & val) {
+		difference_type		diff = position - begin();
+
+		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
+		m_reverse.clear();
+		m_direct.insert(m_direct.begin() + diff, n, val);
+		_balance();
+	}
+	template <class InputIterator>
+	void		insert(iterator position,
+					   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) first, InputIterator last) {
+		difference_type		diff = position - begin();
+
+		m_direct.insert(m_direct.begin(), m_reverse.rbegin(), m_reverse.rend());
+		m_reverse.clear();
+		m_direct.insert(m_direct.begin() + diff, first, last);
+		_balance();
+	}
 //	iterator	erase(iterator position);
 //	iterator	erase(iterator first, iterator last);
 //	void		swap(deque & x);
@@ -220,7 +243,9 @@ public:
 	}
 
 	/* Allocator */
-//	allocator_type	get_allocator() const;
+	allocator_type	get_allocator() const {
+		return m_direct.get_allocator();
+	}
 
 private:
 	vector_type				m_direct;	/* The end of the vector is the end   of the deque */

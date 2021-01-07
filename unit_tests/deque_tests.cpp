@@ -715,3 +715,20 @@ TEST_F(DeqTest, pop) {
 	s1.pop_front();			m1.pop_front();
 	assertDequeEQ(s1, m1);
 }
+
+TEST_F(DeqTest, insert) {
+	sDeq		s1(sAlpha);
+	mDeq		m1(mAlpha);
+
+	s1.insert(++s1.begin(), ANY);
+	m1.insert(++m1.begin(), ANY);
+	assertDequeEQ(s1, m1);
+
+	s1.insert(s1.begin(), LARGE_SIZE, Any());
+	m1.insert(m1.begin(), LARGE_SIZE, Any());
+	assertDequeEQ(s1, m1);
+
+	s1.insert(--s1.end(), sRando.begin(), sRando.end());
+	m1.insert(--m1.end(), sRando.begin(), sRando.end());
+	assertDequeEQ(s1, m1);
+}

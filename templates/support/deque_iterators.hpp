@@ -187,6 +187,16 @@ public:
 	DequeIterator		operator+(_difference_type n, const DequeIterator & it) {
 		return it + n;
 	}
+	friend
+	_difference_type		operator-(const DequeIterator & x, const DequeIterator & y) {
+		if (x.m_isReverse == y.m_isReverse) {
+			return (x.m_isReverse ? (x.m_rIt - y.m_rIt) : (x.m_dIt - y.m_dIt));
+		}
+		if (x.m_isReverse) {
+			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_direct->end() - y.m_dIt));
+		}
+		return (x.m_dIt - x.m_direct->begin()) + (y.m_reverse->rend() - y.m_rIt);
+	}
 
 private:
 	bool			m_isReverse;
@@ -403,6 +413,16 @@ public:
 	}
 	friend bool				operator>=(const DequeIterator<value_type> & x, const DequeConstIterator & y) {
 		return y.operator>=(x);
+	}
+	friend
+	_difference_type		operator-(const DequeConstIterator & x, const DequeConstIterator & y) {
+		if (x.m_isReverse == y.m_isReverse) {
+			return (x.m_isReverse ? (x.m_rIt - y.m_rIt) : (x.m_dIt - y.m_dIt));
+		}
+		if (x.m_isReverse) {
+			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_direct->end() - y.m_dIt));
+		}
+		return (x.m_dIt - x.m_direct->begin()) + (y.m_reverse->rend() - y.m_rIt);
 	}
 
 private:
