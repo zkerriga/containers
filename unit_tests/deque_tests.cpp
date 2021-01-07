@@ -556,3 +556,19 @@ TEST_F(DeqTest, reverse_iterators_compare) {
 	ASSERT_EQ(sI <= sCI, mI <= mCI);
 }
 
+TEST_F(DeqTest, size) {
+	ASSERT_EQ(sEmpty.size(), mEmpty.size());
+	ASSERT_EQ(sAlpha.size(), mAlpha.size());
+	ASSERT_EQ(sRando.size(), mRando.size());
+}
+
+TEST_F(DeqTest, max_size) {
+	ASSERT_EQ(sEmpty.max_size(), mEmpty.max_size());
+	ASSERT_EQ(sAlpha.max_size(), mAlpha.max_size());
+}
+
+TEST_F(DeqTest, empty) {
+	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
+	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
+	ASSERT_EQ(sRando.empty(), mRando.empty());
+}

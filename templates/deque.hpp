@@ -114,7 +114,9 @@ public:
 	size_type	size() const {
 		return (m_direct.size() + m_reverse.size());
 	}
-//	size_type	max_size() const;
+	size_type	max_size() const {
+		return (static_cast<size_type>(-1) / sizeof(value_type));
+	}
 //	void		resize(size_type n, value_type val = value_type());
 	bool		empty() const {
 		return (size() == 0);
