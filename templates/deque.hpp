@@ -174,9 +174,18 @@ public:
 	}
 
 	/* Modifiers */
-//	template <class InputIterator>
-//	void		assign(InputIterator first, InputIterator last);
-//	void		assign(size_type n, const value_type & val);
+	template <class InputIterator>
+	void		assign(InputIterator first,
+					   _ENABLE_INPUT_ITERATOR_TYPE(InputIterator) last) {
+		clear();
+		m_direct.assign(first, last);
+		_balance();
+	}
+	void		assign(size_type n, const value_type & val) {
+		clear();
+		m_direct.assign(n / 2, val);
+		m_reverse.assign(n - n / 2, val);
+	}
 	void		push_back(const value_type & val) {
 		m_direct.push_back(val);
 		_balance();
@@ -194,7 +203,10 @@ public:
 //	iterator	erase(iterator position);
 //	iterator	erase(iterator first, iterator last);
 //	void		swap(deque & x);
-//	void		clear();
+	void		clear() {
+		m_reverse.clear();
+		m_direct.clear();
+	}
 
 	/* Allocator */
 //	allocator_type	get_allocator() const;

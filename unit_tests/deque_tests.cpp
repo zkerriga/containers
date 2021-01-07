@@ -639,3 +639,25 @@ TEST_F(DeqTest, front_and_back) {
 	ASSERT_EQ(sAlpha.front(), mAlpha.front());
 	ASSERT_EQ(sAlpha.back(), mAlpha.back());
 }
+
+TEST_F(DeqTest, assign) {
+	sAlpha.assign(LARGE_SIZE, ANY);
+	mAlpha.assign(LARGE_SIZE, ANY);
+	assertDequeEQ(sAlpha, mAlpha);
+
+	sAlpha.assign(sRando.begin(), sRando.end());
+	mAlpha.assign(sRando.begin(), sRando.end());
+	assertDequeEQ(sAlpha, mAlpha);
+}
+
+TEST_F(DeqTest, clear) {
+	sRando.clear();
+	mRando.clear();
+	sAlpha.clear();
+	mAlpha.clear();
+	sEmpty.clear();
+	mEmpty.clear();
+	ASSERT_EQ(sEmpty.empty(), mEmpty.empty());
+	ASSERT_EQ(sAlpha.empty(), mAlpha.empty());
+	ASSERT_EQ(sRando.empty(), mRando.empty());
+}
