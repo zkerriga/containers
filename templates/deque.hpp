@@ -21,7 +21,7 @@
 #include <vector> /* todo: change types to ft */
 #include <list>
 
-#include "block_chain_iterators.hpp"
+#include "deque_iterators.hpp"
 
 namespace ft {
 
@@ -40,8 +40,8 @@ public:
 private:
 	typedef std::vector<value_type>					vector_type;
 public:
+	typedef DequeIterator<vector_type,value_type>	iterator;
 	/* todo: iterators */
-	typedef int										iterator;
 	typedef int										const_iterator;
 	typedef std::reverse_iterator<iterator>			reverse_iterator;
 	typedef std::reverse_iterator<const_iterator>	const_reverse_iterator;
@@ -61,9 +61,15 @@ public:
 //	deque & operator= (const deque & x);
 
 	/* Iterators */
-//	iterator				begin();
+	iterator				begin() {
+		return iterator(true, &m_direct, &m_reverse,
+						m_direct.end(), m_reverse.rbegin());
+	}
 //	const_iterator			begin() const;
-//	iterator				end();
+	iterator				end() {
+		return iterator(false, &m_direct, &m_reverse,
+						m_direct.end(), m_reverse.rend());
+	}
 //	const_iterator			end() const;
 //	reverse_iterator		rbegin();
 //	const_reverse_iterator	rbegin() const;
@@ -72,7 +78,7 @@ public:
 
 	/* Capacity */
 	size_type	size() const {
-		return m_direct.size() + m_direct.size();
+		return (m_direct.size() + m_reverse.size());
 	}
 //	size_type	max_size() const;
 //	void		resize(size_type n, value_type val = value_type());

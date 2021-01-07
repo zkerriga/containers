@@ -38,25 +38,25 @@ TEST(deque, basic_types) {
 	mDec::size_type					s12;
 }
 
-//void	assertDequeEQ(sDec & sM, mDec & mM) {
-//	ASSERT_EQ(sM.size(), mM.size());
-//	ASSERT_EQ(sM.empty(), mM.empty());
-//
-//	sDec::iterator	sIt		= sM.begin();
-//	sDec::iterator	sIte	= sM.end();
-//	mDec::iterator	mIt		= mM.begin();
-//	mDec::iterator	mIte	= mM.end();
-//
-//	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-//	while (sIt != sIte && mIt != mIte) {
-//		EXPECT_EQ(*sIt, *mIt);
-//		++sIt;
-//		++mIt;
-//	}
-//	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-//}
+void	assertDequeEQ(sDec & sM, mDec & mM) {
+	ASSERT_EQ(sM.size(), mM.size());
+	ASSERT_EQ(sM.empty(), mM.empty());
 
-//5 -> direct = 2 reverse = 3
+	sDec::iterator	sIt		= sM.begin();
+	sDec::iterator	sIte	= sM.end();
+	mDec::iterator	mIt		= mM.begin();
+	mDec::iterator	mIte	= mM.end();
+
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+	++sIt; --sIt;
+	++mIt; --mIt;
+	while (sIt != sIte && mIt != mIte) {
+		EXPECT_EQ(*sIt, *mIt);
+		++sIt;
+		++mIt;
+	}
+	ASSERT_EQ((sIt == sIte), (mIt == mIte));
+}
 
 TEST(deque, construct_basic) {
 	sDec		s1;
@@ -64,9 +64,9 @@ TEST(deque, construct_basic) {
 
 	sDec		s2(LITTLE_SIZE);
 	mDec		m2(LITTLE_SIZE);
-//	assertDequeEQ(s2, m2);
-//
+	assertDequeEQ(s2, m2);
+
 	sDec		s3(LARGE_SIZE, ANY);
 	mDec		m3(LARGE_SIZE, ANY);
-//	assertDequeEQ(s3, m3);
+	assertDequeEQ(s3, m3);
 }
