@@ -55,9 +55,56 @@ public:
 	}
 
 	_reference			operator[](_difference_type n) const {
-		/* todo: [] */
-		return operator*(); /* todo: delete */
+		chain_iterator_type		it(m_chainIterator);
+		if (n == 0) {
+			return operator*();
+		}
+		else if (n > 0) {
+			return getMove(true, it, n, m_blockIndex);
+		}
+		return getMove(false, it, -n, m_blockIndex);
 	}
+	static
+	_reference		getMove(bool isInc,
+							chain_iterator_type & it,
+							const size_type n,
+							const size_type currentBlockIndex) {
+		if (n == 0) {
+			return (*it)[currentBlockIndex];
+		}
+		const size_type		size = (*it).size();
+		if (n / size) {
+			return getMove(isInc, isInc ? ++it : --it, n - size, currentBlockIndex);
+		}
+		if (currentBlockIndex + n >= size) {
+			return getMove(isInc, isInc ? ++it : --it, 0, currentBlockIndex + n - (isInc ? size : 1));
+		}
+		if (currentBlockIndex + n < size) { /* todo: decrease */
+			return getMove(isInc, isInc ? ++it : --it, 0, currentBlockIndex + (isInc ? n : -n));
+		}
+	}
+/*	_reference			_operatorHelperMinus(_difference_type n) const {
+		_difference_type	deltaChainSteps	= (mc_maxBlockSize - m_blockIndex - n) / mc_maxBlockSize;
+		_difference_type	resultIndex		= mc_maxBlockSize + (m_blockIndex - (n % mc_maxBlockSize));
+
+		const chain_iterator_type	movedChainIt = getMovedChainIterator(
+			false,
+			m_chainIterator,
+			deltaChainSteps
+		);
+		return (*movedChainIt)[resultIndex];
+	}
+	_reference			_operatorHelperPlus(_difference_type n) const {
+		size_type	deltaChainSteps	= (m_blockIndex + n) / mc_maxBlockSize;
+		size_type	resultIndex		= (m_blockIndex + n) % mc_maxBlockSize;
+
+		const chain_iterator_type	movedChainIt = getMovedChainIterator(
+			true,
+			m_chainIterator,
+			deltaChainSteps
+		);
+		return (*movedChainIt)[resultIndex];
+	}*/
 
 	DequeIterator		operator+ (_difference_type n) const {
 		DequeIterator	it(*this);
@@ -89,9 +136,9 @@ public:
 	}
 	DequeIterator &		operator--() {
 		if (m_blockIndex == 0) {
-			m_blockIndex = mc_maxBlockSize;
 			--m_chainIndex;
 			--m_chainIterator;
+			m_blockIndex = *(m_chainIterator).size();
 		}
 		--m_blockIndex;
 		return *this;
@@ -124,4 +171,12 @@ private:
 	size_type				m_chainIndex;
 	size_type				m_blockIndex;
 	chain_iterator_type		m_chainIterator;
+
+	static
+	chain_iterator_type	getMovedChainIterator(bool isInc, chain_iterator_type it, const _difference_type n) {
+		if (n == 0) {
+			return it;
+		}
+		return getMovedChainIterator(isInc ? ++it : --it, n - 1);
+	}
 };

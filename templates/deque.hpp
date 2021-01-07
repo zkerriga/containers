@@ -86,7 +86,7 @@ public:
 
 	/* Iterators */
 	iterator				begin() {
-		static const size_type	firstIndex = 0;
+		static const size_type	firstIndex = 0; /* todo: не ноль, можно добавить неполную ноду */
 		return iterator(mc_blockSize, firstIndex, firstIndex, m_blockChain.begin());
 	}
 //	const_iterator			begin() const;

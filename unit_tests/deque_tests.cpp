@@ -67,9 +67,12 @@ TEST(deque, construct_basic) {
 	sDec		s3(LARGE_SIZE, ANY);
 	mDec		m3(LARGE_SIZE, ANY);
 	assertDequeEQ(s3, m3);
+
+	mDec::iterator	it = m3.begin();
+	mDec::iterator	ite = m3.begin();
+
 }
 
 TEST(deque, iterators_basic) {
-	sDec::iterator		s1;
-	mDec::iterator		m1;
+
 }
