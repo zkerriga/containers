@@ -87,7 +87,7 @@ TEST(deque, construct_basic) {
 	assertDequeEQ(s5, m5);
 }
 
-char getRandAlpha() {
+char getRandAlphaDeque() {
 	return static_cast<char>(random() % ('z' - 'a') + 'a');
 }
 
@@ -108,7 +108,7 @@ public:
 		char		randChar;
 		D(std::cout << "Seed = " << seed << std::endl;);
 		for (int i = 0; i < size; ++i) {
-			randChar = getRandAlpha();
+			randChar = getRandAlphaDeque();
 			sRando.push_back(Any(randChar));
 			mRando.push_back(Any(randChar));
 		}

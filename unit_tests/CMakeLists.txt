@@ -9,9 +9,9 @@ include_directories(
 )
 
 set(TEST_FILES
-#        list_tests.cpp
-#        vector_tests.cpp
-#        map_tests.cpp
+        list_tests.cpp
+        vector_tests.cpp
+        map_tests.cpp
         deque_tests.cpp
         utils.hpp
 )
