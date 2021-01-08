@@ -14,6 +14,7 @@
 
 #include <iterator>
 #include <type_traits>
+#include <vector>
 
 template <typename value_type>
 class DequeConstIterator;
