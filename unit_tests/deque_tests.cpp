@@ -32,8 +32,8 @@ TEST(deque, basic_types) {
 	mDeq::const_pointer				s6;
 	mDeq::iterator					s7;
 	mDeq::const_iterator			s8;
-//	mDeq::reverse_iterator			s9; /* todo: iterators */
-//	mDeq::const_reverse_iterator	s10; /* todo iterators */
+	mDeq::reverse_iterator			s9;
+	mDeq::const_reverse_iterator	s10;
 	mDeq::difference_type			s11;
 	mDeq::size_type					s12;
 }
