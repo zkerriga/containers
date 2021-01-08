@@ -85,7 +85,7 @@ TEST(queue, push_pop_front_back) {
 	ASSERT_EQ(s1.front(), m1.front());
 }
 
-TEST(stack, operators) {
+TEST(queue, operators) {
 	sQu		s1;
 	s1.push(ANY);
 	sQu		s2;

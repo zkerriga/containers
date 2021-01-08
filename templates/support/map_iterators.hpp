@@ -41,27 +41,27 @@ public:
 
 	explicit _MapIterator(_tree * p) : m_p(p) {}
 
-	_reference			operator* () const noexcept {
+	_reference			operator* () const _NOEXCEPT {
 		return *(m_p->data);
 	}
-	_pointer			operator->() const noexcept {
+	_pointer			operator->() const _NOEXCEPT {
 		return m_p->data;
 	}
 
-	_MapIterator &		operator++() noexcept {
+	_MapIterator &		operator++() _NOEXCEPT {
 		m_p = _tree::iterateNode(m_p, _tree::step::right, _tree::step::left);
 		return *this;
 	}
-	_MapIterator &		operator--() noexcept {
+	_MapIterator &		operator--() _NOEXCEPT {
 		m_p = _tree::iterateNode(m_p, _tree::step::left, _tree::step::right);
 		return *this;
 	}
-	_MapIterator		operator++(int) noexcept {
+	_MapIterator		operator++(int) _NOEXCEPT {
 		_tree *	tmp = m_p;
 		operator++();
 		return _MapIterator(tmp);
 	}
-	_MapIterator		operator--(int) noexcept {
+	_MapIterator		operator--(int) _NOEXCEPT {
 		_tree *	tmp = m_p;
 		operator--();
 		return _MapIterator(tmp);
@@ -106,27 +106,27 @@ public:
 
 	explicit _MapConstIterator(_tree * p) : m_p(p) {}
 
-	_reference			operator* () const noexcept {
+	_reference			operator* () const _NOEXCEPT {
 		return *(m_p->data);
 	}
-	_pointer			operator->() const noexcept {
+	_pointer			operator->() const _NOEXCEPT {
 		return m_p->data;
 	}
 
-	_MapConstIterator &	operator++() noexcept {
+	_MapConstIterator &	operator++() _NOEXCEPT {
 		m_p = _tree::iterateNode(m_p, _tree::step::right, _tree::step::left);
 		return *this;
 	}
-	_MapConstIterator &	operator--() noexcept {
+	_MapConstIterator &	operator--() _NOEXCEPT {
 		m_p = _tree::iterateNode(m_p, _tree::step::left, _tree::step::right);
 		return *this;
 	}
-	_MapConstIterator	operator++(int) noexcept {
+	_MapConstIterator	operator++(int) _NOEXCEPT {
 		_tree *	tmp = m_p;
 		operator++();
 		return _MapConstIterator(tmp);
 	}
-	_MapConstIterator	operator--(int) noexcept {
+	_MapConstIterator	operator--(int) _NOEXCEPT {
 		_tree *	tmp = m_p;
 		operator--();
 		return _MapConstIterator(tmp);
@@ -148,7 +148,7 @@ typename std::enable_if<
 		&& (std::is_same< RightIterator, _MapIterator< typename RightIterator::value_type > >::value
 			|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
 		bool >::type
-operator==(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
+operator==(const LeftIterator & lhs, const RightIterator & rhs) _NOEXCEPT {
 	return (lhs._getTreePointer() == rhs._getTreePointer());
 }
 
@@ -159,6 +159,6 @@ typename std::enable_if<
 		&& (std::is_same< RightIterator, _MapIterator< typename RightIterator::value_type > >::value
 			|| std::is_same< RightIterator, _MapConstIterator< typename RightIterator::value_type > >::value),
 		bool >::type
-operator!=(const LeftIterator & lhs, const RightIterator & rhs) noexcept {
+operator!=(const LeftIterator & lhs, const RightIterator & rhs) _NOEXCEPT {
 	return !operator==(lhs, rhs);
 }

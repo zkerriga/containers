@@ -326,7 +326,7 @@ private:
 		}
 	private:
 		_link_type() {}
-		_link_type & operator= (const _link_type & other) { return *this; }
+		_link_type & operator= (const _link_type &) { return *this; }
 
 		const _type	mc_link;
 		TreeNode * const	m_head;
