@@ -13,14 +13,6 @@
 
 #include "stack.hpp"
 
-//#define DEBUG
-
-#ifdef DEBUG
-#define D(x) { x }
-#else
-#define D(x) {}
-#endif //ifdef DEBUG
-
 using sStack	= std::stack<Any>;
 using mStack	=  ft::stack<Any>;
 
@@ -37,12 +29,15 @@ TEST(stack, basic_types) {
 }
 
 TEST(stack, construct) {
-	sStack			s1;
-	mStack			m1;
-	sStack			s2(std::vector<Any>());
-	mStack			m2(std::vector<Any>());
-	sStack			s3(std::list<Any>());
-	mStack			m3(std::list<Any>());
+	using sVec	= std::vector<Any>;
+	using sList	= std::list<Any>;
+
+	std::stack<Any>			s1;
+	 ft::stack<Any>			m1;
+	std::stack<Any,sVec>	s2;
+	 ft::stack<Any,sVec>	m2;
+	std::stack<Any,sList>	s3;
+	 ft::stack<Any,sList>	m3;
 }
 
 TEST(stack, empty) {
@@ -85,4 +80,25 @@ TEST(stack, top_push_pop) {
 	ASSERT_EQ(s1.top(), m1.top());
 	s1.pop();				m1.pop();
 	ASSERT_EQ(s1.top(), m1.top());
+}
+
+TEST(stack, operators) {
+	sStack		s1;
+	s1.push(ANY);
+	sStack		s2;
+	s2.push(Any(1));
+	s2.push(Any(100));
+
+	mStack		m1;
+	m1.push(ANY);
+	mStack		m2;
+	m2.push(Any(1));
+	m2.push(Any(100));
+
+	ASSERT_EQ(s1 == s2, m1 == m2);
+	ASSERT_EQ(s1 != s2, m1 != m2);
+	ASSERT_EQ(s1 < s2, m1 < m2);
+	ASSERT_EQ(s1 <= s2, m1 <= m2);
+	ASSERT_EQ(s1 > s2, m1 > m2);
+	ASSERT_EQ(s1 >= s2, m1 >= m2);
 }
