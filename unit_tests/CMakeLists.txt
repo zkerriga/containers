@@ -15,6 +15,7 @@ set(TEST_FILES
         deque_tests.cpp
         stack_tests.cpp
         queue_tests.cpp
+        set_tests.cpp
         utils.hpp
 )
 

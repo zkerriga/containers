@@ -19,6 +19,7 @@
 #include "queue.hpp"
 
 #include "deque.hpp"
+#include "set.hpp"
 
 int main() {
 	ft::list<int>					myList;
@@ -28,6 +29,7 @@ int main() {
 	ft::queue< ft::vector<int> >	myQueue;
 
 	ft::deque< int >				myDeque;
+	ft::set<int>					mySet;
 
 	std::cout << "\033[32m";
 	std::cout << "All container constructors have been compiled!" << std::endl;

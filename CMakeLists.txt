@@ -42,6 +42,10 @@ set(QUEUE_SRC
         ${TEMPLATE_DIR}stack.hpp
         )
 
+set(SET_SRC
+        ${TEMPLATE_DIR}set.hpp
+        )
+
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
         ${LIST_SRC}
@@ -50,6 +54,7 @@ set(SRCS
         ${DEQUE_SRC}
         ${STACK_SRC}
         ${QUEUE_SRC}
+        ${SET_SRC}
         )
 
 add_executable(containers
