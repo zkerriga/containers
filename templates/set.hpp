@@ -159,7 +159,7 @@ public:
 		}
 	}
 	void			erase(iterator position) {
-		erase(position->first);
+		erase(*position);
 	}
 	size_type		erase(const value_type & val) {
 		if ( m_size == 0 || (find(val) == end()) ) {
@@ -216,22 +216,22 @@ public:
 		return ( m_size == 0 || (find(val) == end()) ) ? 0 : 1;
 	}
 	iterator		lower_bound(const value_type & val) const {
-		iterator	it	= begin();
-		iterator	ite	= end();
+		const_iterator	it	= begin();
+		const_iterator	ite	= end();
 
 		while (it != ite && mc_valueCompare(*it, val)) {
 			++it;
 		}
-		return it;
+		return iterator(it._getTreePointer());
 	}
 	iterator		upper_bound(const value_type & val) const {
-		iterator	it = lower_bound(val);
+		const_iterator	it = lower_bound(val);
 
 		if (it != end()
 			&& !mc_valueCompare(*it, val) && !mc_valueCompare(val, *it)) {
 			++it;
 		}
-		return it;
+		return iterator(it._getTreePointer());
 	}
 	std::pair<iterator,iterator>
 					equal_range(const value_type & val) const {

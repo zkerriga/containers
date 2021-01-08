@@ -5,7 +5,6 @@
 
 #include "Any.hpp"
 #include "set.hpp"
-#include "utils.hpp"
 
 //#define DEBUG
 
@@ -82,7 +81,7 @@ void assertSetEQ(const sSet & sM, const mSet & mM) {
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
 }
 
-TEST(map, types) {
+TEST(set, types) {
 	sSet::key_type					s1;
 	sSet::value_type				s3;
 	sSet::key_compare				s4;
@@ -152,7 +151,7 @@ void	createTestsSetsAndStartInsertsSet() {
 	}
 }
 
-TEST(map, insert_crush) {
+TEST(set, insert_crush) {
 	for (int i = 0; i < 1000; ++i) {
 		createTestsSetsAndStartInsertsSet();
 	}
@@ -345,7 +344,7 @@ void	createAndEraseMapsSet() {
 	}
 }
 
-TEST(map, erase_crush) {
+TEST(set, erase_crush) {
 	for (int i = 0; i < 8000; ++i) {
 		createAndEraseMapsSet();
 	}
@@ -520,8 +519,8 @@ TEST_F(SetTest, equal_range) {
 		ASSERT_EQ(s2.first == sAlpha.end(), m2.first == mAlpha.end());
 		ASSERT_EQ(s2.second == sAlpha.end(), m2.second == mAlpha.end());
 		if (s2.first != sAlpha.end() && s2.second != sAlpha.end()) {
-			ASSERT_EQ(s2.first, m2.first);
-			ASSERT_EQ(s2.first, m2.first);
+			ASSERT_EQ(*s2.first, *m2.first);
+			ASSERT_EQ(*s2.first, *m2.first);
 		}
 	}
 }
