@@ -1,13 +1,10 @@
 #include "gtest/gtest.h"
-#include <iterator>
-#include <limits>
 #include <stack>
 #include <vector>
 #include <list>
 #include <deque>
 
 #include "Any.hpp"
-#include "utils.hpp"
 
 #define ANY Any(42)
 
@@ -102,3 +99,5 @@ TEST(stack, operators) {
 	ASSERT_EQ(s1 > s2, m1 > m2);
 	ASSERT_EQ(s1 >= s2, m1 >= m2);
 }
+
+#undef ANY
