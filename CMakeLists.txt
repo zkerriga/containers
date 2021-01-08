@@ -34,12 +34,17 @@ set(DEQUE_SRC
         ${SUPPORT}deque_iterators.hpp
         )
 
+set(STACK_SRC
+        ${TEMPLATE_DIR}stack.hpp
+        )
+
 set(SRCS
         ${TEMPLATE_DIR}utils.hpp
         ${LIST_SRC}
         ${VECTOR_SRC}
         ${MAP_SRC}
         ${DEQUE_SRC}
+        ${STACK_SRC}
         )
 
 add_executable(containers
