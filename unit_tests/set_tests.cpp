@@ -224,8 +224,8 @@ TEST_F(SetTest, assigment) {
 
 TEST_F(SetTest, max_size) {
 	size_t	maxBytes = static_cast<size_t>(-1);
-	ASSERT_GE(maxBytes / sEmpty.max_size(), maxBytes / mEmpty.max_size());
-	ASSERT_GE(maxBytes / sAlpha.max_size(), maxBytes / mAlpha.max_size());
+	ASSERT_EQ(maxBytes / sEmpty.max_size() + 1, maxBytes / mEmpty.max_size());
+	ASSERT_EQ(maxBytes / sAlpha.max_size() + 1, maxBytes / mAlpha.max_size());
 }
 
 TEST_F(SetTest, get_allocator) {
