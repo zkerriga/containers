@@ -48,8 +48,10 @@ void	assertDequeEQ(sDeq & sM, mDeq & mM) {
 	mDeq::iterator	mIte	= mM.end();
 
 	ASSERT_EQ((sIt == sIte), (mIt == mIte));
-	++sIt; --sIt;
-	++mIt; --mIt;
+	if (!sM.empty()) {
+		++sIt; --sIt;
+		++mIt; --mIt;
+	}
 	while (sIt != sIte && mIt != mIte) {
 		EXPECT_EQ(sIt->getInt(), mIt->getInt());
 		++sIt;
@@ -754,4 +756,96 @@ TEST_F(DeqTest, erase) {
 		m1.erase(++m1.begin(), --m1.end())->getInt()
 	);
 	assertDequeEQ(s1, m1);
+}
+
+TEST_F(DeqTest, swap) {
+	sDeq	s1(sAlpha);
+	sDeq	s2(sRando);
+
+	mDeq	m1(mAlpha);
+	mDeq	m2(mRando);
+
+	s1.swap(s2);
+	m1.swap(m2);
+	assertDequeEQ(s2, m2);
+
+	s1.swap(s2);
+	m1.swap(m2);
+	assertDequeEQ(s1, m1);
+	assertDequeEQ(s2, m2);
+}
+
+TEST_F(DeqTest, get_allocator) {
+	sDeq	s1(sAlpha);
+	mDeq	m1(mAlpha);
+	Any *	sP;
+	Any *	mP;
+
+	sP = s1.get_allocator().allocate(10);
+	mP = m1.get_allocator().allocate(10);
+
+	for (int i = 0; i < 10; ++i) {
+		sP[i] = Any(i);
+		mP[i] = Any(i);
+	}
+
+	sDeq	s2(sP, sP + 10);
+	mDeq	m2(mP, mP + 10);
+	assertDequeEQ(s2, m2);
+
+	s1.get_allocator().deallocate(sP, 10);
+	m1.get_allocator().deallocate(mP, 10);
+}
+
+
+TEST_F(DeqTest, non_member_operators) {
+	sDeq	s1(sEmpty);
+	mDeq	m1(mEmpty);
+
+	ASSERT_EQ(s1 == sEmpty, m1 == mEmpty);
+	ASSERT_EQ(s1 < sAlpha, m1 < mAlpha);
+	ASSERT_EQ(s1 > sAlpha, m1 > mAlpha);
+	ASSERT_EQ(s1 != sAlpha, m1 != mAlpha);
+
+	sDeq	s2(sAlpha);
+	mDeq	m2(mAlpha);
+	ASSERT_EQ(s2 <= sAlpha, m2 <= mAlpha);
+	ASSERT_EQ(s2 >= sAlpha, m2 >= mAlpha);
+
+	sDeq	s3(sEmpty);
+	sDeq	s4(sEmpty);
+	mDeq	m3(mEmpty);
+	mDeq	m4(mEmpty);
+
+	s3.push_back(Any(1));	s4.push_back(Any(1));
+	s3.push_back(Any(2));	s4.push_back(Any(2));
+	s3.push_back(Any(3));
+	m3.push_back(Any(1));	m4.push_back(Any(1));
+	m3.push_back(Any(2));	m4.push_back(Any(2));
+	m3.push_back(Any(3));
+	ASSERT_EQ(s3 < s4, m3 < m4);
+	ASSERT_EQ(s3 > s4, m3 > m4);
+	ASSERT_EQ(s3 == s4, m3 == m4);
+}
+
+TEST_F(DeqTest, non_member_swap) {
+	sDeq		s1(sEmpty);
+	sDeq		s2(sAlpha);
+	mDeq		m1(mEmpty);
+	mDeq		m2(mAlpha);
+
+	std::swap(s1, s2);
+	std::swap(m1, m2);
+	assertDequeEQ(s2, m2);
+	assertDequeEQ(s1, m1);
+
+	sDeq		s3(sRando);
+	sDeq		s4(sAlpha);
+	mDeq		m3(mRando);
+	mDeq		m4(mAlpha);
+
+	std::swap(s3, s4);
+	std::swap(m3, m4);
+	assertDequeEQ(s3, m3);
+	assertDequeEQ(s4, m4);
 }

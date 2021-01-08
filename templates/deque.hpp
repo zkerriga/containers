@@ -88,12 +88,12 @@ public:
 	}
 	const_iterator			begin() const _NOEXCEPT {
 		if (m_reverse.empty()) {
-			return iterator(false, &m_direct, &m_reverse,
-							m_direct.begin(), m_reverse.rend());
+			return const_iterator(false, &m_direct, &m_reverse,
+								  m_direct.begin(), m_reverse.rend());
 		}
 		typename vector_type::const_reverse_iterator	rIt = m_reverse.rbegin();
 		return const_iterator(true, &m_direct, &m_reverse,
-						m_direct.end(), rIt);
+							  m_direct.end(), rIt);
 	}
 	iterator				end() _NOEXCEPT {
 		vector_iterator				it = m_direct.end();
@@ -102,8 +102,8 @@ public:
 	}
 	const_iterator			end() const _NOEXCEPT {
 		typename vector_type::const_iterator	it = m_direct.end();
-		return iterator(false, &m_direct, &m_reverse,
-						it, m_reverse.rend());
+		return const_iterator(false, &m_direct, &m_reverse,
+							  it, m_reverse.rend());
 	}
 	reverse_iterator		rbegin() _NOEXCEPT {
 		return reverse_iterator(end());
@@ -160,16 +160,16 @@ public:
 		}
 		return operator[](n);
 	}
-	reference			front() {
+	reference			front() _NOEXCEPT {
 		return (m_reverse.empty() ? m_direct.front() : m_reverse.back());
 	}
-	const_reference		front() const {
+	const_reference		front() const _NOEXCEPT {
 		return (m_reverse.empty() ? m_direct.front() : m_reverse.back());
 	}
-	reference			back() {
+	reference			back() _NOEXCEPT {
 		return m_direct.back();
 	}
-	const_reference		back() const {
+	const_reference		back() const _NOEXCEPT {
 		return m_direct.back();
 	}
 
@@ -256,14 +256,17 @@ public:
 		_balance();
 		return begin() + diff2;
 	}
-//	void		swap(deque & x);
-	void		clear() {
+	void		swap(deque & x) _NOEXCEPT {
+		ft::swap(m_direct, x.m_direct);
+		ft::swap(m_reverse, x.m_reverse);
+	}
+	void		clear() _NOEXCEPT {
 		m_reverse.clear();
 		m_direct.clear();
 	}
 
 	/* Allocator */
-	allocator_type	get_allocator() const {
+	allocator_type	get_allocator() const _NOEXCEPT {
 		return m_direct.get_allocator();
 	}
 
@@ -284,26 +287,69 @@ private:
 	}
 }; //class deque
 
-/* todo: operators */
-template <class T, class Alloc>
-bool operator==(const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-template <class T, class Alloc>
-bool operator!=(const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-template <class T, class Alloc>
-bool operator< (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-template <class T, class Alloc>
-bool operator<=(const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-template <class T, class Alloc>
-bool operator> (const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-template <class T, class Alloc>
-bool operator>=(const deque<T,Alloc>& lhs, const deque<T,Alloc>& rhs);
-/* todo: operators */
-
-/* todo: swap */
-template <class T, class Alloc>
-void swap(deque<T,Alloc> & x, deque<T,Alloc> & y);
-/* todo: swap */
-
 #undef _ENABLE_INPUT_ITERATOR_TYPE
+
+template <class T, class Alloc>
+bool operator==(const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	typedef typename deque<T, Alloc>::const_iterator _iter;
+
+	if (lhs.size() != rhs.size()) {
+		return false;
+	}
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
+	while (lIt != lIte && rIt != rIte) {
+		if (!(*lIt == *rIt)) {
+			return false;
+		}
+		++rIt;
+		++lIt;
+	}
+	return (lIt == lIte && rIt == rIte);
+}
+template <class T, class Alloc>
+bool operator!=(const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	return !operator==(lhs, rhs);
+}
+template <class T, class Alloc>
+bool operator< (const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	typedef typename deque<T, Alloc>::const_iterator _iter;
+
+	_iter	lIt		= lhs.begin();
+	_iter	lIte	= lhs.end();
+	_iter	rIt		= rhs.begin();
+	_iter	rIte	= rhs.end();
+
+	while (lIt != lIte && rIt != rIte) {
+		if (*lIt < *rIt) {
+			return true;
+		}
+		if (*rIt < *lIt) {
+			return false;
+		}
+		++lIt;
+		++rIt;
+	}
+	return (lIt == lIte && rIt != rIte);
+}
+template <class T, class Alloc>
+bool operator<=(const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	return (!operator<(rhs, lhs));
+}
+template <class T, class Alloc>
+bool operator> (const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	return operator<(rhs, lhs);
+}
+template <class T, class Alloc>
+bool operator>=(const deque<T,Alloc> & lhs, const deque<T,Alloc> & rhs) {
+	return (!operator<(lhs, rhs));
+}
+
+template <class T, class Alloc>
+void swap(deque<T,Alloc> & x, deque<T,Alloc> & y) {
+	x.swap(y);
+}
 
 } //namespace ft

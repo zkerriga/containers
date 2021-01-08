@@ -244,8 +244,8 @@ public:
 		return *this;
 	}
 
-	DequeConstIterator(const bool isReverse, vector_type * direct,
-					   vector_type * reverse, _directIt dIt, _reverseIt rIt)
+	DequeConstIterator(const bool isReverse, const vector_type * direct,
+					   const vector_type * reverse, _directIt dIt, _reverseIt rIt)
 		: m_isReverse(isReverse), m_direct(direct), m_reverse(reverse),
 		  m_dIt(dIt), m_rIt(rIt) {}
 
@@ -420,15 +420,15 @@ public:
 			return (x.m_isReverse ? (x.m_rIt - y.m_rIt) : (x.m_dIt - y.m_dIt));
 		}
 		if (x.m_isReverse) {
-			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_direct->end() - y.m_dIt));
+			return -((x.m_reverse->rend() - x.m_rIt) + (y.m_dIt - y.m_direct->begin()));
 		}
 		return (x.m_dIt - x.m_direct->begin()) + (y.m_reverse->rend() - y.m_rIt);
 	}
 
 private:
-	bool			m_isReverse;
-	_directIt		m_dIt;
-	_reverseIt		m_rIt;
-	vector_type *	m_direct;
-	vector_type *	m_reverse;
+	bool					m_isReverse;
+	_directIt				m_dIt;
+	_reverseIt				m_rIt;
+	const vector_type *		m_direct;
+	const vector_type *		m_reverse;
 };
