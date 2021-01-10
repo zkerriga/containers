@@ -11,3 +11,6 @@ In the implementation of **a doubly-linked list**, I created a separate `ListNod
 
 ### ft::vector
 In this container we are working with **continuous memory**. A special feature of the container are [random-access iterators](https://www.cplusplus.com/reference/iterator/RandomAccessIterator/) that can quickly access any part of the array.
+
+### ft::map && ft::set
+Both containers refer to a separate `TreeNode` class, which implements working with [red-black trees](https://en.wikipedia.org/wiki/Red%E2%80%93black_tree). I relied on algorithms from a research paper from **Princeton University** that describes working effectively with **Left-leaning Red-Black Trees**. In this context, the binary tree must interact with iterators, so I added a link to the parent of each node to the implementation and provided for working with a special `endNode` that referred to the beginning, end, and top of the tree. The difference between `ft::map` and `ft::set` is only in the value stored in the `TreeNode`.
