@@ -1,2 +1,2 @@
 # containers
-In this project, I will repeat the work of standard containers from C++
+🔧⚙️ In this project, I studied the [documentation](http://www.cplusplus.com/) of containers from [STL](https://en.wikipedia.org/wiki/Standard_Template_Library) and tried to reproduce their work.
