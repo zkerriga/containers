@@ -17,3 +17,15 @@ Both containers refer to a separate `TreeNode` class, which implements working w
 
 #### `ft::stack` and `ft::queue`
 These adapters simply interact with internal containers to implement [LIFO](https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting) and [FIFO](https://en.wikipedia.org/wiki/FIFO_and_LIFO_accounting) principles.
+
+___
+
+### Testing:
+I wrote unit-tests for all methods and parts of the container implementation using the handy [googletest](https://github.com/google/googletest) library. And I learned how to create classes to quickly initialize the testing environment.
+
+### Demonstration:
+In order to run tests and check the work of containers, you need to download the repository with the command:
+```
+git clone https://github.com/zkerriga/containers --recursive
+```
+After that, you need to build the project in Clion IDE and run the `Google_Test_run` configuration.
