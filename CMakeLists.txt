@@ -62,9 +62,5 @@ add_executable(containers
         main.cpp
         )
 
-add_executable(feature
-        feature.cpp
-        )
-
 add_library(testlib ${SRCS} main.cpp)
 add_subdirectory(unit_tests)
