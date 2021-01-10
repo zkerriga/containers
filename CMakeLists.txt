@@ -29,17 +29,12 @@ set(MAP_SRC
         ${SUPPORT}tree_node.hpp
         )
 
-set(DEQUE_SRC
-        ${TEMPLATE_DIR}deque.hpp
-        ${SUPPORT}deque_iterators.hpp
-        )
-
 set(STACK_SRC
         ${TEMPLATE_DIR}stack.hpp
         )
 
 set(QUEUE_SRC
-        ${TEMPLATE_DIR}stack.hpp
+        ${TEMPLATE_DIR}queue.hpp
         )
 
 set(SET_SRC
@@ -51,7 +46,6 @@ set(SRCS
         ${LIST_SRC}
         ${VECTOR_SRC}
         ${MAP_SRC}
-        ${DEQUE_SRC}
         ${STACK_SRC}
         ${QUEUE_SRC}
         ${SET_SRC}

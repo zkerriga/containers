@@ -12,7 +12,6 @@ set(TEST_FILES
         list_tests.cpp
         vector_tests.cpp
         map_tests.cpp
-        deque_tests.cpp
         stack_tests.cpp
         queue_tests.cpp
         set_tests.cpp

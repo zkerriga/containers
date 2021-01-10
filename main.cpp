@@ -18,7 +18,6 @@
 #include "stack.hpp"
 #include "queue.hpp"
 
-#include "deque.hpp"
 #include "set.hpp"
 
 int main() {
@@ -27,8 +26,6 @@ int main() {
 	ft::map<char, int>				myMap;
 	ft::stack< ft::vector<int> >	myStack;
 	ft::queue< ft::vector<int> >	myQueue;
-
-	ft::deque< int >				myDeque;
 	ft::set<int>					mySet;
 
 	std::cout << "\033[32m";
